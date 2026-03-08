@@ -204,6 +204,10 @@ const defaultOnboarding: OnboardingData = {
   menstrualCycleLength: '',
   hormonalContraception: '',
   goals: [],
+  hairProducts: [],
+  otherHairProduct: '',
+  hairProductFrequency: '',
+  scalpProductFrequency: '',
 };
 
 const demoHistory: CycleEntry[] = [

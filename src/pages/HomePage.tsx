@@ -51,25 +51,7 @@ const getQuickLogTips = (symptoms: string[]): string[] => {
   return tips.slice(0, 3);
 };
 
-const getCycleDay = (lastPeriodDate: string, cycleLengthStr: string): { day: number; total: number; phase: 'menstruation' | 'follicular' | 'luteal' } | null => {
-  if (!lastPeriodDate) return null;
-  const start = new Date(lastPeriodDate);
-  const now = new Date();
-  const diffMs = now.getTime() - start.getTime();
-  const diffDays = Math.floor(diffMs / 86400000);
-  
-  let total = 28;
-  if (cycleLengthStr === '21–25 days') total = 23;
-  else if (cycleLengthStr === '26–30 days') total = 28;
-  else if (cycleLengthStr === '31–35 days') total = 33;
-  
-  const day = (diffDays % total) + 1;
-  let phase: 'menstruation' | 'follicular' | 'luteal' = 'follicular';
-  if (day <= 5) phase = 'menstruation';
-  else if (day >= Math.floor(total / 2)) phase = 'luteal';
-  
-  return { day, total, phase };
-};
+const getCycleDay = (): null => null;
 
 const HomePage = () => {
   const navigate = useNavigate();

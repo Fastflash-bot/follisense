@@ -68,11 +68,6 @@ const protectiveFrequencyOptionsMale = [
 const wornOutWashOptions = ['More than once a week', 'About once a week', 'Every 2 weeks', 'Less than every 2 weeks'];
 const restyleOptions = ['Daily', 'Every few days', 'Weekly', 'Less often'];
 const cycleLengths = ['1–2 weeks', '2–4 weeks', '4–6 weeks', '6+ weeks', 'It varies'];
-const washFrequencyOptions = [
-  'More than once a week', 'About once a week', 'Every 2 weeks', 'Every 3–4 weeks',
-  'Only when I take the style down', 'It depends on the style',
-];
-const washPerCycleOptions = ['0 (not at all)', '1', '2–3', '4+'];
 const cycleLengthMinOptions = ['Less than 1 week', '1–2 weeks', '2–4 weeks', '4–6 weeks'];
 const cycleLengthMaxOptions = ['2–4 weeks', '4–6 weeks', '6–8 weeks', '8+ weeks'];
 const betweenWashOptions = [

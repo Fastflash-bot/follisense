@@ -29,6 +29,7 @@ const dermnetLinks: Record<string, { name: string; url: string }> = {
 
 const ConditionDetail = ({ condition, onBack }: { condition: StylistCondition; onBack: () => void }) => {
   const link = dermnetLinks[condition.id];
+  const consumerCond = consumerConditions.find(c => c.id === condition.id);
 
   return (
     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>

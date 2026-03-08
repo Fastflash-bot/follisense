@@ -1,13 +1,54 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, HelpCircle, ChevronDown, Camera, Check, Leaf } from 'lucide-react';
+import { ArrowLeft, HelpCircle, ChevronDown, Camera, Check, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import ProductSearch from '@/components/ProductSearch';
+
+// Hair reference photos
+import bwType3 from '@/assets/hair/bw_type3.jpg';
+import bwType3c from '@/assets/hair/bw_type3_c.jpg';
+import bwType4a from '@/assets/hair/bw_type4_a.jpg';
+import bwType4b from '@/assets/hair/bw_type4_b.jpg';
+import bwType4c from '@/assets/hair/bw_type4_c.jpg';
+import bmType3 from '@/assets/hair/bm_type3.jpg';
+import bmType4 from '@/assets/hair/bm_type4.jpg';
+import bmType4Fade from '@/assets/hair/bm_type4_fade.jpg';
+import bmLocs from '@/assets/hair/bm_locs.jpg';
+
+// Photo sets by gender and hair type
+const hairPhotos: Record<string, Record<string, { src: string; label: string }[]>> = {
+  type3: {
+    female: [
+      { src: bwType3, label: 'Type 3: S-shaped curls, bouncy' },
+      { src: bwType3c, label: 'Type 3: Tighter curls, voluminous' },
+    ],
+    male: [
+      { src: bmType3, label: 'Type 3: Defined curls, medium density' },
+    ],
+  },
+  type4: {
+    female: [
+      { src: bwType4a, label: 'Type 4a: Defined coils, springy' },
+      { src: bwType4b, label: 'Type 4b: Z-pattern coils, dense' },
+      { src: bwType4c, label: 'Type 4c: Tight coils, significant shrinkage' },
+    ],
+    male: [
+      { src: bmType4, label: 'Type 4: Tight coils, dense, afro' },
+      { src: bmType4Fade, label: 'Type 4: Coily texture, fade' },
+    ],
+  },
+};
+
+const locsPhotos: Record<string, { src: string; label: string }> = {
+  male: { src: bmLocs, label: 'Locs' },
+  female: { src: bmLocs, label: 'Locs' },
+  both: { src: bmLocs, label: 'Locs' },
+};
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -186,6 +227,37 @@ const CurlIcon = ({ type }: { type: string }) => {
     'type4': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 14 L7 10 L9 16 L10 10 L12 16 L13 10 L15 16 L16 10 L18 16 L19 10 L21 16 L22 10 L24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-foreground"/></svg>,
   };
   return patterns[type] || null;
+};
+
+// ── Mini photo gallery for multiple reference photos ──────────────────────────
+const PhotoGallery = ({ photos }: { photos: { src: string; label: string }[] }) => {
+  const [idx, setIdx] = useState(0);
+  if (photos.length === 0) return null;
+  if (photos.length === 1) {
+    return (
+      <div className="rounded-lg overflow-hidden border border-border">
+        <img src={photos[0].src} alt={photos[0].label} className="w-full h-24 object-cover" />
+        <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[0].label}</p>
+      </div>
+    );
+  }
+  return (
+    <div className="relative rounded-lg overflow-hidden border border-border">
+      <img src={photos[idx].src} alt={photos[idx].label} className="w-full h-24 object-cover" />
+      <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[idx].label}</p>
+      <button onClick={(e) => { e.stopPropagation(); setIdx(i => (i - 1 + photos.length) % photos.length); }} className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center">
+        <ChevronLeft size={12} />
+      </button>
+      <button onClick={(e) => { e.stopPropagation(); setIdx(i => (i + 1) % photos.length); }} className="absolute right-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center">
+        <ChevronRight size={12} />
+      </button>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1">
+        {photos.map((_, i) => (
+          <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === idx ? 'bg-foreground' : 'bg-foreground/30'}`} />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 // ── Slide-in wrapper ─────────────────────────────────────────────────────────
@@ -620,8 +692,13 @@ const Onboarding = () => {
                 </p>
                 <div className="space-y-4">
                   {hairTypes.map(ht => {
-                    const showPhotos = ht.photoLabels !== null;
+                    const hasPhotos = ht.id !== 'unsure' && hairPhotos[ht.id];
                     const genderKey = isMale ? 'male' : isNeutral ? 'both' : 'female';
+                    const photos = hasPhotos
+                      ? genderKey === 'both'
+                        ? [...(hairPhotos[ht.id].female || []), ...(hairPhotos[ht.id].male || [])]
+                        : hairPhotos[ht.id][genderKey] || []
+                      : [];
                     return (
                       <button
                         key={ht.id}
@@ -637,38 +714,15 @@ const Onboarding = () => {
                             <p className="text-sm text-muted-foreground">{ht.desc}</p>
                           </div>
                         </div>
-                        {showPhotos && ht.photoLabels && (
-                          <div className={`grid gap-2 mt-3 ${genderKey === 'both' ? 'grid-cols-2' : 'grid-cols-2'}`}>
+                        {photos.length > 0 && (
+                          <div className="grid grid-cols-2 gap-2 mt-3">
                             {/* Illustration */}
                             <div className="rounded-lg bg-accent/50 border border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
                               <CurlIcon type={ht.id} />
                               <span className="text-[10px] text-muted-foreground mt-1.5 text-center">Pattern illustration</span>
                             </div>
-                            {/* Photo placeholders based on gender */}
-                            {genderKey === 'female' && (
-                              <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
-                                <Camera size={20} className="text-muted-foreground mb-1" />
-                                <span className="text-[10px] text-muted-foreground text-center leading-tight">{ht.photoLabels.female}</span>
-                              </div>
-                            )}
-                            {genderKey === 'male' && (
-                              <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
-                                <Camera size={20} className="text-muted-foreground mb-1" />
-                                <span className="text-[10px] text-muted-foreground text-center leading-tight">{ht.photoLabels.male}</span>
-                              </div>
-                            )}
-                            {genderKey === 'both' && (
-                              <div className="space-y-2">
-                                <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-2 flex flex-col items-center justify-center min-h-[36px]">
-                                  <Camera size={14} className="text-muted-foreground mb-0.5" />
-                                  <span className="text-[9px] text-muted-foreground text-center leading-tight">{ht.photoLabels.female}</span>
-                                </div>
-                                <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-2 flex flex-col items-center justify-center min-h-[36px]">
-                                  <Camera size={14} className="text-muted-foreground mb-0.5" />
-                                  <span className="text-[9px] text-muted-foreground text-center leading-tight">{ht.photoLabels.male}</span>
-                                </div>
-                              </div>
-                            )}
+                            {/* Real reference photos */}
+                            <PhotoGallery photos={photos} />
                           </div>
                         )}
                       </button>
@@ -728,14 +782,33 @@ const Onboarding = () => {
                 <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
                 {(() => {
                   const defaultCount = isMale ? 6 : 8;
+                  const locsStyles = ['Locs / faux locs', 'Locs or faux locs'];
+                  const genderKeyStyle = isMale ? 'male' : isNeutral ? 'both' : 'female';
+                  const getLocsPhoto = () => locsPhotos[genderKeyStyle] || null;
+                  
+                  const renderStyleButton = (s: string) => {
+                    const isLocs = locsStyles.includes(s);
+                    const locsPhoto = isLocs ? getLocsPhoto() : null;
+                    return (
+                      <button 
+                        key={s} 
+                        onClick={() => toggleStyle(s)} 
+                        className={`selection-card text-center py-4 ${styles.includes(s) ? 'selected' : ''}`}
+                      >
+                        {locsPhoto && (
+                          <div className="w-full h-16 rounded-lg overflow-hidden mb-2">
+                            <img src={locsPhoto.src} alt={locsPhoto.label} className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        <p className="font-medium text-foreground text-sm">{s}</p>
+                      </button>
+                    );
+                  };
+                  
                   return (
                     <>
                       <div className="grid grid-cols-2 gap-3">
-                        {styleOptions.slice(0, defaultCount).map(s => (
-                          <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
-                            <p className="font-medium text-foreground text-sm">{s}</p>
-                          </button>
-                        ))}
+                        {styleOptions.slice(0, defaultCount).map(s => renderStyleButton(s))}
                       </div>
                       {styleOptions.length > defaultCount && !showMoreStyles && (
                         <button onClick={() => setShowMoreStyles(true)} className="w-full flex items-center justify-center gap-1.5 text-sm font-medium text-primary mt-3 py-2">
@@ -744,11 +817,7 @@ const Onboarding = () => {
                       )}
                       {showMoreStyles && (
                         <div className="grid grid-cols-2 gap-3 mt-3">
-                          {styleOptions.slice(defaultCount).map(s => (
-                            <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
-                              <p className="font-medium text-foreground text-sm">{s}</p>
-                            </button>
-                          ))}
+                          {styleOptions.slice(defaultCount).map(s => renderStyleButton(s))}
                         </div>
                       )}
                     </>

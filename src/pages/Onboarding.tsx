@@ -211,8 +211,8 @@ const Onboarding = () => {
   const [washFreqPerCycle, setWashFreqPerCycle] = useState('');
   const [betweenWashCare, setBetweenWashCare] = useState<string[]>([]);
   const [otherBetweenWash, setOtherBetweenWash] = useState('');
-  const hasProtectiveStyle = styles.some(s => !nonProtectiveStyles.includes(s) && s !== 'Other');
-  const isWornOutOnly = styles.length > 0 && !hasProtectiveStyle;
+  const isWornOutOnly = styles.length > 0 && styles.every(s => wornOutOnlyStyles.includes(s));
+  const hasProtectiveOrStretchedStyle = styles.length > 0 && styles.some(s => !wornOutOnlyStyles.includes(s) && s !== 'Other');
 
   // Baseline — now conversational step-through
   const [baselineStep, setBaselineStep] = useState(0);

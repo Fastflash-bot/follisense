@@ -84,6 +84,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"These patches look like they could be psoriasis. It\'s not contagious and it\'s manageable, but it does need proper treatment from a dermatologist."',
     whatYouCanDo: 'Don\'t pick at or scrape the scales. Be gentle when styling around affected areas. Don\'t apply products directly on plaques.',
     severityGuide: 'Always refer. Psoriasis is a chronic condition that benefits from medical management.',
+    darkerSkinNote: 'On darker skin: Plaques may appear more purple or dark brown rather than the classic pink-red shown in most textbooks. The silvery scaling is usually still visible. The defined borders of the plaque are your best diagnostic clue regardless of skin tone.',
   },
   {
     id: 'alopecia-areata',

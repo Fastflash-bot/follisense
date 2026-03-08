@@ -14,6 +14,7 @@ export interface StylistCondition {
   whatToTell: string;
   whatYouCanDo: string;
   severityGuide: string;
+  darkerSkinNote: string;
 }
 
 export const stylistConditions: StylistCondition[] = [
@@ -32,6 +33,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"I\'ve noticed some thinning around your temples. It might be worth getting that checked by a trichologist or dermatologist, especially if it\'s been getting worse. Catching it early makes a big difference."',
     whatYouCanDo: 'Loosen the installation in affected areas. Suggest a break between styles. Don\'t reinstall tightly over an area that\'s already thinning.',
     severityGuide: 'Early (sparse but baby hairs visible) = reversible with intervention. Late (smooth, shiny, no fine hairs) = likely permanent scarring. Refer urgently.',
+    darkerSkinNote: 'On darker skin: Early thinning may be harder to spot visually because the contrast between skin and hair is lower. Feel for it: run your fingertip along the hairline and temples. If the hair density is noticeably thinner or you feel smooth skin where there used to be fine hairs, that\'s your signal. Redness may present as darker patches or slight hyperpigmentation rather than pink or red.',
   },
   {
     id: 'ccca',
@@ -48,6 +50,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"I\'m seeing some thinning at your crown that looks like it might need a professional opinion. A dermatologist can take a closer look. It\'s better to check early."',
     whatYouCanDo: 'Don\'t apply tension to the crown area. Avoid tight styles that pull from the centre. Note the observation in ScalpSense and share with the client.',
     severityGuide: 'Any unexplained crown thinning should be referred. CCCA causes permanent scarring and early treatment is critical.',
+    darkerSkinNote: 'On darker skin: The shiny, smooth appearance of scarring at the crown may be easier to spot than on lighter skin because of the contrast. But early thinning can be subtle. Part the hair at the crown and look straight down. Compare density at the centre to the sides. If the centre is noticeably sparser, flag it.',
   },
   {
     id: 'seborrheic-dermatitis',
@@ -64,6 +67,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"You\'ve got some flaking and irritation that looks like it could be seborrheic dermatitis. A medicated shampoo with ketoconazole or zinc pyrithione usually helps. If it doesn\'t clear up, a doctor can prescribe something stronger."',
     whatYouCanDo: 'Recommend gentle cleansing. Don\'t cover with heavy products. Note it in ScalpSense.',
     severityGuide: 'Mild (some flaking) = self-manageable with OTC products. Moderate to severe (persistent, spreading, painful) = refer.',
+    darkerSkinNote: 'On darker skin: Flakes tend to be more visible against dark hair and skin. But the redness that typically accompanies it on lighter skin may appear as hyperpigmentation (darker patches) or a slight purple or ashy tone on brown and dark brown skin. Don\'t look for pink. Look for colour change from the client\'s normal skin tone.',
   },
   {
     id: 'scalp-psoriasis',
@@ -80,6 +84,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"These patches look like they could be psoriasis. It\'s not contagious and it\'s manageable, but it does need proper treatment from a dermatologist."',
     whatYouCanDo: 'Don\'t pick at or scrape the scales. Be gentle when styling around affected areas. Don\'t apply products directly on plaques.',
     severityGuide: 'Always refer. Psoriasis is a chronic condition that benefits from medical management.',
+    darkerSkinNote: 'On darker skin: Plaques may appear more purple or dark brown rather than the classic pink-red shown in most textbooks. The silvery scaling is usually still visible. The defined borders of the plaque are your best diagnostic clue regardless of skin tone.',
   },
   {
     id: 'alopecia-areata',
@@ -96,6 +101,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"I\'ve found a smooth bald patch on your scalp. It looks like it could be alopecia areata, which is an autoimmune condition. It\'s not caused by anything you did. A dermatologist can confirm and discuss treatment options."',
     whatYouCanDo: 'Don\'t style over it tightly. Document the size and location in ScalpSense. Note whether it\'s new or getting larger.',
     severityGuide: 'Always refer. Can be self-limiting but can also progress.',
+    darkerSkinNote: 'On darker skin: The smooth, round patches are usually easy to spot because the contrast between bald skin and surrounding hair is clear. The key feature, exclamation point hairs at the edges, looks the same on all skin tones. These are short broken hairs that taper toward the root.',
   },
   {
     id: 'folliculitis',
@@ -112,6 +118,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"You\'ve got some bumps that look like folliculitis, which is inflammation of the hair follicles. It usually clears up on its own if the area isn\'t irritated further. If it gets worse or doesn\'t clear up in a week or two, see a doctor."',
     whatYouCanDo: 'Don\'t install tightly over affected areas. Ensure your tools are sanitised between clients. Recommend the client keep the area clean and avoid touching it.',
     severityGuide: 'Mild (a few bumps) = usually self-resolving. Moderate (spreading, painful, pus-filled) = refer. Recurrent = refer.',
+    darkerSkinNote: 'On darker skin: Bumps may appear darker than surrounding skin rather than red. They can also leave dark marks (post-inflammatory hyperpigmentation) after they heal. In severe cases, you may see keloid scarring at the nape, especially in male clients after lineups.',
   },
   {
     id: 'tinea-capitis',
@@ -128,6 +135,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"I\'m seeing a patch with some unusual scaling and broken hairs that could be a fungal infection. This needs to be seen by a doctor because it usually requires oral medication to clear. It\'s also contagious, so getting it treated quickly is important."',
     whatYouCanDo: 'Do not style over the affected area. Sanitise all tools that touched the area. Refer immediately. Be honest that it needs medical attention.',
     severityGuide: 'Always refer. Requires oral antifungal treatment. Topical treatments alone are insufficient for scalp fungal infections.',
+    darkerSkinNote: 'On darker skin: The ring-shaped border may be harder to see. Focus on the black dot pattern, which is broken hair stubs at the scalp surface. This is the most reliable visual sign regardless of skin tone. Scaling may appear ashy or greyish.',
   },
   {
     id: 'chemical-damage',
@@ -144,6 +152,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"Your scalp looks irritated from the chemical treatment. Let it heal completely before any further processing. If it\'s blistering or weeping, see a doctor."',
     whatYouCanDo: 'Do not apply any further chemicals to the area. Do not install a tight style over damaged scalp. Allow full healing before any styling.',
     severityGuide: 'Mild redness = monitor. Blistering, open wounds, or persistent rawness = refer.',
+    darkerSkinNote: 'On darker skin: Fresh chemical burns may appear darker, ashy, or slightly purple rather than red. In severe cases you may see lighter patches where the skin has been damaged. Scarring from repeated burns often presents as hypopigmented (lighter) smooth patches on brown skin.',
   },
 ];
 

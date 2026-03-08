@@ -593,8 +593,9 @@ const Onboarding = () => {
             {/* Step 0: Gender */}
             {step === 0 && (
               <div>
-                <h2 className="text-lg font-medium text-foreground mb-2">First, tell us a bit about you</h2>
-                <p className="text-muted-foreground mb-6">I am…</p>
+                <h2 className="text-lg font-medium text-foreground mb-1">First, tell us a bit about you</h2>
+                <p className="text-muted-foreground mb-3">This helps us personalise your experience</p>
+                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">Hair health is affected by hormones, and hormonal profiles differ. Knowing this helps us ask the right questions and give you more relevant insights.</p>
                 <div className="space-y-3">
                   {genderOptions.map(opt => (
                     <button key={opt.id} onClick={() => setGender(opt.id)} className={`selection-card w-full text-left ${gender === opt.id ? 'selected' : ''}`}>
@@ -602,6 +603,7 @@ const Onboarding = () => {
                     </button>
                   ))}
                 </div>
+                <p className="text-xs text-muted-foreground mt-4">This is only used to personalise your experience. You can change it anytime in your profile.</p>
               </div>
             )}
 

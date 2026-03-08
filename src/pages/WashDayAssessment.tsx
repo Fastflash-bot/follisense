@@ -285,9 +285,9 @@ const WashDayAssessment = () => {
               transition={{ duration: 0.2 }}
               className="pt-4"
             >
-              <p className="text-label mb-2">Braids — Day 28 of 28</p>
-              <p className="text-sm text-muted-foreground mb-1">Let's see how your scalp did this cycle</p>
-              <h2 className="text-xl font-semibold mb-6">{currentQ.q}</h2>
+              <p className="text-label mb-2">{isRegularCheckIn ? 'Scalp check-in' : 'Braids — Day 28 of 28'}</p>
+              <p className="text-sm text-muted-foreground mb-1">{isRegularCheckIn ? "Time for your scalp check-in — takes about 2 minutes" : "Let's see how your scalp did this cycle"}</p>
+              <h2 className="text-xl font-semibold mb-6">{(currentQ as any).qRegular && isRegularCheckIn ? (currentQ as any).qRegular : currentQ.q}</h2>
               <div className="space-y-3">
                 {currentQ.options.map((opt, optIdx) => (
                   <button

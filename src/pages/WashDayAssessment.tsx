@@ -129,7 +129,7 @@ const WashDayAssessment = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRegularCheckIn = searchParams.get('mode') === 'regular';
-  const { setCurrentCheckIn, baselinePhotos } = useApp();
+  const { setCurrentCheckIn, baselinePhotos, research, incrementResearchPhotos, checkInCount, setCheckInCount } = useApp();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [newProductText, setNewProductText] = useState('');
@@ -137,6 +137,7 @@ const WashDayAssessment = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showHairIntro, setShowHairIntro] = useState(false);
   const [acknowledgment, setAcknowledgment] = useState<string | null>(null);
+  const [includeInResearch, setIncludeInResearch] = useState(research.consented);
 
   const totalSteps = allSteps.length + 1; // +1 for photo step
   const isProductStep = currentStep === allSteps.length - 1;
@@ -191,6 +192,10 @@ const WashDayAssessment = () => {
       type: 'wash-day',
       date: new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }),
     });
+    if (photoSaved && includeInResearch && research.consented) {
+      incrementResearchPhotos();
+    }
+    setCheckInCount(checkInCount + 1);
     navigate('/results');
   };
 
@@ -381,12 +386,28 @@ const WashDayAssessment = () => {
                   })}
                 </div>
               ) : (
-                <div className="card-elevated p-5 mb-8 text-center">
+                <div className="card-elevated p-5 mb-4 text-center">
                   <div className="w-12 h-12 rounded-full bg-sage-light flex items-center justify-center mx-auto mb-3">
                     <Camera size={22} className="text-primary" />
                   </div>
                   <p className="font-medium text-foreground">Photo saved</p>
                   <p className="text-sm text-muted-foreground">Stored on your device only</p>
+                </div>
+              )}
+
+              {/* Research toggle */}
+              {research.consented && photoSaved && (
+                <div className="flex items-center justify-between rounded-2xl bg-accent p-4 mb-6">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">Include in research programme</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Anonymised only. You can change this anytime in settings.</p>
+                  </div>
+                  <button
+                    onClick={() => setIncludeInResearch(!includeInResearch)}
+                    className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 ml-3 ${includeInResearch ? 'bg-primary' : 'bg-border'}`}
+                  >
+                    <div className={`w-5 h-5 rounded-full bg-card shadow-sm absolute top-0.5 transition-transform ${includeInResearch ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
+                  </button>
                 </div>
               )}
 

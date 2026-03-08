@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, ChevronRight, Shield, Trash2, Leaf, Repeat, Heart, Camera, RefreshCw, Target, Check, Calendar } from 'lucide-react';
+import { User, ChevronRight, Shield, Trash2, Leaf, Repeat, Heart, Camera, RefreshCw, Target, Check, Calendar, Microscope } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 const goalOptions = [
@@ -17,7 +17,7 @@ const goalOptions = [
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { onboardingData, setOnboardingData, resetAll, stylistMode, setStylistMode, baselinePhotos, setBaselinePhotos } = useApp();
+  const { onboardingData, setOnboardingData, resetAll, stylistMode, setStylistMode, baselinePhotos, setBaselinePhotos, research } = useApp();
 
   const [notifications, setNotifications] = useState({
     dailyTip: true, midCycle: true, washDay: true, washApproaching: true, productReminders: false, weeklySummary: false,
@@ -245,6 +245,38 @@ const ProfilePage = () => {
             ))}
           </div>
         </div>
+
+        {/* Research */}
+        {!stylistMode && (
+          <div className="mb-6">
+            <h3 className="text-label mb-3">Research</h3>
+            <div className="card-elevated p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <Microscope size={18} className="text-primary flex-shrink-0" strokeWidth={1.8} />
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    {research.consented ? 'Contributing to research' : 'Not participating'}
+                  </p>
+                  {research.consented && research.photoCount > 0 && (
+                    <p className="text-xs text-primary font-medium mt-0.5">
+                      You've contributed {research.photoCount} photo{research.photoCount !== 1 ? 's' : ''}. Thank you.
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <button onClick={() => navigate('/research')} className="text-sm font-medium text-primary block">
+                  {research.consented ? 'Manage consent' : 'Learn more'}
+                </button>
+                {research.consented && (
+                  <button onClick={() => navigate('/research')} className="text-sm text-muted-foreground block">
+                    How my data is used
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Privacy */}
         <div className="mb-6">

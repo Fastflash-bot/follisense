@@ -124,6 +124,13 @@ export interface QuickLogEntry {
   severity: string;
 }
 
+export interface ResearchData {
+  consented: boolean;
+  consentDate: string | null;
+  photoCount: number;
+  dismissed: boolean;
+}
+
 const defaultHealthProfile: HealthProfileData = {
   sweat: '',
   exercise: '',
@@ -172,6 +179,11 @@ interface AppContextType {
   setBaselineDate: (d: string | null) => void;
   quickLogs: QuickLogEntry[];
   addQuickLog: (entry: QuickLogEntry) => void;
+  research: ResearchData;
+  setResearch: (d: ResearchData) => void;
+  incrementResearchPhotos: () => void;
+  checkInCount: number;
+  setCheckInCount: (n: number) => void;
   resetAll: () => void;
 }
 
@@ -250,10 +262,13 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [baselineRisk, setBaselineRisk] = useState<'green' | 'amber' | 'red' | null>(null);
   const [baselineDate, setBaselineDate] = useState<string | null>(null);
   const [quickLogs, setQuickLogs] = useState<QuickLogEntry[]>([]);
+  const [research, setResearch] = useState<ResearchData>({ consented: false, consentDate: null, photoCount: 0, dismissed: false });
+  const [checkInCount, setCheckInCount] = useState(3); // demo: 3 completed
 
   const addSalonVisit = (v: SalonVisit) => setSalonVisits(prev => [v, ...prev]);
   const addClientObservation = (o: ClientObservation) => setClientObservations(prev => [o, ...prev]);
   const addQuickLog = (entry: QuickLogEntry) => setQuickLogs(prev => [entry, ...prev]);
+  const incrementResearchPhotos = () => setResearch(prev => ({ ...prev, photoCount: prev.photoCount + 1 }));
 
   const resetAll = () => {
     setOnboardingComplete(false);
@@ -268,6 +283,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setBaselineRisk(null);
     setBaselineDate(null);
     setQuickLogs([]);
+    setResearch({ consented: false, consentDate: null, photoCount: 0, dismissed: false });
+    setCheckInCount(0);
   };
 
   return (
@@ -286,6 +303,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       baselineRisk, setBaselineRisk,
       baselineDate, setBaselineDate,
       quickLogs, addQuickLog,
+      research, setResearch, incrementResearchPhotos,
+      checkInCount, setCheckInCount,
       resetAll,
     }}>
       {children}

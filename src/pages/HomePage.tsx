@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart, AlertTriangle, ArrowRight, Target, MessageCircle, Stethoscope, FlaskConical, ShieldCheck } from 'lucide-react';
+import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart, AlertTriangle, ArrowRight, Target, MessageCircle, Stethoscope, FlaskConical, ShieldCheck, Microscope } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
@@ -70,7 +70,7 @@ const getQuickLogTips = (symptoms: string[]): string[] => {
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { onboardingData, history, salonVisits, addSalonVisit, healthProfile, addQuickLog } = useApp();
+  const { onboardingData, history, salonVisits, addSalonVisit, healthProfile, addQuickLog, research, setResearch, checkInCount } = useApp();
   const [showSalonForm, setShowSalonForm] = useState(false);
   const [visitDate, setVisitDate] = useState<Date>(new Date());
   const [services, setServices] = useState<string[]>([]);
@@ -299,6 +299,23 @@ const HomePage = () => {
             </div>
             <ChevronRight size={18} className="text-muted-foreground" />
           </button>
+        )}
+
+        {/* Research contribution card - only after 2+ check-ins, not yet dismissed/consented */}
+        {checkInCount >= 2 && !research.consented && !research.dismissed && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="card-elevated p-5 mb-4 border-l-4 border-l-primary">
+            <div className="flex items-start gap-3 mb-3">
+              <Microscope size={20} className="text-primary flex-shrink-0 mt-0.5" strokeWidth={1.8} />
+              <div>
+                <h3 className="font-semibold text-foreground text-sm">Help build better AI for textured hair</h3>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Most scalp health AI doesn't work well on darker skin because the training data doesn't include us. Your check-in photos could help change that.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => navigate('/research')} className="flex-1 h-10 bg-primary text-primary-foreground rounded-xl font-medium text-sm btn-press">Tell me more</button>
+              <button onClick={() => setResearch({ ...research, dismissed: true })} className="flex-1 h-10 rounded-xl border border-border font-medium text-sm btn-press text-muted-foreground">Not right now</button>
+            </div>
+          </motion.div>
         )}
 
         {/* Salon visit card */}

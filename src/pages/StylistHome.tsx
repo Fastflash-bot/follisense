@@ -5,6 +5,18 @@ import { useApp } from '@/contexts/AppContext';
 import { dummyLeaderboard } from '@/data/quizQuestions';
 import { useState, useEffect } from 'react';
 
+interface StylistProfile {
+  role: string; businessName: string; [key: string]: any;
+}
+
+const loadStylistProfile = (): StylistProfile | null => {
+  try {
+    const saved = localStorage.getItem('scalpsense-stylist-profile');
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return null;
+};
+
 const loadQuizState = () => {
   try {
     const saved = localStorage.getItem('scalpsense-quiz');

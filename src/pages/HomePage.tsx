@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart } from 'lucide-react';
+import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart, AlertTriangle, ArrowRight } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
@@ -9,6 +9,46 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
 const serviceOptions = ['Wash', 'Treatment', 'Style installation', 'Style removal/takedown', 'Trim', 'Colour', 'Other'];
+
+const dailyTips = [
+  "Tip: Sleeping on a satin pillowcase reduces friction on your edges while in braids",
+  "Reminder: A light scalp oil massage today can help with circulation — even over your protective style",
+  "Tip: If your braids feel tight around the hairline, don't tough it out — loosen or remove the ones causing pain",
+  "Reminder: Staying hydrated helps your scalp too — aim for 2 litres today",
+  "Tip: Resist the urge to scratch — try pressing gently with a fingertip instead to relieve itch without damaging the scalp",
+  "Reminder: Your wash day is in 5 days — start thinking about whether you'll reinstall or give your hair a break",
+  "Tip: If you're exercising today, a light spritz of scalp refresh spray afterwards can help with sweat buildup under your style",
+];
+
+const quickLogSymptoms = [
+  'Itching', 'Tenderness / soreness', 'Flaking', 'Thinning / shedding', 'Bumps or irritation', 'Something else',
+];
+
+const quickLogSeverities = [
+  { label: 'Mild', desc: 'Just noticed it' },
+  { label: 'Moderate', desc: "It's bothering me" },
+  { label: 'Severe', desc: 'I need to do something about this' },
+];
+
+const getQuickLogTip = (symptoms: string[]): string => {
+  if (symptoms.includes('Itching')) return 'Try pressing gently with a fingertip instead of scratching. A lightweight scalp oil can help soothe irritation.';
+  if (symptoms.includes('Tenderness / soreness')) return "If your style feels tight, loosen the edges. Don't tough it out — tension damage is preventable.";
+  if (symptoms.includes('Flaking')) return 'A gentle sulphate-free rinse can help clear buildup without disturbing your style.';
+  if (symptoms.includes('Thinning / shedding')) return 'Avoid re-tightening edges. If shedding is concentrated at the hairline, consider loosening or removing tension.';
+  if (symptoms.includes('Bumps or irritation')) return 'Keep the area clean and avoid heavy products. If bumps persist, they could indicate folliculitis — worth monitoring.';
+  return 'Note taken. Keep an eye on it and mention it at your next check-in.';
+};
+
+const getQuickLogTips = (symptoms: string[]): string[] => {
+  const tips: string[] = [];
+  if (symptoms.includes('Itching')) tips.push('Apply a lightweight, non-comedogenic scalp oil to soothe irritation');
+  if (symptoms.includes('Tenderness / soreness')) tips.push('Avoid re-tightening your edges — if they\'re loose, leave them');
+  if (symptoms.includes('Flaking')) tips.push('Gently cleanse your scalp mid-cycle with a sulphate-free rinse');
+  if (symptoms.includes('Thinning / shedding')) tips.push('Consider loosening or avoiding tension on your hairline for the next style');
+  if (symptoms.includes('Bumps or irritation')) tips.push('Keep the affected area clean and avoid heavy product application');
+  if (tips.length === 0) tips.push('Monitor the symptom and mention it at your next check-in');
+  return tips.slice(0, 3);
+};
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -18,6 +58,14 @@ const HomePage = () => {
   const [services, setServices] = useState<string[]>([]);
   const [stylistName, setStylistName] = useState('');
   const [visitNotes, setVisitNotes] = useState('');
+  const [dismissedWashPrompt, setDismissedWashPrompt] = useState(false);
+
+  // Quick log state
+  const [showQuickLog, setShowQuickLog] = useState(false);
+  const [quickLogStep, setQuickLogStep] = useState(0);
+  const [quickSymptoms, setQuickSymptoms] = useState<string[]>([]);
+  const [quickSeverity, setQuickSeverity] = useState('');
+  const [quickOtherText, setQuickOtherText] = useState('');
 
   const currentStyle = onboardingData.protectiveStyles[0] || 'Braids';
   const currentDay = 14;
@@ -26,6 +74,14 @@ const HomePage = () => {
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+
+  // Daily tip — rotate by day of year
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+  const todayTip = dailyTips[dayOfYear % dailyTips.length];
+
+  // Pre-wash day prompt — show 2 days before expected wash day
+  const daysUntilWash = totalDays - currentDay;
+  const showWashPrompt = !onboardingData.isWornOutOnly && daysUntilWash <= 2 && !dismissedWashPrompt;
 
   const recentEntries = [
     { label: 'Wash day check-in', date: 'Feb 20', risk: 'green' as const },
@@ -40,6 +96,7 @@ const HomePage = () => {
   const offset = circumference - (progress / 100) * circumference;
 
   const toggleService = (s: string) => setServices(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+  const toggleQuickSymptom = (s: string) => setQuickSymptoms(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
 
   const handleSaveSalon = () => {
     addSalonVisit({
@@ -54,6 +111,14 @@ const HomePage = () => {
     setStylistName('');
     setVisitNotes('');
     setVisitDate(new Date());
+  };
+
+  const resetQuickLog = () => {
+    setShowQuickLog(false);
+    setQuickLogStep(0);
+    setQuickSymptoms([]);
+    setQuickSeverity('');
+    setQuickOtherText('');
   };
 
   return (
@@ -116,6 +181,57 @@ const HomePage = () => {
           </div>
         )}
 
+        {/* Today's tip card */}
+        <div className="rounded-2xl bg-secondary/50 p-4 mb-4">
+          <p className="text-sm text-foreground leading-relaxed">{todayTip}</p>
+          <button onClick={() => navigate('/learn')} className="text-xs text-primary font-medium mt-2 flex items-center gap-1">
+            More tips <ArrowRight size={12} strokeWidth={2} />
+          </button>
+        </div>
+
+        {/* Pre-wash day prompt */}
+        {showWashPrompt && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="card-elevated p-5 mb-4 border-l-4 border-l-warning"
+          >
+            <h3 className="font-semibold text-foreground mb-1">Wash day is coming up</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              When you take down your style, take a moment to check your scalp. We'll walk you through it.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => navigate('/wash-day')}
+                className="flex-1 h-10 bg-primary text-primary-foreground rounded-xl font-medium text-sm btn-press"
+              >
+                Start early assessment
+              </button>
+              <button
+                onClick={() => setDismissedWashPrompt(true)}
+                className="flex-1 h-10 rounded-xl border border-border font-medium text-sm btn-press text-muted-foreground"
+              >
+                I'll wait
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Quick log card */}
+        <button
+          onClick={() => setShowQuickLog(true)}
+          className="card-elevated p-4 mb-4 w-full flex items-center gap-3 text-left"
+        >
+          <div className="w-10 h-10 rounded-xl bg-warning/15 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle size={20} className="text-warning" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1">
+            <p className="font-medium text-foreground text-sm">Something feels off?</p>
+            <p className="text-xs text-muted-foreground">Quick log — takes 30 seconds</p>
+          </div>
+          <ChevronRight size={18} className="text-muted-foreground" />
+        </button>
+
         {/* Health profile prompt */}
         {!healthProfile.sweat && !healthProfile.medicalConditions.length && (
           <button
@@ -156,7 +272,7 @@ const HomePage = () => {
             </div>
             <h3 className="font-semibold text-foreground">Mid-cycle check-in</h3>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">3 quick questions — takes 1 minute</p>
+          <p className="text-sm text-muted-foreground mb-4">4 quick questions — takes 1 minute</p>
           <button
             onClick={() => navigate('/mid-cycle')}
             className="w-full h-12 bg-primary text-primary-foreground rounded-xl font-semibold text-sm btn-press"
@@ -185,7 +301,7 @@ const HomePage = () => {
         </div>
 
         {/* Tip */}
-        <div className="rounded-2xl bg-sage-light p-5">
+        <div className="rounded-2xl bg-sage-light p-5 mb-20">
           <div className="flex items-start gap-3">
             <Lightbulb size={20} className="text-primary mt-0.5 flex-shrink-0" strokeWidth={1.8} />
             <div>
@@ -199,6 +315,165 @@ const HomePage = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* Quick Log Modal */}
+      <AnimatePresence>
+        {showQuickLog && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-foreground/30 z-50 flex items-end justify-center"
+          >
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="bg-card rounded-t-3xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold">Quick log</h3>
+                  <button onClick={resetQuickLog} className="p-1">
+                    <X size={22} className="text-muted-foreground" strokeWidth={1.8} />
+                  </button>
+                </div>
+
+                {quickLogStep === 0 && (
+                  <div>
+                    <p className="font-medium text-foreground mb-4">What are you noticing?</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {quickLogSymptoms.map(s => (
+                        <button
+                          key={s}
+                          onClick={() => toggleQuickSymptom(s)}
+                          className={`pill-option ${quickSymptoms.includes(s) ? 'selected' : ''}`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                    {quickSymptoms.includes('Something else') && (
+                      <input
+                        type="text"
+                        value={quickOtherText}
+                        onChange={e => setQuickOtherText(e.target.value)}
+                        placeholder="What are you noticing?"
+                        className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mb-4"
+                      />
+                    )}
+                    <button
+                      onClick={() => setQuickLogStep(1)}
+                      disabled={quickSymptoms.length === 0}
+                      className={`w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors ${
+                        quickSymptoms.length > 0 ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'
+                      }`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+
+                {quickLogStep === 1 && (
+                  <div>
+                    <p className="font-medium text-foreground mb-4">How bad is it?</p>
+                    <div className="space-y-3">
+                      {quickLogSeverities.map(s => (
+                        <button
+                          key={s.label}
+                          onClick={() => { setQuickSeverity(s.label); setQuickLogStep(2); }}
+                          className={`selection-card w-full text-left ${quickSeverity === s.label ? 'selected' : ''}`}
+                        >
+                          <p className="font-medium text-foreground">{s.label}</p>
+                          <p className="text-sm text-muted-foreground mt-0.5">{s.desc}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {quickLogStep === 2 && (
+                  <div>
+                    {quickSeverity === 'Mild' && (
+                      <div>
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                          <Leaf size={22} className="text-primary" strokeWidth={1.8} />
+                        </div>
+                        <h4 className="font-semibold text-center mb-2">Noted</h4>
+                        <p className="text-sm text-muted-foreground text-center mb-6">
+                          We'll factor this into your next check-in. In the meantime:
+                        </p>
+                        <div className="rounded-2xl bg-accent p-4 mb-6">
+                          <p className="text-sm text-foreground">{getQuickLogTip(quickSymptoms)}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {quickSeverity === 'Moderate' && (
+                      <div>
+                        <div className="w-12 h-12 rounded-full bg-warning/15 flex items-center justify-center mx-auto mb-4">
+                          <AlertTriangle size={22} className="text-warning" strokeWidth={1.8} />
+                        </div>
+                        <h4 className="font-semibold text-center mb-2">Here are some things to try</h4>
+                        <p className="text-sm text-muted-foreground text-center mb-4">
+                          Before your next wash day — and if it gets worse, you can do a full check-in anytime.
+                        </p>
+                        <div className="card-elevated p-4 mb-6">
+                          <ol className="space-y-3">
+                            {getQuickLogTips(quickSymptoms).map((tip, i) => (
+                              <li key={i} className="flex gap-3 text-sm">
+                                <span className="w-5 h-5 rounded-full bg-warning/15 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-warning">{i + 1}</span>
+                                <span className="text-muted-foreground">{tip}</span>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+                      </div>
+                    )}
+
+                    {quickSeverity === 'Severe' && (
+                      <div>
+                        <div className="w-12 h-12 rounded-full bg-destructive/15 flex items-center justify-center mx-auto mb-4">
+                          <AlertTriangle size={22} className="text-destructive" strokeWidth={1.8} />
+                        </div>
+                        <h4 className="font-semibold text-center mb-2">This sounds like it's worth attention now</h4>
+                        <p className="text-sm text-muted-foreground text-center mb-6">
+                          A full assessment will give you personalised guidance and, if needed, a summary to share with a professional.
+                        </p>
+                        <button
+                          onClick={() => { resetQuickLog(); navigate('/wash-day'); }}
+                          className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3"
+                        >
+                          Do a full assessment
+                        </button>
+                        <button
+                          onClick={() => navigate('/results?risk=red')}
+                          className="w-full h-12 rounded-xl border-2 border-border font-medium text-sm btn-press mb-6"
+                        >
+                          View guidance
+                        </button>
+                      </div>
+                    )}
+
+                    <button
+                      onClick={resetQuickLog}
+                      className={`w-full ${quickSeverity === 'Severe' ? '' : 'h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press'}`}
+                    >
+                      {quickSeverity === 'Severe' ? '' : 'Done'}
+                    </button>
+                    {quickSeverity !== 'Severe' && (
+                      <p className="text-xs text-center text-muted-foreground mt-3">
+                        This has been saved to your timeline
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Salon Visit Modal */}
       <AnimatePresence>
@@ -224,7 +499,6 @@ const HomePage = () => {
                   </button>
                 </div>
 
-                {/* Date picker */}
                 <div className="mb-5">
                   <label className="text-sm font-medium text-foreground mb-2 block">Date of visit</label>
                   <Popover>
@@ -246,7 +520,6 @@ const HomePage = () => {
                   </Popover>
                 </div>
 
-                {/* Services */}
                 <div className="mb-5">
                   <label className="text-sm font-medium text-foreground mb-2 block">What was done?</label>
                   <div className="flex flex-wrap gap-2">
@@ -262,7 +535,6 @@ const HomePage = () => {
                   </div>
                 </div>
 
-                {/* Stylist name */}
                 <div className="mb-5">
                   <label className="text-sm font-medium text-foreground mb-2 block">Stylist name (optional)</label>
                   <input
@@ -274,7 +546,6 @@ const HomePage = () => {
                   />
                 </div>
 
-                {/* Notes */}
                 <div className="mb-6">
                   <label className="text-sm font-medium text-foreground mb-2 block">Any notes? (optional)</label>
                   <textarea

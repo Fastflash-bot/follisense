@@ -8,11 +8,23 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { onboardingData, resetAll, stylistMode, setStylistMode, baselinePhotos, setBaselinePhotos } = useApp();
 
-  const [reminders, setReminders] = useState({
+  const [notifications, setNotifications] = useState({
+    dailyTip: true,
     midCycle: true,
     washDay: true,
-    weeklyTip: false,
+    washApproaching: true,
+    productReminders: false,
+    weeklySummary: false,
   });
+
+  const notificationOptions = [
+    { key: 'dailyTip' as const, label: 'Daily scalp care tip', desc: 'A quick tip or reminder to help your scalp health between check-ins' },
+    { key: 'midCycle' as const, label: 'Mid-cycle check-in reminder', desc: "We'll nudge you when it's time for your quick check" },
+    { key: 'washDay' as const, label: 'Wash day reminder', desc: "A heads-up when your wash day is approaching" },
+    { key: 'washApproaching' as const, label: 'Wash day is approaching', desc: 'Reminder 2 days before your expected wash day' },
+    { key: 'productReminders' as const, label: 'Product reminders', desc: 'Reminders to apply scalp treatments or oils based on your routine' },
+    { key: 'weeklySummary' as const, label: 'Weekly scalp health summary', desc: 'A quick recap of your scalp activity this week' },
+  ];
 
   const hairTypeLabel: Record<string, string> = {
     '3b': '3b', '3c': '3c', '4a': '4a', '4b': '4b', '4c': '4c', 'unsure': 'Not sure',
@@ -162,23 +174,23 @@ const ProfilePage = () => {
 
         {/* Notifications */}
         <div className="mb-6">
-          <h3 className="text-label mb-3">Notifications</h3>
+          <h3 className="text-label mb-1">Notifications</h3>
+          <p className="text-xs text-muted-foreground mb-3">Choose what you'd like to hear from us</p>
           <div className="card-elevated divide-y divide-border">
-            {[
-              { key: 'midCycle' as const, label: 'Mid-cycle check-in reminder' },
-              { key: 'washDay' as const, label: 'Wash day reminder' },
-              { key: 'weeklyTip' as const, label: 'Weekly scalp tip' },
-            ].map(item => (
-              <div key={item.key} className="flex items-center justify-between p-4">
-                <span className="text-sm text-foreground">{item.label}</span>
+            {notificationOptions.map(item => (
+              <div key={item.key} className="flex items-start justify-between p-4 gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">{item.label}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+                </div>
                 <button
-                  onClick={() => setReminders(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
-                  className={`w-11 h-6 rounded-full transition-colors relative ${
-                    reminders[item.key] ? 'bg-primary' : 'bg-border'
+                  onClick={() => setNotifications(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
+                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 mt-0.5 ${
+                    notifications[item.key] ? 'bg-primary' : 'bg-border'
                   }`}
                 >
                   <div className={`w-5 h-5 rounded-full bg-card shadow-sm absolute top-0.5 transition-transform ${
-                    reminders[item.key] ? 'translate-x-[22px]' : 'translate-x-0.5'
+                    notifications[item.key] ? 'translate-x-[22px]' : 'translate-x-0.5'
                   }`} />
                 </button>
               </div>
@@ -209,7 +221,7 @@ const ProfilePage = () => {
         </div>
 
         {/* About */}
-        <div className="mb-6">
+        <div className="mb-20">
           <h3 className="text-label mb-3">About</h3>
           <div className="card-elevated p-4">
             <div className="flex items-start gap-3">

@@ -283,16 +283,17 @@ const Onboarding = () => {
    * STEP MAP:
    * -1 = Intro ("why we ask")
    * 0 = Gender
-   * 1 = Hair type + chemical
-   * 2 = Styles
-   * 3 = Cycle / routine
-   * 4 = Baseline check → navigates to /onboarding/baseline-response
-   * 5 = Photos
-   * 6 = Products (skippable)
-   * 7 = Menstrual (skipped for male; skippable for others)
-   * 8 = Goals
+   * 1 = Hair type (get to know your hair)
+   * 2 = Chemical processing (separate clinical question)
+   * 3 = Styles
+   * 4 = Cycle / routine
+   * 5 = Baseline check → navigates to /onboarding/baseline-response
+   * 6 = Photos
+   * 7 = Products (skippable)
+   * 8 = Menstrual (skipped for male; skippable for others)
+   * 9 = Goals
    */
-  const totalSegments = skipMenstrual ? 9 : 10; // +1 for intro
+  const totalSegments = skipMenstrual ? 10 : 11; // +1 for intro
 
   const baselineAreas = [
     { id: 'hairline', label: 'Hairline — temples and edges', desc: 'Front-facing', optional: false },

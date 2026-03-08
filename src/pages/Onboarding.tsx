@@ -949,7 +949,10 @@ const Onboarding = () => {
             )}
 
             {/* Step 7: Products */}
-            {step === 7 && (
+            {step === 7 && (() => {
+              const scalpIsNone = products.length === 1 && products[0] === 'None';
+              const hairIsNone = hairProds.length === 1 && hairProds[0] === 'None';
+              return (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-2">What do you put on your scalp?</h2>
                 <p className="text-sm text-muted-foreground mb-4">Start typing a product or brand name</p>
@@ -960,10 +963,15 @@ const Onboarding = () => {
                   noneLabel="I don't use anything on my scalp"
                 />
 
-                <p className="text-sm text-muted-foreground mt-6 mb-3">How often do you apply products to your scalp?</p>
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {productFrequencies.map(f => (<button key={f} onClick={() => setProdFreq(f)} className={`pill-option ${prodFreq === f ? 'selected' : ''}`}>{f}</button>))}
-                </div>
+                {!scalpIsNone && products.length > 0 && (
+                  <>
+                    <p className="text-sm text-muted-foreground mt-6 mb-3">How often do you apply products to your scalp?</p>
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      {productFrequencies.map(f => (<button key={f} onClick={() => setProdFreq(f)} className={`pill-option ${prodFreq === f ? 'selected' : ''}`}>{f}</button>))}
+                    </div>
+                  </>
+                )}
+                {scalpIsNone && <div className="mb-8" />}
 
                 <h3 className="text-base font-medium text-foreground mb-1">And what about your hair?</h3>
                 <p className="text-sm text-muted-foreground mb-4">Start typing a product or brand name</p>
@@ -974,12 +982,17 @@ const Onboarding = () => {
                   noneLabel="I don't use hair products"
                 />
 
-                <p className="text-sm text-muted-foreground mt-6 mb-3">How often do you apply products to your hair?</p>
-                <div className="flex flex-wrap gap-2">
-                  {productFrequencies.map(f => (<button key={f} onClick={() => setHairProdFreq(f)} className={`pill-option ${hairProdFreq === f ? 'selected' : ''}`}>{f}</button>))}
-                </div>
+                {!hairIsNone && hairProds.length > 0 && (
+                  <>
+                    <p className="text-sm text-muted-foreground mt-6 mb-3">How often do you apply products to your hair?</p>
+                    <div className="flex flex-wrap gap-2">
+                      {productFrequencies.map(f => (<button key={f} onClick={() => setHairProdFreq(f)} className={`pill-option ${hairProdFreq === f ? 'selected' : ''}`}>{f}</button>))}
+                    </div>
+                  </>
+                )}
               </div>
-            )}
+              );
+            })()}
 
             {/* Step 8: Menstrual cycle (skipped for men) */}
             {step === 8 && !skipMenstrual && (

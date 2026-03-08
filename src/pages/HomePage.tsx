@@ -112,7 +112,8 @@ const HomePage = () => {
     return m[onboardingData.menstrualCycleLength] || 28;
   })();
 
-  // Determine tip based on menstrual phase
+  // Determine tip based on user type and menstrual phase
+  const dailyTips = onboardingData.isWornOutOnly ? wornOutTips : protectiveStyleTips;
   let todayTip = dailyTips[dayOfYear % dailyTips.length];
   if (cycleDay) {
     if (cycleDay >= 1 && cycleDay <= 5) {

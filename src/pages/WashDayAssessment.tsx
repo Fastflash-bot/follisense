@@ -69,7 +69,7 @@ const hairHealthSteps = [
   },
   {
     key: 'hairBreakage',
-    q: 'Have you noticed any breakage?',
+    q: 'Any breakage lately?',
     options: [
       { label: 'No breakage', desc: '' },
       { label: 'A little — mostly at the ends', desc: '' },

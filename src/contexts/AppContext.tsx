@@ -278,6 +278,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const incrementResearchPhotos = () => setResearch(prev => ({ ...prev, photoCount: prev.photoCount + 1 }));
 
   const resetAll = () => {
+    setUserName('');
     setOnboardingComplete(false);
     setOnboardingData(defaultOnboarding);
     setCurrentCheckIn(null);

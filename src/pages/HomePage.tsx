@@ -211,13 +211,14 @@ const HomePage = () => {
           <div className="card-elevated p-5 mb-4 border-l-4 border-l-primary">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-sage-light flex flex-col items-center justify-center flex-shrink-0">
-                <span className="text-xl font-semibold text-foreground">3</span>
-                <span className="text-[10px] text-muted-foreground leading-tight">days ago</span>
+                <Leaf size={22} className="text-primary mb-0.5" strokeWidth={1.8} />
+                <span className="text-[10px] text-muted-foreground leading-tight">Tracker</span>
               </div>
               <div className="flex-1">
-                <p className="text-label mb-1">Last wash</p>
-                <p className="font-semibold text-foreground">{new Date(Date.now() - 3 * 86400000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
-                <p className="text-sm text-muted-foreground mt-1">Next check-in: {new Date(Date.now() + 4 * 86400000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
+                <p className="font-semibold text-foreground mb-1">Scalp health tracker</p>
+                <p className="text-sm text-muted-foreground">Last check-in: Feb 20</p>
+                <p className="text-sm text-muted-foreground">Next check-in: {new Date(Date.now() + 4 * 86400000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
+                <p className="text-xs text-primary font-medium mt-1">3 check-ins completed</p>
               </div>
             </div>
           </div>

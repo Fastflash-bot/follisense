@@ -193,6 +193,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Did they appear after getting a new style installed or a haircut?' },
       { question: 'Are they concentrated along where the style sits?' },
     ],
+    photoGallery: [
+      { label: 'Mild — small bumps', description: 'Mild folliculitis showing small bumps at hair follicles on the scalp' },
+      { label: 'Post-installation', description: 'Folliculitis bumps along the installation line after a fresh protective style' },
+      { label: 'Moderate — at nape', description: 'Moderate folliculitis at the nape of the neck after a lineup on darker skin' },
+    ],
     actionSteps: [
       'Keep the area clean and avoid touching it',
       'Loosen or remove the style if it\'s causing irritation',
@@ -205,6 +210,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If the bumps are spreading, painful, pus-filled, or don't clear up within 1–2 weeks, see a doctor.",
     relatedArticleId: undefined,
     dermnetUrl: 'https://dermnetnz.org/topics/folliculitis',
+    externalLinkLabel: 'DermNet NZ — Folliculitis',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have folliculitis?', 'Is folliculitis contagious?', 'What should I tell my doctor about this?'],
   },
   {

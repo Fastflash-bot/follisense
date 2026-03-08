@@ -46,7 +46,7 @@ const scalpSteps = [
   },
   {
     key: 'shedding',
-    q: 'How much hair came out during wash and detangling?',
+    q: 'How much hair came out at wash time?',
     options: [
       { label: 'Normal', desc: "About what I'd expect" },
       { label: 'More than usual', desc: 'A bit more than usual' },

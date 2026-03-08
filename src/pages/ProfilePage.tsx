@@ -154,7 +154,7 @@ const ProfilePage = () => {
           <h3 className="text-label mb-3">Personal</h3>
           <div className="card-elevated divide-y divide-border px-4">
             <InfoRow label="First name" value={userName || 'Not set'} />
-            <InfoRow label="Gender" value={onboardingData.gender || 'Not set'} />
+            <InfoRow label="Gender" value={onboardingData.gender === 'woman' ? 'Female' : onboardingData.gender === 'man' ? 'Male' : onboardingData.gender === 'prefer-not-to-say' ? 'Prefer not to say' : onboardingData.gender || 'Not set'} />
           </div>
         </div>
 

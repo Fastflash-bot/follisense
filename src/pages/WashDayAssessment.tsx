@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, X, Camera } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import ProductSearch from '@/components/ProductSearch';
 
 const getAcknowledgment = (optionIndex: number, totalOptions: number): string => {
   if (optionIndex === 0) {
@@ -133,6 +134,7 @@ const WashDayAssessment = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [newProductText, setNewProductText] = useState('');
+  const [newProductsList, setNewProductsList] = useState<string[]>([]);
   const [photoSaved, setPhotoSaved] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showHairIntro, setShowHairIntro] = useState(false);
@@ -188,7 +190,7 @@ const WashDayAssessment = () => {
       hairBreakage: answers.hairBreakage,
       hairAppearance: answers.hairAppearance,
       newProducts: answers.newProducts,
-      newProductDetails: newProductText || undefined,
+      newProductDetails: newProductsList.length > 0 ? newProductsList.join(', ') : newProductText || undefined,
       type: 'wash-day',
       date: new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }),
     });
@@ -321,13 +323,12 @@ const WashDayAssessment = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-6"
                 >
-                  <label className="text-sm font-medium text-foreground mb-2 block">What did you try? (optional)</label>
-                  <input
-                    type="text"
-                    value={newProductText}
-                    onChange={e => setNewProductText(e.target.value)}
-                    placeholder="e.g. New edge control gel"
-                    className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  <label className="text-sm font-medium text-foreground mb-3 block">What new products did you use this cycle?</label>
+                  <ProductSearch
+                    category="hair"
+                    selectedProducts={newProductsList}
+                    onProductsChange={setNewProductsList}
+                    placeholder="Search products..."
                   />
                   <button
                     onClick={handleProductContinue}

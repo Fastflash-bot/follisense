@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, ChevronRight, Shield, Trash2, Leaf, Repeat, Heart, Camera, RefreshCw, Target, Check, Calendar, Microscope } from 'lucide-react';
+import { User, ChevronRight, Shield, Trash2, Leaf, Repeat, Heart, Camera, RefreshCw, Target, Check, Calendar, Microscope, ChevronDown } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import ProductSearch from '@/components/ProductSearch';
 
 const goalOptions = [
   'Protect my edges / grow my hairline back',
@@ -24,6 +25,7 @@ const ProfilePage = () => {
   });
   const [showGoalEditor, setShowGoalEditor] = useState(false);
   const [editGoals, setEditGoals] = useState<string[]>(onboardingData.goals || []);
+  const [showProductEditor, setShowProductEditor] = useState(false);
 
   const notificationOptions = [
     { key: 'dailyTip' as const, label: 'Daily scalp care tip', desc: 'A quick tip or reminder to help your scalp health between check-ins' },
@@ -182,7 +184,9 @@ const ProfilePage = () => {
         {/* Hair settings */}
         {!stylistMode && (
           <div className="mb-6">
-            <h3 className="text-label mb-3">Hair & Style Settings</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-label">Hair & Style Settings</h3>
+            </div>
             <div className="card-elevated divide-y divide-border">
               {[
                 { label: 'Hair type', value: hairTypeLabel[onboardingData.hairType] || 'Not set' },
@@ -190,8 +194,6 @@ const ProfilePage = () => {
                 { label: 'Preferred styles', value: onboardingData.protectiveStyles.join(', ') || 'Not set' },
                 { label: 'Cycle length', value: onboardingData.cycleLength || 'Not set' },
                 { label: 'Wash frequency', value: onboardingData.washFrequency || onboardingData.wornOutWashFrequency || 'Not set' },
-                { label: 'Scalp products', value: onboardingData.scalpProducts.join(', ') || 'Not set' },
-                { label: 'Hair products', value: onboardingData.hairProducts.join(', ') || 'Not set' },
               ].map(item => (
                 <div key={item.label} className="flex items-center justify-between p-4">
                   <span className="text-sm text-foreground">{item.label}</span>
@@ -202,6 +204,52 @@ const ProfilePage = () => {
                 </div>
               ))}
             </div>
+
+            {/* Products section */}
+            <div className="mt-4">
+              <button
+                onClick={() => setShowProductEditor(!showProductEditor)}
+                className="flex items-center justify-between w-full text-left mb-3"
+              >
+                <h3 className="text-label">Products</h3>
+                <ChevronDown size={16} className={`text-muted-foreground transition-transform ${showProductEditor ? 'rotate-180' : ''}`} />
+              </button>
+
+              {!showProductEditor ? (
+                <div className="card-elevated p-4 space-y-3">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Scalp products</p>
+                    <p className="text-sm text-foreground">{onboardingData.scalpProducts.filter(p => p !== 'None').join(', ') || 'None'}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Hair products</p>
+                    <p className="text-sm text-foreground">{onboardingData.hairProducts.filter(p => p !== 'None').join(', ') || 'None'}</p>
+                  </div>
+                  <button onClick={() => setShowProductEditor(true)} className="text-sm font-medium text-primary">Edit products</button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-sm font-medium text-foreground mb-2">Scalp products</p>
+                    <ProductSearch
+                      category="scalp"
+                      selectedProducts={onboardingData.scalpProducts.filter(p => p !== 'None')}
+                      onProductsChange={(prods) => setOnboardingData({ ...onboardingData, scalpProducts: prods })}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground mb-2">Hair products</p>
+                    <ProductSearch
+                      category="hair"
+                      selectedProducts={onboardingData.hairProducts.filter(p => p !== 'None')}
+                      onProductsChange={(prods) => setOnboardingData({ ...onboardingData, hairProducts: prods })}
+                    />
+                  </div>
+                  <button onClick={() => setShowProductEditor(false)} className="text-sm font-medium text-primary">Done editing</button>
+                </div>
+              )}
+            </div>
+
             <button onClick={() => navigate('/products')} className="text-sm font-medium text-primary mt-3 px-1">Browse product guide →</button>
           </div>
         )}

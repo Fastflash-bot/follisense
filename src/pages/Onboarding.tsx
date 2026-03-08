@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
+import ProductSearch from '@/components/ProductSearch';
 
 const hairTypes = [
   { id: '3b', label: '3b', desc: 'Loose, springy curls' },
@@ -415,8 +416,10 @@ const Onboarding = () => {
       case 4: return allBaselineAnswered;
       case 5: return true;
       case 6: {
-        const scalpOk = products.length > 0 && !!prodFreq && (!products.includes('Other') || otherProduct.trim().length > 0);
-        const hairOk = hairProds.length > 0 && !!hairProdFreq && (!hairProds.includes('Other') || otherHairProd.trim().length > 0);
+        const scalpNone = products.length === 1 && products[0] === 'None';
+        const hairNone = hairProds.length === 1 && hairProds[0] === 'None';
+        const scalpOk = scalpNone || (products.length > 0 && !!prodFreq);
+        const hairOk = hairNone || (hairProds.length > 0 && !!hairProdFreq);
         return scalpOk && hairOk;
       }
       case 7: {
@@ -859,43 +862,30 @@ const Onboarding = () => {
             {/* Step 6: Products */}
             {step === 6 && (
               <div>
-                <h2 className="text-lg font-medium text-foreground mb-2">Let's talk products</h2>
-                <p className="text-muted-foreground mb-6">This helps us understand what might be affecting your scalp health</p>
+                <h2 className="text-lg font-medium text-foreground mb-2">What do you put on your scalp?</h2>
+                <p className="text-sm text-muted-foreground mb-4">Start typing a product or brand name</p>
+                <ProductSearch
+                  category="scalp"
+                  selectedProducts={products}
+                  onProductsChange={setProducts}
+                  noneLabel="I don't use anything on my scalp"
+                />
 
-                <h3 className="text-base font-medium text-foreground mb-1">What do you put on your scalp?</h3>
-                <p className="text-sm text-muted-foreground mb-4">Even if it's just oil every now and then</p>
-                <div className="grid grid-cols-2 gap-2 mb-2">
-                  {scalpProductOptions.map(p => (
-                    <button key={p} onClick={() => toggleProduct(p)} className={`selection-card text-center py-4 ${products.includes(p) ? 'selected' : ''}`}>
-                      <p className="font-medium text-foreground text-xs leading-snug">{p}</p>
-                    </button>
-                  ))}
-                </div>
-                {products.includes('Other') && (
-                  <input type="text" value={otherProduct} onChange={e => setOtherProduct(e.target.value)} placeholder="What else do you use on your scalp?" className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mb-2" />
-                )}
-                <button onClick={() => navigate('/products?from=onboarding&type=scalp')} className="text-xs font-medium text-primary mb-6 py-1">Browse products →</button>
-
-                <p className="text-sm text-muted-foreground mb-3">How often do you apply products to your scalp?</p>
+                <p className="text-sm text-muted-foreground mt-6 mb-3">How often do you apply products to your scalp?</p>
                 <div className="flex flex-wrap gap-2 mb-8">
                   {productFrequencies.map(f => (<button key={f} onClick={() => setProdFreq(f)} className={`pill-option ${prodFreq === f ? 'selected' : ''}`}>{f}</button>))}
                 </div>
 
                 <h3 className="text-base font-medium text-foreground mb-1">And what about your hair?</h3>
-                <p className="text-sm text-muted-foreground mb-4">The stuff that goes on your lengths and ends</p>
-                <div className="grid grid-cols-2 gap-2 mb-2">
-                  {hairProductOptions.map(p => (
-                    <button key={p} onClick={() => toggleHairProd(p)} className={`selection-card text-center py-4 ${hairProds.includes(p) ? 'selected' : ''}`}>
-                      <p className="font-medium text-foreground text-xs leading-snug">{p}</p>
-                    </button>
-                  ))}
-                </div>
-                {hairProds.includes('Other') && (
-                  <input type="text" value={otherHairProd} onChange={e => setOtherHairProd(e.target.value)} placeholder="What else do you use on your hair?" className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mb-2" />
-                )}
-                <button onClick={() => navigate('/products?from=onboarding&type=hair')} className="text-xs font-medium text-primary mb-6 py-1">Browse products →</button>
+                <p className="text-sm text-muted-foreground mb-4">Start typing a product or brand name</p>
+                <ProductSearch
+                  category="hair"
+                  selectedProducts={hairProds}
+                  onProductsChange={setHairProds}
+                  noneLabel="I don't use hair products"
+                />
 
-                <p className="text-sm text-muted-foreground mb-3">How often do you apply products to your hair?</p>
+                <p className="text-sm text-muted-foreground mt-6 mb-3">How often do you apply products to your hair?</p>
                 <div className="flex flex-wrap gap-2">
                   {productFrequencies.map(f => (<button key={f} onClick={() => setHairProdFreq(f)} className={`pill-option ${hairProdFreq === f ? 'selected' : ''}`}>{f}</button>))}
                 </div>

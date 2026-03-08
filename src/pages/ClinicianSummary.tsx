@@ -130,7 +130,7 @@ const ClinicianSummary = () => {
       <div className="max-w-[430px] mx-auto px-6">
         <div className="flex items-center justify-between py-4">
           <button onClick={() => navigate(-1)} className="p-2 -ml-2"><ArrowLeft size={22} className="text-foreground" strokeWidth={1.8} /></button>
-          <div className="flex items-center gap-1.5"><Leaf size={16} className="text-primary" strokeWidth={1.8} /><span className="text-xs font-semibold text-muted-foreground">ScalpSense</span></div>
+          <div className="flex items-center gap-1.5"><Leaf size={16} className="text-primary" strokeWidth={1.8} /><span className="text-xs font-semibold text-muted-foreground">FolliSense</span></div>
           <div className="w-10" />
         </div>
 

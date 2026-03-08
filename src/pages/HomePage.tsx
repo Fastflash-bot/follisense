@@ -87,8 +87,23 @@ const HomePage = () => {
   const [stylistName, setStylistName] = useState('');
   const [visitNotes, setVisitNotes] = useState('');
   const [dismissedWashPrompt, setDismissedWashPrompt] = useState(false);
-  const [dismissedCheckInModal, setDismissedCheckInModal] = useState(false);
-  const [showCheckInModal, setShowCheckInModal] = useState(true);
+  // Check-in modal logic: only show on fresh app open (6h+ gap) and not within 24h of dismissal
+  const [dismissedCheckInModal, setDismissedCheckInModal] = useState(() => {
+    const lastDismissed = localStorage.getItem('follisense-checkin-dismissed');
+    if (lastDismissed) {
+      const elapsed = Date.now() - parseInt(lastDismissed, 10);
+      if (elapsed < 24 * 60 * 60 * 1000) return true; // within 24h
+    }
+    const lastHomeVisit = localStorage.getItem('follisense-last-home-visit');
+    if (lastHomeVisit) {
+      const elapsed = Date.now() - parseInt(lastHomeVisit, 10);
+      if (elapsed < 6 * 60 * 60 * 1000) return true; // within 6h = just tab switching
+    }
+    const justOnboarded = sessionStorage.getItem('follisense-just-onboarded');
+    if (justOnboarded === 'true') return true;
+    return false;
+  });
+  const [showCheckInModal] = useState(!dismissedCheckInModal);
   const [showHealthNudge, setShowHealthNudge] = useState(false);
   const [dismissedHealthNudge, setDismissedHealthNudge] = useState(false);
 

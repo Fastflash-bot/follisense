@@ -51,7 +51,7 @@ const getQuickLogTips = (symptoms: string[]): string[] => {
   return tips.slice(0, 3);
 };
 
-const getCycleDay = (): null => null;
+
 
 const HomePage = () => {
   const navigate = useNavigate();

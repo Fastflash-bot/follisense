@@ -35,9 +35,8 @@ const styleOptions = [
   'Other',
 ];
 
-const nonProtectiveStyles = [
+const wornOutOnlyStyles = [
   'Worn out / loose (natural)', 'Worn out / loose (relaxed or straightened)',
-  'Silk press / blowout', 'Twist out / braid out', 'Wash and go',
 ];
 
 const protectiveFrequencyOptions = [
@@ -60,29 +59,31 @@ const betweenWashOptions = [
 ];
 
 const scalpProductOptions = [
-  'Scalp oil (e.g., tea tree, rosemary, castor)',
+  'Scalp oil (e.g., Mielle Rosemary Mint, Jamaican Mango & Lime)',
   'Scalp serum or treatment',
-  'Anti-dandruff or medicated shampoo',
-  'Clarifying shampoo',
+  'Anti-dandruff or medicated shampoo (e.g., Nizoral, Head & Shoulders Royal Oils)',
+  'Clarifying shampoo (e.g., SheaMoisture, Neutrogena Anti-Residue)',
   'Scalp scrub or exfoliant',
   'Scalp refresh spray',
   'Grease or pomade (applied to scalp)',
-  'Growth drops or topical (e.g., minoxidil)',
+  'Growth drops or topical (e.g., The Ordinary Multi-Peptide Serum, Minoxidil)',
   'Apple cider vinegar rinse',
   'Nothing directly on my scalp',
   'Other',
 ];
 
 const hairProductOptions = [
-  'Leave-in conditioner',
-  'Deep conditioner or mask',
-  'Hair oil (e.g., argan, jojoba, coconut)',
+  'Leave-in conditioner (e.g., SheaMoisture, Cantu, Aunt Jackie\'s)',
+  'Deep conditioner or mask (e.g., SheaMoisture Manuka Honey, Amika Soulfood)',
+  'Hair oil (e.g., Mielle, The Ordinary, Moroccanoil)',
   'Hair butter or cream',
   'Mousse or foam',
-  'Gel',
-  'Edge control',
-  'Heat protectant',
-  'Protein treatment',
+  'Gel (e.g., Eco Styler, Uncle Funky\'s Daughter)',
+  'Edge control (e.g., Ebin, Got2b, Gorilla Snot)',
+  'Heat protectant (e.g., Chi 44 Iron Guard, TRESemme, GHD)',
+  'Protein treatment (e.g., Aphogee Two-Step, Curlsmith)',
+  'Bond repair treatment (e.g., Olaplex No.3, K18)',
+  'Curl cream (e.g., Eco Style, Twist by Ouidad, Cantu)',
   'Co-wash',
   'Dry shampoo',
   'Detangler',
@@ -210,8 +211,8 @@ const Onboarding = () => {
   const [washFreqPerCycle, setWashFreqPerCycle] = useState('');
   const [betweenWashCare, setBetweenWashCare] = useState<string[]>([]);
   const [otherBetweenWash, setOtherBetweenWash] = useState('');
-  const hasProtectiveStyle = styles.some(s => !nonProtectiveStyles.includes(s) && s !== 'Other');
-  const isWornOutOnly = styles.length > 0 && !hasProtectiveStyle;
+  const isWornOutOnly = styles.length > 0 && styles.every(s => wornOutOnlyStyles.includes(s));
+  const hasProtectiveOrStretchedStyle = styles.length > 0 && styles.some(s => !wornOutOnlyStyles.includes(s) && s !== 'Other');
 
   // Baseline — now conversational step-through
   const [baselineStep, setBaselineStep] = useState(0);
@@ -284,7 +285,7 @@ const Onboarding = () => {
       case 1: return !!hairType && !!chemicalProcessing && (chemicalProcessing !== 'Multiple' || chemicalMultiple.length > 0);
       case 2: {
         const stylesOk = styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
-        const freqOk = !hasProtectiveStyle || !!protectiveFreq;
+        const freqOk = isWornOutOnly || !!protectiveFreq;
         return stylesOk && freqOk;
       }
       case 3: {
@@ -429,6 +430,9 @@ const Onboarding = () => {
                     ))}
                   </div>
                 )}
+                {(chemicalProcessing.startsWith('Yes') || chemicalProcessing === 'Previously processed, currently growing out' || chemicalProcessing === 'Multiple') && (
+                  <p className="text-xs text-muted-foreground mt-3">When was your last chemical treatment? This helps us understand where you are in your hair journey.</p>
+                )}
                 <p className="text-xs text-muted-foreground mt-3">Chemical processing can affect how your scalp responds to styling — this helps us personalise your experience.</p>
               </div>
             )}
@@ -462,7 +466,7 @@ const Onboarding = () => {
                 {styles.includes('Other') && (
                   <input type="text" value={otherStyle} onChange={e => setOtherStyle(e.target.value)} placeholder="Describe your style" className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3" />
                 )}
-                {hasProtectiveStyle && styles.length > 0 && (
+                {hasProtectiveOrStretchedStyle && styles.length > 0 && (
                   <div className="mt-8">
                     <p className="font-medium text-foreground mb-3">How much of the time are you in a protective or installed style?</p>
                     <div className="flex flex-wrap gap-2">

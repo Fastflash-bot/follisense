@@ -13,7 +13,7 @@ const services = ['Braids (box braids, knotless, etc.)', 'Cornrows or flat twist
 const goals = ['Document scalp observations for my clients', 'Learn to spot scalp conditions early', 'Build trust with clients through better scalp care', 'Track client scalp health over time', 'Get referral guidance when I see something concerning', 'Stay up to date on scalp health knowledge', "I'm just exploring for now"];
 
 interface StylistProfile {
-  role: string; otherRole: string; experience: string; businessName: string; city: string; country: string;
+  role: string[]; otherRole: string; experience: string; businessName: string; city: string; country: string;
   workplace: string; clientCount: string; services: string[]; otherService: string; goals: string[];
 }
 
@@ -22,18 +22,19 @@ const StylistOnboarding = () => {
   const { setStylistMode } = useApp();
   const [step, setStep] = useState(0);
   const [profile, setProfile] = useState<StylistProfile>({
-    role: '', otherRole: '', experience: '', businessName: '', city: '', country: '',
+    role: [], otherRole: '', experience: '', businessName: '', city: '', country: '',
     workplace: '', clientCount: '', services: [], otherService: '', goals: [],
   });
 
   const totalSteps = 4;
   const progress = ((step + 1) / totalSteps) * 100;
 
+  const toggleRole = (r: string) => setProfile(p => ({ ...p, role: p.role.includes(r) ? p.role.filter(x => x !== r) : [...p.role, r] }));
   const toggleService = (s: string) => setProfile(p => ({ ...p, services: p.services.includes(s) ? p.services.filter(x => x !== s) : [...p.services, s] }));
   const toggleGoal = (g: string) => setProfile(p => ({ ...p, goals: p.goals.includes(g) ? p.goals.filter(x => x !== g) : [...p.goals, g] }));
 
   const canNext = () => {
-    if (step === 0) return profile.role && (profile.role !== 'Other' || profile.otherRole.trim()) && profile.experience;
+    if (step === 0) return profile.role.length > 0 && (!profile.role.includes('Other') || profile.otherRole.trim()) && profile.experience;
     if (step === 1) return profile.workplace && profile.clientCount;
     if (step === 2) return profile.services.length > 0;
     if (step === 3) return profile.goals.length > 0;
@@ -72,11 +73,21 @@ const StylistOnboarding = () => {
           {step === 0 && (
             <div>
               <h1 className="text-xl font-semibold mb-6">Tell us about you</h1>
-              <p className="text-sm font-medium text-foreground mb-3">What do you do?</p>
-              <div className="space-y-2 mb-4">
-                {roles.map(r => <SelectButton key={r} selected={profile.role === r} label={r} onClick={() => setProfile(p => ({ ...p, role: r }))} />)}
+              <p className="text-sm font-medium text-foreground mb-2">What do you do?</p>
+              <p className="text-xs text-muted-foreground mb-3">Select all that apply</p>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {roles.map(r => (
+                  <button key={r} onClick={() => toggleRole(r)} className={`p-3 rounded-xl border-2 text-left text-xs font-medium transition-colors ${profile.role.includes(r) ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground'}`}>
+                    <div className="flex items-center gap-2">
+                      <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 ${profile.role.includes(r) ? 'bg-primary' : 'border-2 border-border'}`}>
+                        {profile.role.includes(r) && <Check size={10} className="text-primary-foreground" strokeWidth={2.5} />}
+                      </div>
+                      <span>{r}</span>
+                    </div>
+                  </button>
+                ))}
               </div>
-              {profile.role === 'Other' && (
+              {profile.role.includes('Other') && (
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
                   <input type="text" value={profile.otherRole} onChange={e => setProfile(p => ({ ...p, otherRole: e.target.value }))} placeholder="Tell us your role" className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
                 </motion.div>

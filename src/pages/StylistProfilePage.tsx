@@ -9,7 +9,7 @@ const allServices = ['Braids (box braids, knotless, etc.)', 'Cornrows or flat tw
 const allGoals = ['Document scalp observations for my clients', 'Learn to spot scalp conditions early', 'Build trust with clients through better scalp care', 'Track client scalp health over time', 'Get referral guidance when I see something concerning', 'Stay up to date on scalp health knowledge', "I'm just exploring for now"];
 
 interface StylistProfile {
-  role: string; otherRole: string; experience: string; businessName: string; city: string; country: string;
+  role: string | string[]; otherRole: string; experience: string; businessName: string; city: string; country: string;
   workplace: string; clientCount: string; services: string[]; otherService: string; goals: string[];
 }
 
@@ -103,7 +103,15 @@ const StylistProfilePage = () => {
             <User size={28} className="text-muted-foreground" strokeWidth={1.5} />
           </div>
           <h1 className="text-2xl font-semibold">{userName || 'Stylist'}</h1>
-          {profile.role && <p className="text-sm text-muted-foreground mt-0.5">{profile.role}</p>}
+          {profile.role && (Array.isArray(profile.role) ? profile.role.length > 0 : !!profile.role) && (
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {(() => {
+                const roles = Array.isArray(profile.role) ? profile.role.filter(r => r !== 'Other') : [profile.role];
+                if (profile.otherRole) roles.push(profile.otherRole);
+                return roles.join(', ');
+              })()}
+            </p>
+          )}
           {profile.businessName && (
             <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
               <MapPin size={11} /> {profile.businessName}{location ? `, ${location}` : ''}
@@ -117,7 +125,11 @@ const StylistProfilePage = () => {
           <div className="card-elevated divide-y divide-border">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-2"><Briefcase size={15} className="text-muted-foreground" /><span className="text-sm text-foreground">Role</span></div>
-              <span className="text-sm text-muted-foreground">{profile.role || 'Not set'}</span>
+              <span className="text-sm text-muted-foreground truncate max-w-[180px]">{(() => {
+                const roles = Array.isArray(profile.role) ? profile.role.filter(r => r !== 'Other') : (profile.role ? [profile.role] : []);
+                if (profile.otherRole) roles.push(profile.otherRole);
+                return roles.length > 0 ? roles.join(', ') : 'Not set';
+              })()}</span>
             </div>
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-2"><MapPin size={15} className="text-muted-foreground" /><span className="text-sm text-foreground">Business</span></div>

@@ -73,9 +73,6 @@ const productOptions = [
 ];
 const productFrequencies = ['Daily', 'Every few days', 'Weekly', 'Only on wash day', 'Rarely'];
 
-const menstrualCycleLengths = ['21–25 days', '26–30 days', '31–35 days', 'Irregular', 'Not sure'];
-const hormonalContraceptionOptions = ['No', 'Yes (pill)', 'Yes (implant or injection)', 'Yes (IUD/coil)', 'Prefer not to say'];
-
 const goalOptions = [
   'Protect my edges / grow my hairline back',
   'Reduce scalp irritation or itching',

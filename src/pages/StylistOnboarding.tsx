@@ -70,7 +70,7 @@ const StylistOnboarding = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col px-6 pt-8 pb-6">
-      <div className="max-w-[430px] w-full mx-auto flex-1 flex flex-col">
+      <div className="max-w-[430px] w-full mx-auto flex-1 flex flex-col min-h-0">
         <div className="flex items-center gap-2 mb-4">
           <Leaf size={20} className="text-primary" strokeWidth={1.8} />
           <span className="text-sm font-semibold text-foreground">FolliSense</span>

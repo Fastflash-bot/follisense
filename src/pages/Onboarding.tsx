@@ -656,11 +656,11 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* ── Step 2: Styles ── */}
-            {step === 2 && (
+            {/* ── Step 3: Styles ── */}
+            {step === 3 && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">How do you usually wear your hair?</h2>
-                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[2]}</p>
+                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[3]}</p>
                 <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
                 {(() => {
                   const defaultCount = isMale ? 6 : 8;

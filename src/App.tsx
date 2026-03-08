@@ -19,6 +19,7 @@ import ProfilePage from "./pages/ProfilePage";
 import StylistHome from "./pages/StylistHome";
 import StylistObservation from "./pages/StylistObservation";
 import StylistClients from "./pages/StylistClients";
+import ChatPage from "./pages/ChatPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

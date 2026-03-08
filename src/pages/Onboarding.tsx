@@ -12,12 +12,30 @@ import ProductSearch from '@/components/ProductSearch';
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const hairTypes = [
-  { id: '4c', label: '4c', desc: 'Very tight, densely packed coils' },
-  { id: '4b', label: '4b', desc: 'Z-shaped, tightly coiled' },
-  { id: '4a', label: '4a', desc: 'Dense, S-shaped coils' },
-  { id: '3c', label: '3c', desc: 'Tight, corkscrew curls' },
-  { id: '3b', label: '3b', desc: 'Loose, springy curls' },
-  { id: 'unsure', label: 'Not sure', desc: "That's okay, lots of us have a mix of patterns" },
+  {
+    id: 'type3',
+    label: 'Type 3 — Curly',
+    desc: 'Visible curl pattern, S-shaped curls, looser texture',
+    photoLabels: {
+      female: '3 female: S-shaped curls, bouncy, visible curl pattern',
+      male: '3 male: defined curls, medium density',
+    },
+  },
+  {
+    id: 'type4',
+    label: 'Type 4 — Coily',
+    desc: 'Tight coils or zig-zag pattern, dense texture, significant shrinkage',
+    photoLabels: {
+      female: '4 female: tight coils, z-pattern, dense',
+      male: '4 male: tight coils, dense, significant shrinkage',
+    },
+  },
+  {
+    id: 'unsure',
+    label: 'Not sure',
+    desc: "That's okay — we'll use the most inclusive experience",
+    photoLabels: null,
+  },
 ];
 
 const chemicalOptionsSimple = ['Yes, currently', 'Previously but not now', 'Never', 'Not sure'];
@@ -164,11 +182,8 @@ const computeBaselineRisk = (itch: string, tenderness: string, hairline: string,
 const CurlIcon = ({ type }: { type: string }) => {
   if (type === 'unsure') return <HelpCircle size={24} className="text-muted-foreground" strokeWidth={1.5} />;
   const patterns: Record<string, React.ReactNode> = {
-    '3b': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 20 C10 8, 14 24, 18 12 C20 6, 24 18, 24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-foreground"/></svg>,
-    '3c': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 18 C8 10, 10 22, 12 14 C14 6, 16 22, 18 14 C20 6, 22 18, 24 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-foreground"/></svg>,
-    '4a': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 16 C8 10, 9 20, 11 14 C13 8, 14 20, 16 14 C18 8, 19 20, 21 14 C23 8, 24 16, 24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-foreground"/></svg>,
-    '4b': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 16 L9 10 L11 18 L14 10 L16 18 L19 10 L21 18 L24 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-foreground"/></svg>,
-    '4c': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 14 L7 10 L9 16 L10 10 L12 16 L13 10 L15 16 L16 10 L18 16 L19 10 L21 16 L22 10 L24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-foreground"/></svg>,
+    'type3': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 20 C10 8, 14 24, 18 12 C20 6, 24 18, 24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-foreground"/></svg>,
+    'type4': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 14 L7 10 L9 16 L10 10 L12 16 L13 10 L15 16 L16 10 L18 16 L19 10 L21 16 L22 10 L24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-foreground"/></svg>,
   };
   return patterns[type] || null;
 };
@@ -599,17 +614,66 @@ const Onboarding = () => {
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">Let's get to know your hair</h2>
                 <p className="text-xs text-muted-foreground mb-5">{sectionWhyText[1]}</p>
-                <p className="text-muted-foreground mb-6">Select the option closest to your hair type</p>
-                <div className="space-y-3">
-                  {hairTypes.map(ht => (
-                    <button key={ht.id} onClick={() => setHairType(ht.id)} className={`selection-card w-full flex items-center gap-4 text-left ${hairType === ht.id ? 'selected' : ''}`}>
-                      <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"><CurlIcon type={ht.id} /></div>
-                      <div>
-                        <p className="font-semibold text-foreground">{ht.label}</p>
-                        <p className="text-sm text-muted-foreground">{ht.desc}</p>
-                      </div>
-                    </button>
-                  ))}
+                <p className="text-muted-foreground mb-4">Which best describes your hair texture?</p>
+                <p className="text-xs text-muted-foreground mb-6 italic">
+                  Type 3 curls wrap around a finger. Type 4 coils are tighter than a pen spring.
+                </p>
+                <div className="space-y-4">
+                  {hairTypes.map(ht => {
+                    const showPhotos = ht.photoLabels !== null;
+                    const genderKey = isMale ? 'male' : isNeutral ? 'both' : 'female';
+                    return (
+                      <button
+                        key={ht.id}
+                        onClick={() => setHairType(ht.id)}
+                        className={`selection-card w-full text-left ${hairType === ht.id ? 'selected' : ''}`}
+                      >
+                        <div className="flex items-center gap-4 mb-2">
+                          <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0">
+                            <CurlIcon type={ht.id} />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-foreground">{ht.label}</p>
+                            <p className="text-sm text-muted-foreground">{ht.desc}</p>
+                          </div>
+                        </div>
+                        {showPhotos && ht.photoLabels && (
+                          <div className={`grid gap-2 mt-3 ${genderKey === 'both' ? 'grid-cols-2' : 'grid-cols-2'}`}>
+                            {/* Illustration */}
+                            <div className="rounded-lg bg-accent/50 border border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
+                              <CurlIcon type={ht.id} />
+                              <span className="text-[10px] text-muted-foreground mt-1.5 text-center">Pattern illustration</span>
+                            </div>
+                            {/* Photo placeholders based on gender */}
+                            {genderKey === 'female' && (
+                              <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
+                                <Camera size={20} className="text-muted-foreground mb-1" />
+                                <span className="text-[10px] text-muted-foreground text-center leading-tight">{ht.photoLabels.female}</span>
+                              </div>
+                            )}
+                            {genderKey === 'male' && (
+                              <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
+                                <Camera size={20} className="text-muted-foreground mb-1" />
+                                <span className="text-[10px] text-muted-foreground text-center leading-tight">{ht.photoLabels.male}</span>
+                              </div>
+                            )}
+                            {genderKey === 'both' && (
+                              <div className="space-y-2">
+                                <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-2 flex flex-col items-center justify-center min-h-[36px]">
+                                  <Camera size={14} className="text-muted-foreground mb-0.5" />
+                                  <span className="text-[9px] text-muted-foreground text-center leading-tight">{ht.photoLabels.female}</span>
+                                </div>
+                                <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-2 flex flex-col items-center justify-center min-h-[36px]">
+                                  <Camera size={14} className="text-muted-foreground mb-0.5" />
+                                  <span className="text-[9px] text-muted-foreground text-center leading-tight">{ht.photoLabels.male}</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}

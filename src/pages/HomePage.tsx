@@ -507,13 +507,13 @@ const HomePage = () => {
                     Hey — your braids have been in for 14 days. Quick scalp check? Takes about a minute.
                   </p>
                   <button
-                    onClick={() => { setDismissedCheckInModal(true); navigate('/mid-cycle'); }}
+                    onClick={() => { dismissCheckIn(); navigate('/mid-cycle'); }}
                     className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3"
                   >
                     Start check-in
                   </button>
                   <button
-                    onClick={() => setDismissedCheckInModal(true)}
+                    onClick={dismissCheckIn}
                     className="w-full text-center text-sm text-muted-foreground py-2"
                   >
                     Remind me later
@@ -525,13 +525,13 @@ const HomePage = () => {
                     It's been 2 weeks — ready for a quick scalp check? Takes about 2 minutes.
                   </p>
                   <button
-                    onClick={() => { setDismissedCheckInModal(true); navigate('/wash-day?mode=regular'); }}
+                    onClick={() => { dismissCheckIn(); navigate('/wash-day?mode=regular'); }}
                     className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3"
                   >
                     Start check-in
                   </button>
                   <button
-                    onClick={() => setDismissedCheckInModal(true)}
+                    onClick={dismissCheckIn}
                     className="w-full text-center text-sm text-muted-foreground py-2"
                   >
                     Remind me later

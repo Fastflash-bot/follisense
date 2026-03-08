@@ -26,6 +26,7 @@ export interface OnboardingData {
   baselineItch: string;
   baselineTenderness: string;
   baselineHairline: string;
+  baselineHairHealth: string;
   scalpProducts: string[];
   otherProduct: string;
   productFrequency: string;

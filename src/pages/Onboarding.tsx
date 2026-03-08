@@ -464,7 +464,7 @@ const Onboarding = () => {
                   </div>
                 )}
                 <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-1">How do you care for your scalp during a protective style?</h3>
+                  <h3 className="text-base font-medium text-foreground mb-1">How do you care for your scalp during a protective style?</h3>
                   <p className="text-muted-foreground text-sm mb-4">How often do you wash or wet your scalp?</p>
                   <div className="flex flex-wrap gap-2">
                     {washFrequencyOptions.map(w => (

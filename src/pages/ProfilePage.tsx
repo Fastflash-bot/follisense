@@ -58,7 +58,7 @@ const ProfilePage = () => {
     { key: 'weeklySummary' as const, label: 'Weekly scalp health summary', desc: 'A quick recap of your scalp activity this week' },
   ];
 
-  const isMale = onboardingData.gender === 'A man';
+  const isMale = onboardingData.gender === 'man';
 
   const handleDelete = () => { resetAll(); navigate('/'); };
   const handleRetakePhoto = (area: string) => {

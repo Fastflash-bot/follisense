@@ -131,6 +131,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Does the affected area feel tender or tingly?' },
       { question: 'Has it been spreading outward over time?' },
     ],
+    photoGallery: [
+      { label: 'Early — crown thinning', description: 'Early CCCA showing subtle thinning at the crown on textured hair' },
+      { label: 'Moderate — spreading', description: 'Moderate CCCA with visible spreading from the centre of the crown' },
+      { label: 'Advanced — scarring', description: 'Advanced CCCA with smooth scarred scalp at the vertex' },
+    ],
     actionSteps: [
       'See a dermatologist as soon as possible — early treatment is critical',
       'Avoid tension and heat at the crown area',
@@ -143,6 +148,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: 'Any unexplained thinning at the crown should be assessed by a dermatologist. CCCA requires medical treatment.',
     relatedArticleId: 'ccca',
     dermnetUrl: 'https://dermnetnz.org/topics/central-centrifugal-cicatricial-alopecia',
+    externalLinkLabel: 'American Academy of Dermatology',
+    externalLinkUrl: 'https://www.aad.org',
     chatPrompts: ['Could I have CCCA?', "What's the difference between CCCA and normal thinning?", 'What should I tell my doctor about this?'],
   },
   {

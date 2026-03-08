@@ -556,8 +556,8 @@ const HomePage = () => {
                     {quickSeverity === 'Severe' && (
                       <div>
                         <div className="w-12 h-12 rounded-full bg-destructive/15 flex items-center justify-center mx-auto mb-4"><AlertTriangle size={22} className="text-destructive" strokeWidth={1.8} /></div>
-                        <h4 className="font-semibold text-center mb-2">This sounds like it needs attention now</h4>
-                        <p className="text-sm text-muted-foreground text-center mb-6">A full assessment will give you personalised guidance and, if needed, a summary to share with a professional.</p>
+                        <h4 className="font-semibold text-center mb-2">I'm sorry you're dealing with that</h4>
+                        <p className="text-sm text-muted-foreground text-center mb-6">That sounds like it needs attention. A full assessment will give you personalised guidance and, if needed, a summary to share with a professional.</p>
                         <button onClick={() => { handleQuickLogDone(); navigate('/wash-day'); }} className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3">Do a full assessment</button>
                         <button onClick={() => navigate('/results?risk=red')} className="w-full h-12 rounded-xl border-2 border-border font-medium text-sm btn-press mb-6">View guidance</button>
                       </div>

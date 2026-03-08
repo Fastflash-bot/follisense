@@ -707,8 +707,8 @@ const Onboarding = () => {
                 </div>
 
                 {/* Hair products */}
-                <h3 className="text-base font-medium text-foreground mb-1">Hair products</h3>
-                <p className="text-sm text-muted-foreground mb-4">Anything you apply to your hair (lengths and ends)</p>
+                <h3 className="text-base font-medium text-foreground mb-1">And what about your hair?</h3>
+                <p className="text-sm text-muted-foreground mb-4">The stuff that goes on your lengths and ends</p>
                 <div className="grid grid-cols-2 gap-2 mb-2">
                   {hairProductOptions.map(p => (
                     <button key={p} onClick={() => toggleHairProd(p)} className={`selection-card text-center py-4 ${hairProds.includes(p) ? 'selected' : ''}`}>

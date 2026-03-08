@@ -29,12 +29,19 @@ const questions = [
 
 const getAcknowledgment = (optionIndex: number): string => {
   if (optionIndex === 0) {
-    const mild = ["Great — let's keep going", "Good to hear", "Nice — moving on"];
-    return mild[Math.floor(Math.random() * mild.length)];
+    const msgs = ["That's good to hear", 'Great', 'Lovely'];
+    return msgs[Math.floor(Math.random() * msgs.length)];
   }
-  if (optionIndex === 1) return "Noted — we'll keep an eye on that";
-  if (optionIndex === 2) return "Thanks for flagging that — we'll factor this in";
-  return "Thanks for letting us know — this is important";
+  if (optionIndex === 1) {
+    const msgs = ['Okay, noted', 'Thanks for sharing that', 'Got it'];
+    return msgs[Math.floor(Math.random() * msgs.length)];
+  }
+  if (optionIndex === 2) {
+    const msgs = ['Thanks for being honest about that', "Okay, that's really helpful to know", "We'll keep a close eye on that"];
+    return msgs[Math.floor(Math.random() * msgs.length)];
+  }
+  const msgs = ["I'm sorry you're dealing with that. Let's make sure we address it.", "That sounds really uncomfortable. You're in the right place.", "Thank you for telling us. We're going to take that seriously."];
+  return msgs[Math.floor(Math.random() * msgs.length)];
 };
 
 const MidCycleCheckIn = () => {

@@ -178,6 +178,15 @@ const RiskOutput = () => {
                 </button>
               </div>
 
+              {telogenTriggers.length > 0 && (
+                <div className="rounded-2xl bg-accent p-5 mb-4">
+                  <h3 className="font-semibold mb-2">Worth knowing</h3>
+                  <p className="text-sm text-muted-foreground">
+                    You've mentioned {telogenTriggers.join(', ')}. Increased shedding can be a normal temporary response to these changes — this is sometimes called telogen effluvium. It usually resolves on its own within 6–12 months, but it's still worth monitoring. If you're concerned, a professional can help distinguish between temporary shedding and other causes.
+                  </p>
+                </div>
+              )}
+
               <div className="card-elevated p-5 mb-8">
                 <h3 className="font-semibold mb-2">Who to see</h3>
                 <p className="text-sm text-muted-foreground">

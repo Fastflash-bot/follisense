@@ -23,19 +23,6 @@ const ClinicianSummary = () => {
     return cp;
   };
 
-  // Menstrual cycle day calculation
-  const getCycleDay = () => {
-    if (onboardingData.menstrualTracking !== 'yes' || !onboardingData.lastPeriodDate) return null;
-    const start = new Date(onboardingData.lastPeriodDate);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - start.getTime()) / 86400000);
-    let total = 28;
-    if (onboardingData.menstrualCycleLength === '21–25 days') total = 23;
-    else if (onboardingData.menstrualCycleLength === '31–35 days') total = 33;
-    return { day: (diffDays % total) + 1, total };
-  };
-
-  const cycleInfo = getCycleDay();
 
   const fields = [
     { label: 'Hair type', value: hairTypeLabel[onboardingData.hairType] || 'Not specified' },

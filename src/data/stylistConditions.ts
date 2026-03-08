@@ -135,6 +135,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"I\'m seeing a patch with some unusual scaling and broken hairs that could be a fungal infection. This needs to be seen by a doctor because it usually requires oral medication to clear. It\'s also contagious, so getting it treated quickly is important."',
     whatYouCanDo: 'Do not style over the affected area. Sanitise all tools that touched the area. Refer immediately. Be honest that it needs medical attention.',
     severityGuide: 'Always refer. Requires oral antifungal treatment. Topical treatments alone are insufficient for scalp fungal infections.',
+    darkerSkinNote: 'On darker skin: The ring-shaped border may be harder to see. Focus on the black dot pattern, which is broken hair stubs at the scalp surface. This is the most reliable visual sign regardless of skin tone. Scaling may appear ashy or greyish.',
   },
   {
     id: 'chemical-damage',

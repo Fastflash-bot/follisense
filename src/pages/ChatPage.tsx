@@ -243,7 +243,7 @@ const buildContextAwareResponse = (userMessage: string, ctx: UserContext, histor
 
     if (ctx.hairType) {
       const isHighPorosity = ctx.chemicalProcessing && ctx.chemicalProcessing !== 'No, fully natural';
-      response += `With ${ctx.hairType} hair${isHighPorosity ? ' that\'s been chemically processed' : ''}, ${isHighPorosity ? 'your hair is likely higher porosity, so heavier creams and butters sealed with oil work well' : 'focus on lightweight products that won\'t weigh your curls down'}.\n\n`;
+      response += `With ${ctx.hairType} hair${isHighPorosity ? ' that\'s been chemically processed' : ''}, ${isHighPorosity ? 'your hair is likely higher porosity, so heavier creams and butters on the hair shaft (not the scalp) work well' : 'focus on lightweight products that won\'t weigh your curls down'}.\n\n`;
     }
 
     response += 'If you\'re experiencing specific issues like itching, flaking, or breakage, let me know and I can give more targeted suggestions.';

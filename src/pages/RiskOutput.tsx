@@ -169,7 +169,7 @@ const RiskOutput = () => {
                   {[
                     'Gently cleanse your scalp mid-cycle with a sulphate-free rinse',
                     'Avoid re-tightening your edges — if they\'re loose, leave them',
-                    'Apply a lightweight, non-comedogenic scalp oil to soothe irritation',
+                    'If your scalp feels dry or tight, a fragrance-free scalp moisturiser or hydrating mist may help. Avoid heavy oils or butters directly on the scalp as these can clog follicles and worsen buildup.',
                   ].map((tip, i) => (
                     <li key={i} className="flex gap-3 text-sm">
                       <span className="w-6 h-6 rounded-full bg-sage-light flex items-center justify-center flex-shrink-0 text-xs font-semibold text-primary">{i + 1}</span>

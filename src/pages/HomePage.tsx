@@ -262,7 +262,7 @@ const HomePage = () => {
             </div>
             <h3 className="font-semibold text-foreground">Mid-cycle check-in</h3>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">4 quick questions — takes 1 minute</p>
+          <p className="text-sm text-muted-foreground mb-4">Hey — it's been 2 weeks since your braids went in. Quick check-in? Takes about a minute.</p>
           <button onClick={() => navigate('/mid-cycle')} className="w-full h-12 bg-primary text-primary-foreground rounded-xl font-semibold text-sm btn-press">Start check-in</button>
         </div>
 

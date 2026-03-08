@@ -248,6 +248,7 @@ const RiskOutput = () => {
                 <h3 className="font-semibold mb-2">Who to see</h3>
                 <p className="text-sm text-muted-foreground">
                   A trichologist specialises in hair and scalp. A dermatologist can investigate further. Your GP can refer you.
+                  {isMale && ' Your barber may also notice changes. Ask them to flag anything they see.'}
                 </p>
               </div>
               <div className="card-elevated p-5 mb-4">

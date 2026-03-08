@@ -251,7 +251,7 @@ const HealthProfile = () => {
                   <p className="text-sm font-medium text-foreground mb-2">Do you experience any skin conditions on your body?</p>
                   <MultiSelect
                     selected={hp.skinConditions}
-                    options={['Eczema', 'Psoriasis', 'Keratosis pilaris', 'Hyperpigmentation', 'Keloid scarring', 'Acne', 'None', 'Other']}
+                    options={['Eczema', 'Psoriasis', 'Keratosis pilaris', 'Hyperpigmentation', 'Keloid scarring', 'Acne', 'Folliculitis or razor bumps', 'None', 'Other']}
                     onToggle={v => toggleMulti('skinConditions', v)}
                   />
                   {hp.skinConditions.includes('Other') && (

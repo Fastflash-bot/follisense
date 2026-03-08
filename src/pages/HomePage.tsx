@@ -611,7 +611,7 @@ const HomePage = () => {
             <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 300 }} className="bg-card rounded-t-3xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold">Log a salon visit</h3>
+                  <h3 className="text-lg font-semibold">{isMale ? 'Log a salon or barber visit' : 'Log a salon visit'}</h3>
                   <button onClick={() => setShowSalonForm(false)} className="p-1"><X size={22} className="text-muted-foreground" strokeWidth={1.8} /></button>
                 </div>
                 <div className="mb-5">

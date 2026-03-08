@@ -68,6 +68,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Does it come and go but never fully clear up?' },
       { question: 'Is it itchy?' },
     ],
+    photoGallery: [
+      { label: 'Mild — oily flaking', description: 'Mild seborrheic dermatitis with yellowish, oily flakes along the part line' },
+      { label: 'Moderate — with irritation', description: 'Moderate seborrheic dermatitis with flaking and visible irritation on darker skin' },
+      { label: 'Behind the ears', description: 'Seborrheic dermatitis presenting behind the ear on textured hair' },
+    ],
     actionSteps: [
       'Try a medicated shampoo with ketoconazole or zinc pyrithione',
       'Cleanse your scalp regularly, even under protective styles',
@@ -80,6 +85,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If over-the-counter medicated shampoos aren't helping after 2–3 weeks, see a dermatologist for a prescription-strength treatment.",
     relatedArticleId: 'seb-derm',
     dermnetUrl: 'https://dermnetnz.org/topics/seborrhoeic-dermatitis',
+    externalLinkLabel: 'DermNet NZ — Seborrheic dermatitis',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have seborrheic dermatitis?', "What's the difference between dandruff and seb derm?", 'What should I tell my doctor about this?'],
   },
   {

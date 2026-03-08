@@ -137,13 +137,17 @@ interface AppContextType {
 
 const defaultOnboarding: OnboardingData = {
   hairType: '',
+  chemicalProcessing: '',
+  chemicalProcessingMultiple: [],
   protectiveStyles: [],
+  otherStyle: '',
   cycleLength: '',
   washFrequency: '',
   baselineItch: '',
   baselineTenderness: '',
   baselineHairline: '',
   scalpProducts: [],
+  otherProduct: '',
   productFrequency: '',
 };
 

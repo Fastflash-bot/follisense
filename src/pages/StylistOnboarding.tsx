@@ -43,7 +43,7 @@ const StylistOnboarding = () => {
   const handleNext = () => {
     if (step < 3) { setStep(step + 1); return; }
     // Save profile to localStorage for the prototype
-    localStorage.setItem('scalpsense-stylist-profile', JSON.stringify(profile));
+    localStorage.setItem('follisense-stylist-profile', JSON.stringify(profile));
     setStylistMode(true);
     navigate('/stylist');
   };

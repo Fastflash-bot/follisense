@@ -24,7 +24,6 @@ interface CapturedPhoto {
 
 const SalonCheckIn = () => {
   const navigate = useNavigate();
-  const { addCheckInEntry } = useApp();
   const [step, setStep] = useState(0); // 0=intro, 1=photos, 2=observations, 3=notes, 4=done
   const [photos, setPhotos] = useState<CapturedPhoto[]>([]);
   const [selectedRegion, setSelectedRegion] = useState(regions[0]);

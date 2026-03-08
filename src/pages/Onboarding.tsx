@@ -972,8 +972,8 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* ── Step 6: Products (skippable) ── */}
-            {step === 6 && (() => {
+            {/* ── Step 7: Products (skippable) ── */}
+            {step === 7 && (() => {
               const scalpIsNone = products.length === 1 && products[0] === 'None';
               const hairIsNone = hairProds.length === 1 && hairProds[0] === 'None';
               return (

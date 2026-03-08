@@ -42,11 +42,11 @@ const femaleStyleOptions = [
 ];
 
 const maleStyleOptions = [
-  'Waves (with durag or wave cap)', 'Short natural (TWA, tapered)',
-  'High top or frohawk', 'Cornrows or flat twists',
-  'Box braids', 'Locs or faux locs',
-  'Twists (two-strand)', 'Fade or low cut (barber-maintained)',
-  'Free-form (no manipulation)', 'Other',
+  'Fade or low cut (barber-maintained)', 'Free-form (no manipulation)',
+  'Waves (with durag or wave cap)', 'High top or frohawk',
+  'Short natural (TWA, tapered)', 'Locs or faux locs',
+  'Box braids', 'Cornrows or flat twists',
+  'Twists (two-strand)', 'Other',
 ];
 
 const wornOutOnlyStylesFemale = [
@@ -243,36 +243,45 @@ const computeBaselineRisk = (itch: string, tenderness: string, hairline: string,
   return allScalpMild ? 'green' : 'amber';
 };
 
-const getBaselineSevereFlaggedSymptoms = (itch: string, tenderness: string, hairline: string): string[] => {
+const buildBaselineFlaggedSymptoms = (itch: string, tenderness: string, hairline: string, hairHealth: string): string[] => {
   const flagged: string[] = [];
   const severe = ['Severe', 'Very concerned'];
   const moderate = ['Moderate', 'Noticeable change'];
-  if (severe.includes(itch) || moderate.includes(itch)) flagged.push('scalp itching');
-  if (severe.includes(tenderness) || moderate.includes(tenderness)) flagged.push('tenderness');
-  if (severe.includes(hairline) || moderate.includes(hairline)) flagged.push('hairline changes');
+  if (severe.includes(itch)) flagged.push('severe itching');
+  else if (moderate.includes(itch)) flagged.push('moderate itching');
+  else if (itch === 'Mild') flagged.push('mild itching');
+  if (severe.includes(tenderness)) flagged.push('severe tenderness');
+  else if (moderate.includes(tenderness)) flagged.push('some tenderness');
+  else if (tenderness === 'Mild') flagged.push('mild tenderness');
+  if (severe.includes(hairline)) flagged.push('concern about your hairline');
+  else if (moderate.includes(hairline)) flagged.push('noticeable hairline changes');
+  else if (hairline === 'Slight concern') flagged.push('slight hairline concern');
+  if (hairHealth === "Concerned about my hair's condition") flagged.push('concern about your hair\'s condition');
+  else if (hairHealth === 'Noticeably dry, brittle, or breaking more than usual') flagged.push('noticeable dryness and breakage');
+  else if (hairHealth === 'Some dryness or breakage but nothing unusual') flagged.push('some dryness');
   return flagged;
 };
 
-const getBaselineModerateSymptoms = (itch: string, tenderness: string, hairline: string, hairHealth: string): string[] => {
-  const flagged: string[] = [];
-  if (itch === 'Mild') flagged.push('mild itching');
-  if (itch === 'Moderate') flagged.push('moderate itching');
-  if (tenderness === 'Mild') flagged.push('mild tenderness');
-  if (tenderness === 'Moderate') flagged.push('some tenderness');
-  if (hairline === 'Slight concern') flagged.push('slight hairline concern');
-  if (hairline === 'Noticeable change') flagged.push('noticeable hairline changes');
-  if (hairHealth === 'Some dryness or breakage but nothing unusual') flagged.push('some dryness');
-  if (hairHealth === 'Noticeably dry, brittle, or breaking more than usual') flagged.push('noticeable dryness and breakage');
-  if (hairHealth === "Concerned about my hair's condition") flagged.push('hair condition concerns');
-  return flagged;
+const buildBaselineAmberBody = (symptoms: string[]): string => {
+  if (symptoms.length === 0) return "We've noted a few things as your starting point.";
+  const joined = symptoms.length === 1 ? symptoms[0] : symptoms.slice(0, -1).join(', ') + ' and ' + symptoms[symptoms.length - 1];
+  return `You mentioned ${joined}. We've noted that as your starting point. As you check in over the coming weeks, we'll track whether these improve, stay the same, or need attention.`;
 };
 
-const getBaselineTipForSymptoms = (itch: string, tenderness: string, hairline: string, hairHealth: string): string => {
-  if (itch === 'Moderate' || itch === 'Mild') return 'A lightweight, non-comedogenic scalp oil can help soothe irritation between washes.';
-  if (tenderness === 'Moderate' || tenderness === 'Mild') return 'If your current style feels tight, don\'t re-tighten loose areas — let them be.';
-  if (hairline === 'Noticeable change' || hairline === 'Slight concern') return 'Consider asking your stylist to keep installations looser around your hairline next time.';
-  if (hairHealth.includes('dry') || hairHealth.includes('brittle') || hairHealth.includes('breakage')) return 'A deep conditioning treatment can help restore moisture and reduce breakage over time.';
-  return 'Consistency is key — regular check-ins will help you spot patterns early.';
+const buildBaselineRedBody = (symptoms: string[]): string => {
+  if (symptoms.length === 0) return "What you're describing sounds uncomfortable. This is worth getting professional advice on. You don't need to wait for tracking data to take action.";
+  const joined = symptoms.length === 1 ? symptoms[0] : symptoms.slice(0, -1).join(', ') + ' and ' + symptoms[symptoms.length - 1];
+  return `What you're describing sounds really uncomfortable, especially the ${joined}. This is worth getting looked at sooner rather than later. You don't need to wait for a full cycle of tracking to take action.`;
+};
+
+const getBaselineTips = (itch: string, tenderness: string, hairline: string, hairHealth: string): string[] => {
+  const tips: string[] = [];
+  if (itch === 'Moderate' || itch === 'Mild' || itch === 'Severe') tips.push('A gentle, fragrance-free scalp oil can help soothe irritation between washes.');
+  if (tenderness === 'Moderate' || tenderness === 'Mild' || tenderness === 'Severe') tips.push('If your current style feels tight, don\'t re-tighten loose areas — let them be. It\'s okay to take it down early.');
+  if (hairline === 'Noticeable change' || hairline === 'Slight concern' || hairline === 'Very concerned') tips.push('Give your hairline a break from tension — consider asking your stylist to keep installations looser around your edges.');
+  if (hairHealth.includes('dry') || hairHealth.includes('brittle') || hairHealth.includes('breakage') || hairHealth.includes('Concerned')) tips.push('A deep conditioning treatment can help restore moisture and reduce breakage over time.');
+  if (tips.length === 0) tips.push('Consistency is key — regular check-ins will help you spot patterns early.');
+  return tips;
 };
 
 const genderOptions = [
@@ -592,27 +601,34 @@ const Onboarding = () => {
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-2">How do you usually wear your hair?</h2>
                 <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
-                <div className="grid grid-cols-2 gap-3">
-                  {styleOptions.slice(0, 8).map(s => (
-                    <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
-                      <p className="font-medium text-foreground text-sm">{s}</p>
-                    </button>
-                  ))}
-                </div>
-                {styleOptions.length > 8 && !showMoreStyles && (
-                  <button onClick={() => setShowMoreStyles(true)} className="w-full flex items-center justify-center gap-1.5 text-sm font-medium text-primary mt-3 py-2">
-                    Show more styles <ChevronDown size={16} strokeWidth={2} />
-                  </button>
-                )}
-                {showMoreStyles && styleOptions.length > 8 && (
-                  <div className="grid grid-cols-2 gap-3 mt-3">
-                    {styleOptions.slice(8).map(s => (
-                      <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
-                        <p className="font-medium text-foreground text-sm">{s}</p>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {(() => {
+                  const defaultCount = isMale ? 6 : 8;
+                  return (
+                    <>
+                      <div className="grid grid-cols-2 gap-3">
+                        {styleOptions.slice(0, defaultCount).map(s => (
+                          <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
+                            <p className="font-medium text-foreground text-sm">{s}</p>
+                          </button>
+                        ))}
+                      </div>
+                      {styleOptions.length > defaultCount && !showMoreStyles && (
+                        <button onClick={() => setShowMoreStyles(true)} className="w-full flex items-center justify-center gap-1.5 text-sm font-medium text-primary mt-3 py-2">
+                          Show more styles <ChevronDown size={16} strokeWidth={2} />
+                        </button>
+                      )}
+                      {showMoreStyles && styleOptions.length > defaultCount && (
+                        <div className="grid grid-cols-2 gap-3 mt-3">
+                          {styleOptions.slice(defaultCount).map(s => (
+                            <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
+                              <p className="font-medium text-foreground text-sm">{s}</p>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
                 {styles.includes('Other') && (
                   <input type="text" value={otherStyle} onChange={e => setOtherStyle(e.target.value)} placeholder="Describe your style" className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3" />
                 )}
@@ -754,82 +770,87 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Step 5: Baseline Response — dedicated full page */}
-            {step === 5 && baselineResultScreen === 'green' && (
-              <div>
-                <div className="flex justify-center mb-6 pt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-primary/15 flex items-center justify-center">
-                    <Check size={32} className="text-primary" strokeWidth={1.8} />
-                  </motion.div>
-                </div>
-                <h2 className="text-xl font-semibold text-foreground text-center mb-3">Everything looks good</h2>
-                <p className="text-muted-foreground text-center mb-8 leading-relaxed">Your scalp and hair seem to be in a healthy place right now. We'll use this as your baseline and track how things change over time.</p>
-              </div>
-            )}
+            {/* Step 5: Baseline Response — dedicated full page, dynamically built from answers */}
+            {step === 5 && (() => {
+              const bItch = baselineAnswers.itch || '';
+              const bTenderness = baselineAnswers.tenderness || '';
+              const bHairline = baselineAnswers.hairline || '';
+              const bHairHealth = baselineAnswers.hairHealth || '';
+              const risk = computeBaselineRisk(bItch, bTenderness, bHairline, bHairHealth);
+              const symptoms = buildBaselineFlaggedSymptoms(bItch, bTenderness, bHairline, bHairHealth);
+              const tips = getBaselineTips(bItch, bTenderness, bHairline, bHairHealth);
 
-            {step === 5 && baselineResultScreen === 'amber' && (
-              <div>
-                <div className="flex justify-center mb-6 pt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-warning/15 flex items-center justify-center">
-                    <Eye size={32} className="text-warning" strokeWidth={1.8} />
-                  </motion.div>
+              if (risk === 'green') return (
+                <div>
+                  <div className="flex justify-center mb-6 pt-8">
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-primary/15 flex items-center justify-center">
+                      <Check size={32} className="text-primary" strokeWidth={1.8} />
+                    </motion.div>
+                  </div>
+                  <h2 className="text-xl font-semibold text-foreground text-center mb-3">Everything looks good</h2>
+                  <p className="text-muted-foreground text-center mb-8 leading-relaxed">Your scalp and hair seem to be in a healthy place right now. We'll use this as your baseline and track how things change over time.</p>
                 </div>
-                <h2 className="text-xl font-semibold text-foreground text-center mb-3">Thanks for sharing that</h2>
-                <p className="text-muted-foreground text-center mb-6 leading-relaxed">
-                  You've flagged a few things we'll want to keep an eye on. We've noted {getBaselineModerateSymptoms(itch, tenderness, hairline, baselineAnswers.hairHealth || '').join(', ')} as your starting point. As you check in over the coming weeks, we'll track whether these improve, stay the same, or need attention.
-                </p>
-                <div className="card-elevated p-5 mb-8">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-warning/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Sparkles size={16} className="text-warning" strokeWidth={1.8} />
+              );
+
+              if (risk === 'amber') return (
+                <div>
+                  <div className="flex justify-center mb-6 pt-8">
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-warning/15 flex items-center justify-center">
+                      <Eye size={32} className="text-warning" strokeWidth={1.8} />
+                    </motion.div>
+                  </div>
+                  <h2 className="text-xl font-semibold text-foreground text-center mb-3">Thanks for sharing that</h2>
+                  <p className="text-muted-foreground text-center mb-6 leading-relaxed">
+                    {buildBaselineAmberBody(symptoms)}
+                  </p>
+                  <div className="card-elevated p-5 mb-8">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-warning/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Sparkles size={16} className="text-warning" strokeWidth={1.8} />
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{tips[0]}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{getBaselineTipForSymptoms(itch, tenderness, hairline, baselineAnswers.hairHealth || '')}</p>
                   </div>
                 </div>
-              </div>
-            )}
+              );
 
-            {step === 5 && baselineResultScreen === 'red' && (
-              <div>
-                <div className="flex justify-center mb-6 pt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-destructive/15 flex items-center justify-center">
-                    <Stethoscope size={32} className="text-destructive" strokeWidth={1.8} />
-                  </motion.div>
-                </div>
-                <h2 className="text-xl font-semibold text-foreground text-center mb-3">We hear you, and we're glad you're here</h2>
-                <p className="text-muted-foreground text-center mb-6 leading-relaxed">
-                  What you're describing — {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).join(' and ')} — sounds like something worth getting professional advice on. You don't need to wait for a full cycle of tracking to take action.
-                </p>
-                <div className="card-elevated p-5 mb-4">
-                  <h3 className="font-semibold mb-3">Who can help</h3>
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Trichologist</strong> — specialises in hair and scalp conditions. Best first step for hair-specific concerns.</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Dermatologist</strong> — can investigate skin and scalp conditions in depth and prescribe treatment.</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">GP</strong> — can run blood tests, check for underlying causes, and refer you onwards.</p>
+              // Red
+              return (
+                <div>
+                  <div className="flex justify-center mb-6 pt-8">
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-destructive/15 flex items-center justify-center">
+                      <Stethoscope size={32} className="text-destructive" strokeWidth={1.8} />
+                    </motion.div>
                   </div>
-                </div>
-                <div className="card-elevated p-5 mb-4">
-                  <h3 className="font-semibold mb-3">In the meantime</h3>
-                  <div className="space-y-2">
-                    {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).includes('scalp itching') && (
-                      <p className="text-sm text-muted-foreground leading-relaxed">• A gentle, fragrance-free scalp oil can help soothe irritation while you wait for an appointment.</p>
-                    )}
-                    {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).includes('tenderness') && (
-                      <p className="text-sm text-muted-foreground leading-relaxed">• Avoid any styles that pull on tender areas. If your current style hurts, it's okay to take it down early.</p>
-                    )}
-                    {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).includes('hairline changes') && (
-                      <p className="text-sm text-muted-foreground leading-relaxed">• Give your hairline a complete break from tension — no tight styles, no edge control, no pulling.</p>
-                    )}
+                  <h2 className="text-xl font-semibold text-foreground text-center mb-3">We hear you, and we're glad you're here</h2>
+                  <p className="text-muted-foreground text-center mb-6 leading-relaxed">
+                    {buildBaselineRedBody(symptoms)}
+                  </p>
+                  <div className="card-elevated p-5 mb-4">
+                    <h3 className="font-semibold mb-3">Who can help</h3>
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Trichologist</strong> — specialises in hair and scalp conditions. Best first step for hair-specific concerns.</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Dermatologist</strong> — can investigate skin and scalp conditions in depth and prescribe treatment.</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">GP</strong> — can run blood tests, check for underlying causes, and refer you onwards.</p>
+                    </div>
                   </div>
+                  <div className="card-elevated p-5 mb-4">
+                    <h3 className="font-semibold mb-3">In the meantime</h3>
+                    <div className="space-y-2">
+                      {tips.map((tip, i) => (
+                        <p key={i} className="text-sm text-muted-foreground leading-relaxed">• {tip}</p>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl bg-accent p-4 mb-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed">Setting up ScalpSense now means you'll be building a symptom timeline that's really useful to bring to any consultation.</p>
+                  </div>
+                  <button onClick={() => navigate('/clinician-summary')} className="w-full h-12 rounded-xl border-2 border-border font-semibold text-sm btn-press mb-4 flex items-center justify-center gap-2">
+                    <Stethoscope size={16} strokeWidth={1.8} /> View your baseline summary
+                  </button>
                 </div>
-                <div className="rounded-2xl bg-accent p-4 mb-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">Setting up ScalpSense now means you'll be building a symptom timeline that's really useful to bring to any consultation.</p>
-                </div>
-                <button onClick={() => navigate('/clinician-summary')} className="w-full h-12 rounded-xl border-2 border-border font-semibold text-sm btn-press mb-4 flex items-center justify-center gap-2">
-                  <Stethoscope size={16} strokeWidth={1.8} /> View your baseline summary
-                </button>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Step 6: Baseline photos */}
             {step === 6 && (

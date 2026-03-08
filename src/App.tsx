@@ -36,6 +36,7 @@ import StylistLearnPage from "./pages/StylistLearnPage";
 import ScalpQuiz from "./pages/ScalpQuiz";
 import SalonCheckIn from "./pages/SalonCheckIn";
 import StylistQuickIntake from "./pages/StylistQuickIntake";
+import SpotIt from "./pages/SpotIt";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

@@ -787,10 +787,10 @@ const Onboarding = () => {
               </div>
             )}
 
-            {step === 3 && !isMale && !isWornOutOnly && (
+            {step === 4 && !isMale && !isWornOutOnly && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">Your cycle</h2>
-                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[3]}</p>
+                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[4]}</p>
                 <p className="text-muted-foreground mb-6">How long do you typically keep a style in?</p>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {cycleLengths.map(c => (

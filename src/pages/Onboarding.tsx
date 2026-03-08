@@ -42,11 +42,11 @@ const femaleStyleOptions = [
 ];
 
 const maleStyleOptions = [
-  'Waves (with durag or wave cap)', 'Short natural (TWA, tapered)',
-  'High top or frohawk', 'Cornrows or flat twists',
-  'Box braids', 'Locs or faux locs',
-  'Twists (two-strand)', 'Fade or low cut (barber-maintained)',
-  'Free-form (no manipulation)', 'Other',
+  'Fade or low cut (barber-maintained)', 'Free-form (no manipulation)',
+  'Waves (with durag or wave cap)', 'High top or frohawk',
+  'Short natural (TWA, tapered)', 'Locs or faux locs',
+  'Box braids', 'Cornrows or flat twists',
+  'Twists (two-strand)', 'Other',
 ];
 
 const wornOutOnlyStylesFemale = [

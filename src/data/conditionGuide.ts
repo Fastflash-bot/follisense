@@ -100,6 +100,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Did it appear suddenly?' },
       { question: 'Is the rest of your hair unaffected?' },
     ],
+    photoGallery: [
+      { label: 'Single smooth patch', description: 'Alopecia areata presenting as a single smooth, round bald patch on the scalp' },
+      { label: 'Multiple patches', description: 'Multiple patches of alopecia areata on darker skin' },
+      { label: 'Exclamation point hairs', description: 'Close-up showing exclamation point hairs at the edge of an alopecia areata patch' },
+    ],
     actionSteps: [
       'See a dermatologist for confirmation and treatment options',
       "Don't panic — many cases resolve on their own",
@@ -112,6 +117,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: 'See a dermatologist if you notice smooth, round bald patches appearing. Treatment is most effective when started early.',
     relatedArticleId: 'alopecia-areata',
     dermnetUrl: 'https://dermnetnz.org/topics/alopecia-areata',
+    externalLinkLabel: 'DermNet NZ — Alopecia areata',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have alopecia areata?', "What's the difference between alopecia areata and traction alopecia?", 'What should I tell my doctor about this?'],
   },
   {

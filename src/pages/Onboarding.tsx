@@ -75,7 +75,7 @@ const CurlIcon = ({ type }: { type: string }) => {
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { setOnboardingComplete, setOnboardingData } = useApp();
+  const { setOnboardingComplete, setOnboardingData, setBaselinePhotos } = useApp();
   const [step, setStep] = useState(1);
   const [hairType, setHairType] = useState('');
   const [chemicalProcessing, setChemicalProcessing] = useState('');
@@ -92,8 +92,15 @@ const Onboarding = () => {
   const [prodFreq, setProdFreq] = useState('');
   const [showMoreStyles, setShowMoreStyles] = useState(false);
   const [showMoreProducts, setShowMoreProducts] = useState(false);
+  const [capturedPhotos, setCapturedPhotos] = useState<Record<string, boolean>>({});
 
-  const totalSteps = 5;
+  const totalSteps = 6;
+
+  const baselineAreas = [
+    { id: 'hairline', label: 'Hairline — temples and edges', desc: 'Front-facing', optional: false },
+    { id: 'crown', label: 'Crown and vertex', desc: 'Top of head', optional: false },
+    { id: 'nape', label: 'Nape / back of neck', desc: 'Optional', optional: true },
+  ];
 
   const toggleStyle = (s: string) => setStyles(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
   const toggleProduct = (p: string) => setProducts(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);

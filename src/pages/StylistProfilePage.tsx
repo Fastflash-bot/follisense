@@ -1,30 +1,54 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronRight, Shield, Trash2, Leaf, Lock, Eye, EyeOff, Check, MapPin, Briefcase, Clock, Plus, X, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  User, Shield, Trash2, Lock, Eye, EyeOff, ChevronRight, MapPin, Briefcase, Clock,
+  Plus, Star, Check, Pencil, Award, ClipboardCheck, Brain, Scissors, X
+} from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { toast } from '@/hooks/use-toast';
 
-const allServices = ['Braids (box braids, knotless, etc.)', 'Cornrows or flat twists', 'Locs installation or maintenance', 'Weave or sew-in', 'Wig install (lace fronts, etc.)', 'Crochet braids', 'Twist styles', 'Natural hair styling', 'Silk press or blowout', 'Relaxer or chemical treatments', 'Colour or bleach', 'Haircuts or trims', 'Barber services (fades, lineups)', 'Scalp treatments'];
-const allGoals = ['Document scalp observations for my clients', 'Learn to spot scalp conditions early', 'Build trust with clients through better scalp care', 'Track client scalp health over time', 'Get referral guidance when I see something concerning', 'Stay up to date on scalp health knowledge', "I'm just exploring for now"];
+const allSpecialties = [
+  'Braids (box braids, knotless, etc.)', 'Cornrows or flat twists', 'Locs installation or maintenance',
+  'Weave or sew-in', 'Wig install (lace fronts, etc.)', 'Crochet braids', 'Twist styles',
+  'Natural hair styling', 'Silk press or blowout', 'Relaxer or chemical treatments',
+  'Colour or bleach', 'Haircuts or trims', 'Barber services (fades, lineups)', 'Scalp treatments',
+];
 
-interface StylistProfile {
-  role: string | string[]; otherRole: string; experience: string; businessName: string; city: string; country: string;
-  workplace: string; clientCount: string; services: string[]; otherService: string; goals: string[];
+const businessTypes = ['Salon-based', 'Mobile', 'Both'];
+
+interface StylistProfileData {
+  role: string | string[];
+  otherRole: string;
+  experience: string;
+  businessName: string;
+  businessType: string;
+  city: string;
+  country: string;
+  specialties: string[];
+  bio: string;
 }
 
-const defaultProfile: StylistProfile = {
-  role: '', otherRole: '', experience: '', businessName: '', city: '', country: '',
-  workplace: '', clientCount: '', services: [], otherService: '', goals: [],
+const defaultProfile: StylistProfileData = {
+  role: '', otherRole: '', experience: '', businessName: '', businessType: '',
+  city: '', country: '', specialties: [], bio: '',
+};
+
+const loadQuizState = () => {
+  try {
+    const saved = localStorage.getItem('follisense-quiz');
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return { totalPoints: 0, currentStreak: 0, bestStreak: 0, challengeHighScore: 0, badges: [] };
 };
 
 const StylistProfilePage = () => {
   const navigate = useNavigate();
-  const { userName, resetAll, stylistLocations, setStylistLocations, addStylistLocation, removeStylistLocation } = useApp();
-  const [profile, setProfile] = useState<StylistProfile>(defaultProfile);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [editingServices, setEditingServices] = useState(false);
-  const [editingGoals, setEditingGoals] = useState(false);
+  const { userName, resetAll, clientObservations, stylistLocations, setStylistLocations, addStylistLocation, removeStylistLocation } = useApp();
+  const [profile, setProfile] = useState<StylistProfileData>(defaultProfile);
+  const [editing, setEditing] = useState(false);
+  const [editProfile, setEditProfile] = useState<StylistProfileData>(defaultProfile);
+  const [editingSpecialties, setEditingSpecialties] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -32,61 +56,78 @@ const StylistProfilePage = () => {
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
   const [showConfirmPw, setShowConfirmPw] = useState(false);
-  const [editingLocationId, setEditingLocationId] = useState<string | null>(null);
-  const [editLocName, setEditLocName] = useState('');
-  const [editLocCity, setEditLocCity] = useState('');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showAddLocation, setShowAddLocation] = useState(false);
   const [newLocName, setNewLocName] = useState('');
   const [newLocCity, setNewLocCity] = useState('');
+  const [editingLocationId, setEditingLocationId] = useState<string | null>(null);
+  const [editLocName, setEditLocName] = useState('');
+  const [editLocCity, setEditLocCity] = useState('');
   const [confirmDeleteLoc, setConfirmDeleteLoc] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState({ clientReminders: true, quizReminders: true, weeklyDigest: false });
+
+  const quizState = loadQuizState();
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('follisense-stylist-profile');
-      if (saved) setProfile(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Migrate old 'services' key to 'specialties'
+        const migrated = {
+          ...defaultProfile,
+          ...parsed,
+          specialties: parsed.specialties || parsed.services || [],
+        };
+        setProfile(migrated);
+      }
     } catch {}
   }, []);
 
-  const saveProfile = (updated: StylistProfile) => {
+  const saveProfile = (updated: StylistProfileData) => {
     setProfile(updated);
     localStorage.setItem('follisense-stylist-profile', JSON.stringify(updated));
   };
 
-  const toggleService = (s: string) => {
-    const updated = { ...profile, services: profile.services.includes(s) ? profile.services.filter(x => x !== s) : [...profile.services, s] };
-    saveProfile(updated);
+  const startEditing = () => { setEditProfile({ ...profile }); setEditing(true); };
+  const cancelEditing = () => { setEditing(false); setEditingSpecialties(false); };
+  const saveEditing = () => {
+    saveProfile(editProfile);
+    setEditing(false);
+    setEditingSpecialties(false);
+    toast({ title: 'Profile updated' });
   };
 
-  const toggleGoal = (g: string) => {
-    const updated = { ...profile, goals: profile.goals.includes(g) ? profile.goals.filter(x => x !== g) : [...profile.goals, g] };
-    saveProfile(updated);
+  const toggleSpecialty = (s: string) => {
+    setEditProfile(prev => ({
+      ...prev,
+      specialties: prev.specialties.includes(s) ? prev.specialties.filter(x => x !== s) : [...prev.specialties, s],
+    }));
   };
 
   const location = [profile.city, profile.country].filter(Boolean).join(', ');
+  const clientsChecked = clientObservations.length;
+  const roleDisplay = (() => {
+    const roles = Array.isArray(profile.role) ? profile.role.filter(r => r !== 'Other') : (profile.role ? [profile.role] : []);
+    if (profile.otherRole) roles.push(profile.otherRole);
+    return roles.length > 0 ? roles.join(', ') : '';
+  })();
 
   const handleSetPrimary = (id: string) => {
     setStylistLocations(stylistLocations.map(l => ({ ...l, isPrimary: l.id === id })));
     toast({ title: 'Primary location updated' });
   };
-
   const handleEditLocation = (id: string) => {
     const loc = stylistLocations.find(l => l.id === id);
     if (loc) { setEditingLocationId(id); setEditLocName(loc.name); setEditLocCity(loc.city); }
   };
-
   const handleSaveEditLocation = () => {
     if (!editingLocationId || !editLocName.trim()) return;
     setStylistLocations(stylistLocations.map(l => l.id === editingLocationId ? { ...l, name: editLocName.trim(), city: editLocCity.trim() } : l));
     setEditingLocationId(null);
     toast({ title: 'Location updated' });
   };
-
-  const handleDeleteLocation = (id: string) => {
-    removeStylistLocation(id);
-    setConfirmDeleteLoc(null);
-    toast({ title: 'Location removed' });
-  };
-
+  const handleDeleteLocation = (id: string) => { removeStylistLocation(id); setConfirmDeleteLoc(null); toast({ title: 'Location removed' }); };
   const handleAddNewLocation = () => {
     if (!newLocName.trim()) return;
     addStylistLocation({ id: `loc-${Date.now()}`, name: newLocName.trim(), city: newLocCity.trim(), isPrimary: stylistLocations.length === 0 });
@@ -94,61 +135,171 @@ const StylistProfilePage = () => {
     toast({ title: 'Location added' });
   };
 
+  const InfoRow = ({ label, value, icon: Icon }: { label: string; value: string; icon?: any }) => (
+    <div className="flex items-center justify-between p-4">
+      <div className="flex items-center gap-2">
+        {Icon && <Icon size={15} className="text-muted-foreground" />}
+        <span className="text-sm text-foreground">{label}</span>
+      </div>
+      <span className="text-sm text-muted-foreground truncate max-w-[180px]">{value}</span>
+    </div>
+  );
+
   return (
-    <div className="page-container pt-6">
+    <div className="page-container pt-6 pb-32">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-        {/* Header */}
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center mb-3">
-            <User size={28} className="text-muted-foreground" strokeWidth={1.5} />
-          </div>
-          <h1 className="text-2xl font-semibold">{userName || 'Stylist'}</h1>
-          {profile.role && (Array.isArray(profile.role) ? profile.role.length > 0 : !!profile.role) && (
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {(() => {
-                const roles = Array.isArray(profile.role) ? profile.role.filter(r => r !== 'Other') : [profile.role];
-                if (profile.otherRole) roles.push(profile.otherRole);
-                return roles.join(', ');
-              })()}
-            </p>
-          )}
-          {profile.businessName && (
-            <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-              <MapPin size={11} /> {profile.businessName}{location ? `, ${location}` : ''}
-            </p>
-          )}
-        </div>
 
-        {/* Professional info */}
-        <div className="mb-6">
-          <h3 className="text-label mb-3">Professional Info</h3>
-          <div className="card-elevated divide-y divide-border">
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-2"><Briefcase size={15} className="text-muted-foreground" /><span className="text-sm text-foreground">Role</span></div>
-              <span className="text-sm text-muted-foreground truncate max-w-[180px]">{(() => {
-                const roles = Array.isArray(profile.role) ? profile.role.filter(r => r !== 'Other') : (profile.role ? [profile.role] : []);
-                if (profile.otherRole) roles.push(profile.otherRole);
-                return roles.length > 0 ? roles.join(', ') : 'Not set';
-              })()}</span>
+        {/* ─── Professional Header ─── */}
+        <div className="relative mb-8">
+          <div className="absolute inset-0 -mx-4 -mt-6 h-32 bg-gradient-to-br from-primary/20 to-accent rounded-b-3xl" />
+          <div className="relative pt-8 flex flex-col items-center">
+            <div className="w-20 h-20 rounded-full bg-card border-4 border-primary/20 flex items-center justify-center mb-3 shadow-md">
+              <User size={32} className="text-primary" strokeWidth={1.5} />
             </div>
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-2"><MapPin size={15} className="text-muted-foreground" /><span className="text-sm text-foreground">Business</span></div>
-              <span className="text-sm text-muted-foreground truncate max-w-[160px]">{profile.businessName || 'Not set'}</span>
+            <div className="flex items-center gap-2 mb-1">
+              <h1 className="text-2xl font-semibold text-foreground">{userName || 'Stylist'}</h1>
+              <span className="text-[10px] font-semibold bg-primary text-primary-foreground px-2 py-0.5 rounded-full uppercase tracking-wide">Pro</span>
             </div>
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-2"><MapPin size={15} className="text-muted-foreground" /><span className="text-sm text-foreground">Location</span></div>
-              <span className="text-sm text-muted-foreground">{location || 'Not set'}</span>
-            </div>
-            <div className="flex items-center justify-between p-4">
-              <div className="flex items-center gap-2"><Clock size={15} className="text-muted-foreground" /><span className="text-sm text-foreground">Experience</span></div>
-              <span className="text-sm text-muted-foreground">{profile.experience || 'Not set'}</span>
-            </div>
+            {roleDisplay && <p className="text-sm text-muted-foreground">{roleDisplay}</p>}
+            {(profile.businessName || location) && (
+              <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                <MapPin size={11} /> {profile.businessName}{location ? `, ${location}` : ''}
+              </p>
+            )}
+            {!editing && (
+              <button onClick={startEditing} className="mt-3 text-xs font-medium text-primary flex items-center gap-1">
+                <Pencil size={12} /> Edit profile
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Locations */}
+        {/* ─── Stats Bar ─── */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="card-elevated p-3 text-center">
+            <ClipboardCheck size={18} className="text-primary mx-auto mb-1" />
+            <p className="text-lg font-bold text-foreground">{clientsChecked}</p>
+            <p className="text-[10px] text-muted-foreground">Clients checked</p>
+          </div>
+          <div className="card-elevated p-3 text-center">
+            <Brain size={18} className="text-primary mx-auto mb-1" />
+            <p className="text-lg font-bold text-foreground">{quizState.totalPoints || 0}</p>
+            <p className="text-[10px] text-muted-foreground">Quiz points</p>
+          </div>
+          <div className="card-elevated p-3 text-center">
+            <Award size={18} className="text-primary mx-auto mb-1" />
+            <p className="text-lg font-bold text-foreground">{quizState.bestStreak || 0}</p>
+            <p className="text-[10px] text-muted-foreground">Best streak</p>
+          </div>
+        </div>
+
+        {/* ─── Edit Mode ─── */}
+        {editing ? (
+          <div className="mb-6 space-y-4">
+            <h3 className="text-label">Edit Profile</h3>
+            <div className="card-elevated p-4 space-y-3">
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1 block">Business name</label>
+                <input type="text" value={editProfile.businessName} onChange={e => setEditProfile({ ...editProfile, businessName: e.target.value })}
+                  className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" placeholder="e.g. Natural Touch Studio" />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1 block">Business type</label>
+                <div className="flex gap-2">
+                  {businessTypes.map(bt => (
+                    <button key={bt} onClick={() => setEditProfile({ ...editProfile, businessType: bt })}
+                      className={`flex-1 h-10 rounded-lg border-2 text-sm font-medium transition-colors ${editProfile.businessType === bt ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground'}`}>
+                      {bt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1 block">City</label>
+                  <input type="text" value={editProfile.city} onChange={e => setEditProfile({ ...editProfile, city: e.target.value })}
+                    className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Country</label>
+                  <input type="text" value={editProfile.country} onChange={e => setEditProfile({ ...editProfile, country: e.target.value })}
+                    className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1 block">Years of experience</label>
+                <input type="text" value={editProfile.experience} onChange={e => setEditProfile({ ...editProfile, experience: e.target.value })}
+                  className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" placeholder="e.g. 5 years" />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-1 block">Bio (optional)</label>
+                <textarea value={editProfile.bio} onChange={e => setEditProfile({ ...editProfile, bio: e.target.value })}
+                  className="w-full min-h-[80px] px-3 py-2 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary resize-none"
+                  placeholder="Tell clients a bit about yourself and your approach to scalp health..." maxLength={300} />
+                <p className="text-[10px] text-muted-foreground text-right mt-1">{editProfile.bio.length}/300</p>
+              </div>
+
+              {/* Specialties in edit mode */}
+              <div>
+                <label className="text-xs font-medium text-muted-foreground mb-2 block">Specialties</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {allSpecialties.map(s => (
+                    <button key={s} onClick={() => toggleSpecialty(s)}
+                      className={`p-2.5 rounded-xl border-2 text-left text-xs font-medium transition-colors ${editProfile.specialties.includes(s) ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground'}`}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button onClick={cancelEditing} className="flex-1 h-10 rounded-xl border border-border text-sm font-medium text-muted-foreground">Cancel</button>
+                <button onClick={saveEditing} className="flex-1 h-10 rounded-xl bg-primary text-primary-foreground text-sm font-medium">Save</button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* ─── Bio ─── */}
+            {profile.bio && (
+              <div className="mb-6">
+                <div className="card-elevated p-4">
+                  <p className="text-sm text-foreground italic">"{profile.bio}"</p>
+                </div>
+              </div>
+            )}
+
+            {/* ─── Professional Info ─── */}
+            <div className="mb-6">
+              <h3 className="text-label mb-3">Professional Info</h3>
+              <div className="card-elevated divide-y divide-border">
+                <InfoRow label="Role" value={roleDisplay || 'Not set'} icon={Briefcase} />
+                <InfoRow label="Business" value={profile.businessName || 'Not set'} icon={MapPin} />
+                <InfoRow label="Business type" value={profile.businessType || 'Not set'} icon={Briefcase} />
+                <InfoRow label="Location" value={location || 'Not set'} icon={MapPin} />
+                <InfoRow label="Experience" value={profile.experience || 'Not set'} icon={Clock} />
+              </div>
+            </div>
+
+            {/* ─── Specialties ─── */}
+            <div className="mb-6">
+              <h3 className="text-label mb-3">Specialties</h3>
+              <div className="card-elevated p-4">
+                {profile.specialties.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {profile.specialties.map(s => (
+                      <span key={s} className="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full font-medium">{s}</span>
+                    ))}
+                  </div>
+                ) : <p className="text-sm text-muted-foreground">No specialties set</p>}
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ─── Locations ─── */}
         <div className="mb-6">
-          <h3 className="text-label mb-3">Your Locations</h3>
+          <h3 className="text-label mb-3">Locations</h3>
           <div className="space-y-2 mb-3">
             {stylistLocations.map(loc => (
               <div key={loc.id} className="card-elevated p-4">
@@ -183,9 +334,7 @@ const StylistProfilePage = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       {!loc.isPrimary && (
-                        <button onClick={() => handleSetPrimary(loc.id)} className="text-xs text-primary font-medium btn-press">
-                          <Star size={14} />
-                        </button>
+                        <button onClick={() => handleSetPrimary(loc.id)} className="text-xs text-primary font-medium btn-press"><Star size={14} /></button>
                       )}
                       <button onClick={() => handleEditLocation(loc.id)} className="text-xs text-muted-foreground font-medium btn-press">Edit</button>
                       <button onClick={() => setConfirmDeleteLoc(loc.id)} className="text-xs text-destructive font-medium btn-press">Remove</button>
@@ -195,7 +344,6 @@ const StylistProfilePage = () => {
               </div>
             ))}
           </div>
-
           {showAddLocation ? (
             <div className="card-elevated p-4 space-y-2">
               <input type="text" value={newLocName} onChange={e => setNewLocName(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" placeholder="Location name" />
@@ -212,67 +360,32 @@ const StylistProfilePage = () => {
           )}
         </div>
 
-        {/* Services */}
+        {/* ─── Notifications ─── */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-label">Services</h3>
-            <button onClick={() => setEditingServices(!editingServices)} className="text-xs font-medium text-primary">{editingServices ? 'Done' : 'Edit'}</button>
-          </div>
-          {!editingServices ? (
-            <div className="card-elevated p-4">
-              {profile.services.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {profile.services.map(s => <span key={s} className="text-xs bg-secondary text-foreground px-2.5 py-1 rounded-full">{s}</span>)}
+          <h3 className="text-label mb-3">Notifications</h3>
+          <div className="card-elevated divide-y divide-border">
+            {[
+              { key: 'clientReminders' as const, label: 'Client check-in reminders', desc: 'Nudge when a returning client is due' },
+              { key: 'quizReminders' as const, label: 'Quiz reminders', desc: 'Weekly reminder to test your knowledge' },
+              { key: 'weeklyDigest' as const, label: 'Weekly activity digest', desc: 'Summary of your scalp checks this week' },
+            ].map(opt => (
+              <div key={opt.key} className="flex items-center justify-between p-4">
+                <div className="flex-1 mr-3">
+                  <p className="text-sm text-foreground">{opt.label}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{opt.desc}</p>
                 </div>
-              ) : <p className="text-sm text-muted-foreground">No services set</p>}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-2">
-              {allServices.map(s => (
-                <button key={s} onClick={() => toggleService(s)} className={`p-3 rounded-xl border-2 text-left text-xs font-medium transition-colors ${profile.services.includes(s) ? 'border-primary bg-primary/5 text-foreground' : 'border-border text-muted-foreground'}`}>{s}</button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Goals */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-label">Goals</h3>
-            <button onClick={() => setEditingGoals(!editingGoals)} className="text-xs font-medium text-primary">{editingGoals ? 'Done' : 'Edit'}</button>
-          </div>
-          {!editingGoals ? (
-            <div className="card-elevated p-4">
-              {profile.goals.length > 0 ? (
-                <div className="space-y-2">
-                  {profile.goals.map(g => (
-                    <div key={g} className="flex items-start gap-2">
-                      <Check size={14} className="text-primary flex-shrink-0 mt-0.5" strokeWidth={2} />
-                      <p className="text-sm text-foreground">{g}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : <p className="text-sm text-muted-foreground">No goals set</p>}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {allGoals.map(g => (
-                <button key={g} onClick={() => toggleGoal(g)} className={`w-full text-left p-3 rounded-xl border-2 transition-colors ${profile.goals.includes(g) ? 'border-primary bg-primary/5' : 'border-border'}`}>
-                  <div className="flex items-center gap-2">
-                    <div className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 ${profile.goals.includes(g) ? 'bg-primary' : 'border-2 border-border'}`}>
-                      {profile.goals.includes(g) && <Check size={10} className="text-primary-foreground" strokeWidth={2.5} />}
-                    </div>
-                    <span className="text-sm text-foreground">{g}</span>
-                  </div>
+                <button onClick={() => setNotifications(prev => ({ ...prev, [opt.key]: !prev[opt.key] }))}
+                  className={`w-11 h-6 rounded-full transition-colors relative flex-shrink-0 ${notifications[opt.key] ? 'bg-primary' : 'bg-border'}`}>
+                  <div className={`w-5 h-5 rounded-full bg-card shadow-sm absolute top-0.5 transition-transform ${notifications[opt.key] ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
                 </button>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Data & Privacy */}
+        {/* ─── Account & Privacy ─── */}
         <div className="mb-6">
-          <h3 className="text-label mb-3">Data & Privacy</h3>
+          <h3 className="text-label mb-3">Account & Privacy</h3>
           <div className="card-elevated p-4 mb-3">
             <div className="flex items-start gap-3">
               <Shield size={20} className="text-primary mt-0.5 flex-shrink-0" strokeWidth={1.5} />
@@ -290,36 +403,43 @@ const StylistProfilePage = () => {
               <div className="card-elevated p-4 space-y-3">
                 <div className="relative">
                   <label className="text-xs font-medium text-muted-foreground mb-1 block">Current password</label>
-                  <input type={showCurrentPw ? 'text' : 'password'} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="w-full h-10 px-3 pr-10 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
+                  <input type={showCurrentPw ? 'text' : 'password'} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)}
+                    className="w-full h-10 px-3 pr-10 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
                   <button type="button" onClick={() => setShowCurrentPw(!showCurrentPw)} className="absolute right-3 top-7 text-muted-foreground">{showCurrentPw ? <EyeOff size={16} /> : <Eye size={16} />}</button>
                 </div>
                 <div className="relative">
                   <label className="text-xs font-medium text-muted-foreground mb-1 block">New password</label>
-                  <input type={showNewPw ? 'text' : 'password'} value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full h-10 px-3 pr-10 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
+                  <input type={showNewPw ? 'text' : 'password'} value={newPassword} onChange={e => setNewPassword(e.target.value)}
+                    className="w-full h-10 px-3 pr-10 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
                   <button type="button" onClick={() => setShowNewPw(!showNewPw)} className="absolute right-3 top-7 text-muted-foreground">{showNewPw ? <EyeOff size={16} /> : <Eye size={16} />}</button>
                 </div>
                 <div className="relative">
                   <label className="text-xs font-medium text-muted-foreground mb-1 block">Confirm new password</label>
-                  <input type={showConfirmPw ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="w-full h-10 px-3 pr-10 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
+                  <input type={showConfirmPw ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}
+                    className="w-full h-10 px-3 pr-10 rounded-lg border border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" />
                   <button type="button" onClick={() => setShowConfirmPw(!showConfirmPw)} className="absolute right-3 top-7 text-muted-foreground">{showConfirmPw ? <EyeOff size={16} /> : <Eye size={16} />}</button>
                 </div>
-                <button onClick={() => { toast({ title: 'Password updated' }); setCurrentPassword(''); setNewPassword(''); setConfirmPassword(''); setShowChangePassword(false); }} disabled={!currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword} className={`w-full h-10 rounded-xl font-medium text-sm btn-press transition-colors ${currentPassword && newPassword && confirmPassword && newPassword === confirmPassword ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'}`}>
+                <button onClick={() => { toast({ title: 'Password updated' }); setCurrentPassword(''); setNewPassword(''); setConfirmPassword(''); setShowChangePassword(false); }}
+                  disabled={!currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword}
+                  className={`w-full h-10 rounded-xl font-medium text-sm btn-press transition-colors ${currentPassword && newPassword && confirmPassword && newPassword === confirmPassword ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'}`}>
                   Update password
                 </button>
               </div>
             )}
-            <button onClick={() => { resetAll(); navigate('/'); }} className="card-elevated w-full p-4 text-left text-sm text-destructive flex items-center gap-2"><Trash2 size={16} strokeWidth={1.5} /> Delete all data</button>
+            <button onClick={() => { resetAll(); navigate('/'); }} className="card-elevated w-full p-4 text-left text-sm text-destructive flex items-center gap-2">
+              <Trash2 size={16} strokeWidth={1.5} /> Delete all data
+            </button>
           </div>
         </div>
 
-        {/* About */}
+        {/* ─── About ─── */}
         <div className="mb-6">
           <h3 className="text-label mb-3">About</h3>
           <div className="card-elevated p-4">
             <div className="flex items-start gap-3">
-              <Leaf size={16} className="text-primary mt-0.5" strokeWidth={1.8} />
+              <Scissors size={16} className="text-primary mt-0.5" strokeWidth={1.8} />
               <div>
-                <p className="text-sm text-foreground font-medium">FolliSense for Stylists</p>
+                <p className="text-sm text-foreground font-medium">FolliSense for Professionals</p>
                 <p className="text-xs text-muted-foreground mt-1">A professional tool for documenting and tracking client scalp health.</p>
                 <p className="text-xs text-muted-foreground mt-2">Version 1.0</p>
               </div>

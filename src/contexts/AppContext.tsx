@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+export interface BaselinePhoto {
+  area: string;
+  captured: boolean;
+  date: string;
+}
+
 export interface OnboardingData {
   hairType: string;
   chemicalProcessing: string;

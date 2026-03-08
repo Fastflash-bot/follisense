@@ -120,9 +120,32 @@ const CurlIcon = ({ type }: { type: string }) => {
   return patterns[type] || null;
 };
 
+const computeBaselineRisk = (itch: string, tenderness: string, hairline: string): 'green' | 'amber' | 'red' => {
+  const mildest = ['None', 'No concerns'];
+  const severe = ['Severe', 'Very concerned'];
+  const moderate = ['Moderate', 'Noticeable change'];
+
+  const values = [itch, tenderness, hairline];
+  if (values.every(v => mildest.includes(v))) return 'green';
+  if (values.some(v => severe.includes(v))) return 'red';
+  const moderateCount = values.filter(v => moderate.includes(v)).length;
+  if (moderateCount >= 2) return 'red';
+  return 'amber';
+};
+
+const getBaselineSevereFlaggedSymptoms = (itch: string, tenderness: string, hairline: string): string[] => {
+  const flagged: string[] = [];
+  const severe = ['Severe', 'Very concerned'];
+  const moderate = ['Moderate', 'Noticeable change'];
+  if (severe.includes(itch) || moderate.includes(itch)) flagged.push('scalp itching');
+  if (severe.includes(tenderness) || moderate.includes(tenderness)) flagged.push('tenderness');
+  if (severe.includes(hairline) || moderate.includes(hairline)) flagged.push('hairline changes');
+  return flagged;
+};
+
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { setOnboardingComplete, setOnboardingData, setBaselinePhotos } = useApp();
+  const { setOnboardingComplete, setOnboardingData, setBaselinePhotos, setBaselineRisk, setBaselineDate } = useApp();
   const [step, setStep] = useState(1);
   const [hairType, setHairType] = useState('');
   const [chemicalProcessing, setChemicalProcessing] = useState('');

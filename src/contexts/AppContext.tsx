@@ -138,6 +138,8 @@ interface AppContextType {
   stylistObservations: StylistObservationEntry[];
   healthProfile: HealthProfileData;
   setHealthProfile: (d: HealthProfileData) => void;
+  baselinePhotos: BaselinePhoto[];
+  setBaselinePhotos: (photos: BaselinePhoto[]) => void;
   resetAll: () => void;
 }
 

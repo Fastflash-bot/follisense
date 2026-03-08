@@ -36,7 +36,7 @@ const ResearchProgramme = () => {
         </div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <h1 className="text-2xl font-semibold mb-2">The ScalpSense Research Programme</h1>
+          <h1 className="text-2xl font-semibold mb-2">The FolliSense Research Programme</h1>
 
           <div className="space-y-4 text-sm text-muted-foreground leading-relaxed mt-6">
             <p>

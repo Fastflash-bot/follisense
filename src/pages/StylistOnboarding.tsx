@@ -114,7 +114,20 @@ const StylistOnboarding = () => {
                 <div><label className="text-sm font-medium text-foreground mb-1.5 block">Business or salon name</label><input type="text" value={profile.businessName} onChange={e => setProfile(p => ({ ...p, businessName: e.target.value }))} className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" /></div>
                 <div className="flex gap-3">
                   <div className="flex-1"><label className="text-sm font-medium text-foreground mb-1.5 block">City</label><input type="text" value={profile.city} onChange={e => setProfile(p => ({ ...p, city: e.target.value }))} className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" /></div>
-                  <div className="flex-1"><label className="text-sm font-medium text-foreground mb-1.5 block">Country</label><input type="text" value={profile.country} onChange={e => setProfile(p => ({ ...p, country: e.target.value }))} className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" /></div>
+                  <div className="flex-1">
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Country</label>
+                    <div className="relative">
+                      <select
+                        value={profile.country}
+                        onChange={e => setProfile(p => ({ ...p, country: e.target.value }))}
+                        className="w-full h-12 px-4 pr-10 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary appearance-none"
+                      >
+                        <option value="">Select</option>
+                        {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                      <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                    </div>
+                  </div>
                 </div>
               </div>
               <p className="text-sm font-medium text-foreground mb-3">Do you work from:</p>

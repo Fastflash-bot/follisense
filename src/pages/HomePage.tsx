@@ -445,14 +445,24 @@ const HomePage = () => {
             <div className="w-8 h-8 rounded-lg bg-sage-light flex items-center justify-center">
               <Leaf size={18} className="text-primary" strokeWidth={1.8} />
             </div>
-            <h3 className="font-semibold text-foreground">{onboardingData.isWornOutOnly ? 'Scalp check-in' : 'Mid-cycle check-in'}</h3>
+            <h3 className="font-semibold text-foreground">
+              {isMale
+                ? (onboardingData.barberFrequency ? 'Scalp check-in' : 'Scalp check-in')
+                : (onboardingData.isWornOutOnly ? 'Scalp check-in' : 'Mid-cycle check-in')}
+            </h3>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            {onboardingData.isWornOutOnly
-              ? "It's been 2 weeks — ready for a quick scalp check?"
-              : "Hey — it's been 2 weeks since your braids went in. Quick check-in? Takes about a minute."}
+            {isMale
+              ? (onboardingData.barberFrequency
+                ? "It's been a couple of weeks since your last barber visit. Quick scalp check?"
+                : onboardingData.locRetwistFrequency
+                ? "Your locs have been in for 2 weeks — time for a quick scalp check?"
+                : "Ready for a quick scalp check? Takes about a minute.")
+              : (onboardingData.isWornOutOnly
+                ? "It's been 2 weeks — ready for a quick scalp check?"
+                : `Hey — it's been 2 weeks since your ${(onboardingData.protectiveStyles[0] || 'braids').toLowerCase()} went in. Quick check-in? Takes about a minute.`)}
           </p>
-          <button onClick={() => navigate(onboardingData.isWornOutOnly ? '/wash-day?mode=regular' : '/mid-cycle')} className="w-full h-12 bg-primary text-primary-foreground rounded-xl font-semibold text-sm btn-press">Start check-in</button>
+          <button onClick={() => navigate(isMale ? '/wash-day?mode=regular' : (onboardingData.isWornOutOnly ? '/wash-day?mode=regular' : '/mid-cycle'))} className="w-full h-12 bg-primary text-primary-foreground rounded-xl font-semibold text-sm btn-press">Start check-in</button>
         </div>
 
         {/* Got a question? - points to Learn since chat is floating */}

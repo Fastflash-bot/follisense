@@ -610,8 +610,8 @@ const Onboarding = () => {
                   {chemicalOptionsSimple.map(opt => (
                     <button key={opt} onClick={() => {
                       setChemicalProcessing(opt);
-                      if (opt !== 'Yes') { setChemicalSubSelection(''); setChemicalMultiple([]); }
-                      if (opt === 'No, fully natural' || opt === 'Not sure') setLastChemicalTreatment('');
+                      if (opt === 'No, fully natural') { setChemicalMultiple([]); setLastChemicalTreatment(''); }
+                      if (opt !== 'Yes') setChemicalMultiple([]);
                     }} className={`selection-card w-full text-left ${chemicalProcessing === opt ? 'selected' : ''}`}>
                       <p className="font-medium text-foreground text-sm">{opt}</p>
                     </button>
@@ -619,17 +619,12 @@ const Onboarding = () => {
                 </div>
                 {chemicalProcessing === 'Yes' && (
                   <div className="mt-3 p-3 rounded-xl bg-accent space-y-2">
-                    <p className="text-xs text-muted-foreground mb-2">What kind of processing?</p>
-                    {chemicalSubOptions.map(opt => (
-                      <button key={opt} onClick={() => { setChemicalSubSelection(opt); if (opt !== 'Multiple') setChemicalMultiple([]); }} className={`pill-option ${chemicalSubSelection === opt ? 'selected' : ''}`}>{opt}</button>
-                    ))}
-                  </div>
-                )}
-                {chemicalSubSelection === 'Multiple' && (
-                  <div className="flex flex-wrap gap-2 mt-3 p-3 rounded-xl bg-accent">
-                    {chemicalMultipleOptions.map(opt => (
-                      <button key={opt} onClick={() => toggleChemMulti(opt)} className={`pill-option ${chemicalMultiple.includes(opt) ? 'selected' : ''}`}>{opt}</button>
-                    ))}
+                    <p className="text-xs text-muted-foreground mb-2">What type of processing?</p>
+                    <div className="flex flex-wrap gap-2">
+                      {chemicalTypeOptions.map(opt => (
+                        <button key={opt} onClick={() => toggleChemMulti(opt)} className={`pill-option ${chemicalMultiple.includes(opt) ? 'selected' : ''}`}>{opt}</button>
+                      ))}
+                    </div>
                   </div>
                 )}
                 {showChemicalFollowUp && (

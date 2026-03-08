@@ -34,6 +34,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import MyRoutine from "./pages/MyRoutine";
 import StylistLearnPage from "./pages/StylistLearnPage";
 import ScalpQuiz from "./pages/ScalpQuiz";
+import SalonCheckIn from "./pages/SalonCheckIn";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,7 @@ const App = () => (
               <Route path="/history" element={<HistoryPage />} />
               <Route path="/learn" element={<LearnPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/salon-checkin" element={<SalonCheckIn />} />
               <Route path="/stylist/signup" element={<StylistSignUpPage />} />
               <Route path="/stylist/login" element={<StylistLoginPage />} />
               <Route path="/stylist/onboarding" element={<StylistOnboarding />} />

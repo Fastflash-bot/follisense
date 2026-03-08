@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 const ClinicianSummary = () => {
   const navigate = useNavigate();
-  const { onboardingData, currentCheckIn } = useApp();
+  const { onboardingData, currentCheckIn, healthProfile } = useApp();
 
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 

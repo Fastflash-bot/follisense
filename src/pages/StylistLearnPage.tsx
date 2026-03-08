@@ -182,7 +182,7 @@ const StylistLearnPage = () => {
         {/* Quiz card */}
         {(() => {
           let quiz = { totalPoints: 0, currentStreak: 0 };
-          try { const s = localStorage.getItem('scalpsense-quiz'); if (s) quiz = JSON.parse(s); } catch {}
+          try { const s = localStorage.getItem('follisense-quiz'); if (s) quiz = JSON.parse(s); } catch {}
           return (
             <button onClick={() => navigate('/stylist/quiz')} className="card-elevated p-4 w-full text-left flex items-center justify-between mb-5 btn-press">
               <div>

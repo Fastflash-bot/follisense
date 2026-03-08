@@ -362,7 +362,7 @@ const Onboarding = () => {
             {/* Step 1: Hair type & chemical processing */}
             {step === 1 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">Let's get to know your hair</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">Let's get to know your hair</h2>
                 <p className="text-muted-foreground mb-6">Select the option closest to your hair type</p>
                 <div className="space-y-3 mb-8">
                   {hairTypes.map(ht => (
@@ -397,7 +397,7 @@ const Onboarding = () => {
             {/* Step 2: Hair styles */}
             {step === 2 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">How do you usually wear your hair?</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">How do you usually wear your hair?</h2>
                 <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
                 <div className="grid grid-cols-2 gap-3">
                   {styleOptions.slice(0, 8).map(s => (
@@ -439,7 +439,7 @@ const Onboarding = () => {
             {/* Step 3: Cycle / routine */}
             {step === 3 && !isWornOutOnly && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">Your cycle</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">Your cycle</h2>
                 <p className="text-muted-foreground mb-6">How long do you typically keep a style in?</p>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {cycleLengths.map(c => (
@@ -464,7 +464,7 @@ const Onboarding = () => {
                   </div>
                 )}
                 <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-1">How do you care for your scalp during a protective style?</h3>
+                  <h3 className="text-base font-medium text-foreground mb-1">How do you care for your scalp during a protective style?</h3>
                   <p className="text-muted-foreground text-sm mb-4">How often do you wash or wet your scalp?</p>
                   <div className="flex flex-wrap gap-2">
                     {washFrequencyOptions.map(w => (
@@ -494,7 +494,7 @@ const Onboarding = () => {
 
             {step === 3 && isWornOutOnly && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">Your routine</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">Your routine</h2>
                 <p className="text-muted-foreground mb-6">How often do you wash your hair?</p>
                 <div className="mb-8">
                   <div className="flex flex-wrap gap-2">
@@ -525,8 +525,8 @@ const Onboarding = () => {
                   </motion.div>
                 ) : (
                   <div>
-                    <h2 className="text-2xl font-semibold mb-2">Quick check-in — how are things right now?</h2>
-                    <p className="text-muted-foreground mb-6">This helps us set your starting point</p>
+                    <h2 className="text-lg font-medium text-foreground mb-2">How are things right now?</h2>
+                    <p className="text-muted-foreground mb-6">Just a few questions so we know where you're starting from</p>
 
                     <div className="flex gap-1 mb-6">
                       {baselineQuestions.map((_, i) => (
@@ -542,7 +542,7 @@ const Onboarding = () => {
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <h3 className="text-lg font-semibold mb-4">{baselineQuestions[baselineStep].q}</h3>
+                        <h3 className="text-base font-medium text-foreground mb-4">{baselineQuestions[baselineStep].q}</h3>
                         <div className="space-y-3">
                           {baselineQuestions[baselineStep].options.map((opt, optIdx) => (
                             <button
@@ -568,7 +568,7 @@ const Onboarding = () => {
                     <Eye size={32} className="text-warning-foreground" strokeWidth={1.8} />
                   </motion.div>
                 </div>
-                <h2 className="text-2xl font-semibold text-center mb-2">Thanks for sharing — a couple of things to note</h2>
+                <h2 className="text-lg font-medium text-foreground text-center mb-2">Thanks for sharing — a couple of things to note</h2>
                 <p className="text-muted-foreground text-center mb-6">You have some symptoms worth tracking from the start. We'll factor this into your first check-in so we can see how things develop.</p>
                 <div className="card-elevated p-5 mb-4">
                   <h3 className="font-semibold mb-3">In the meantime</h3>
@@ -597,7 +597,7 @@ const Onboarding = () => {
                     <Stethoscope size={32} className="text-destructive-foreground" strokeWidth={1.8} />
                   </motion.div>
                 </div>
-                <h2 className="text-2xl font-semibold text-center mb-2">We'd recommend seeking advice soon</h2>
+                <h2 className="text-lg font-medium text-foreground text-center mb-2">We'd recommend seeking advice soon</h2>
                 <p className="text-muted-foreground text-center mb-6">The symptoms you've described — especially {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).join(' and ')} — are worth getting checked sooner rather than later.</p>
                 <div className="card-elevated p-5 mb-4">
                   <h3 className="font-semibold mb-2">Who to see</h3>
@@ -616,7 +616,7 @@ const Onboarding = () => {
             {/* Step 5: Baseline photos */}
             {step === 5 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">Capture your starting point</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">Capture your starting point</h2>
                 <p className="text-muted-foreground mb-6">A baseline photo helps you spot gradual changes that are hard to notice day to day</p>
                 <div className="space-y-3 mb-6">
                   {baselineAreas.map(area => (
@@ -644,7 +644,7 @@ const Onboarding = () => {
             {/* Step 6: Products */}
             {step === 6 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">What products do you use on your scalp?</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">What products do you use on your scalp?</h2>
                 <p className="text-muted-foreground mb-6">This helps us understand what might be affecting your scalp health</p>
                 <div className="grid grid-cols-2 gap-3">
                   {productOptions.slice(0, 8).map(p => (
@@ -680,8 +680,15 @@ const Onboarding = () => {
             {/* Step 7: Menstrual cycle */}
             {step === 7 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">Do you want to link your menstrual cycle?</h2>
-                <p className="text-muted-foreground mb-6">Hormonal changes can affect your scalp — tracking this helps us give smarter insights</p>
+                <h2 className="text-lg font-medium text-foreground mb-2">Do you want to link your menstrual cycle?</h2>
+                <p className="text-muted-foreground mb-4">Your hormones have a direct effect on your scalp</p>
+
+                <div className="rounded-2xl bg-secondary/50 p-4 mb-6">
+                  <p className="text-sm text-foreground leading-relaxed">
+                    Oestrogen, progesterone, and testosterone fluctuate throughout your cycle and can affect scalp oiliness, sensitivity, and shedding. Linking your cycle lets us give you context when symptoms change, so you know what's hormonal and what's worth investigating.
+                  </p>
+                </div>
+
                 <div className="space-y-3 mb-6">
                   {["Yes, I'd like to track", 'No thanks', "I don't menstruate"].map(opt => (
                     <button
@@ -735,7 +742,7 @@ const Onboarding = () => {
             {/* Step 8: Goals */}
             {step === 8 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">What matters most to you right now?</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">What matters most to you right now?</h2>
                 <p className="text-muted-foreground mb-6">Pick up to 3 — this helps us focus your experience</p>
                 <div className="space-y-3 mb-6">
                   {goalOptions.map(g => (

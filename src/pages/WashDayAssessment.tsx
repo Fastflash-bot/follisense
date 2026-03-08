@@ -46,7 +46,7 @@ const scalpSteps = [
   },
   {
     key: 'hairline',
-    q: 'How are your edges looking?',
+    q: 'How are your edges and temples looking?',
     options: [
       { label: 'No change', desc: 'Edges look the same as usual' },
       { label: 'Looks a bit thinner', desc: 'Slight difference, not sure' },
@@ -69,7 +69,7 @@ const scalpSteps = [
 const hairHealthSteps = [
   {
     key: 'hairFeel',
-    q: "How's your hair feeling right now?",
+    q: "How's your hair feeling?",
     options: [
       { label: 'Soft and moisturised as usual', desc: '' },
       { label: 'A bit dry', desc: '' },
@@ -79,7 +79,7 @@ const hairHealthSteps = [
   },
   {
     key: 'hairBreakage',
-    q: 'Any breakage lately?',
+    q: 'Any breakage?',
     options: [
       { label: 'No breakage', desc: '' },
       { label: 'A little — mostly at the ends', desc: '' },
@@ -89,7 +89,7 @@ const hairHealthSteps = [
   },
   {
     key: 'hairAppearance',
-    q: 'How does your hair look overall compared to your normal?',
+    q: 'How does your hair look overall?',
     options: [
       { label: 'Looks healthy, no changes', desc: '' },
       { label: 'A bit dull or lacklustre', desc: '' },
@@ -284,6 +284,7 @@ const WashDayAssessment = () => {
               className="pt-4"
             >
               <p className="text-label mb-2">Braids — Day 28 of 28</p>
+              <p className="text-sm text-muted-foreground mb-1">Let's see how your scalp did this cycle</p>
               <h2 className="text-xl font-semibold mb-6">{currentQ.q}</h2>
               <div className="space-y-3">
                 {currentQ.options.map((opt, optIdx) => (
@@ -330,10 +331,11 @@ const WashDayAssessment = () => {
               transition={{ duration: 0.2 }}
               className="pt-4"
             >
-              <h2 className="text-xl font-semibold mb-2">Want to add a photo?</h2>
-              <p className="text-muted-foreground text-sm mb-6">
-                Tracking your hairline visually over time can help you spot gradual changes. Photos are stored on your device only — never uploaded.
+              <h2 className="text-xl font-semibold mb-2">Want to add photos?</h2>
+              <p className="text-muted-foreground text-sm mb-1">
+                Tracking visually helps you spot gradual changes.
               </p>
+              <p className="text-xs text-muted-foreground mb-6">Photos stay on your device only.</p>
 
               {!photoSaved ? (
                 <div className="space-y-3 mb-8">

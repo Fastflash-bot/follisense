@@ -67,6 +67,8 @@ const HomePage = () => {
   const [stylistName, setStylistName] = useState('');
   const [visitNotes, setVisitNotes] = useState('');
   const [dismissedWashPrompt, setDismissedWashPrompt] = useState(false);
+  const [dismissedCheckInModal, setDismissedCheckInModal] = useState(false);
+  const [showCheckInModal, setShowCheckInModal] = useState(true);
 
   const [showQuickLog, setShowQuickLog] = useState(false);
   const [quickLogStep, setQuickLogStep] = useState(0);
@@ -114,11 +116,12 @@ const HomePage = () => {
   const showWashPrompt = !onboardingData.isWornOutOnly && daysUntilWash <= 2 && !dismissedWashPrompt;
 
   const recentEntries = [
-    { label: 'Wash day check-in', date: 'Feb 20', risk: 'green' as const },
-    { label: 'Quick log: itching', date: 'Feb 15', risk: 'amber' as const },
-    { label: 'Stylist observation', date: 'Feb 12', risk: 'amber' as const, icon: 'eye' },
-    { label: 'Mid-cycle check-in', date: 'Feb 10', risk: 'green' as const },
-    { label: 'Wash day check-in', date: 'Feb 6', risk: 'amber' as const },
+    { label: 'Wash day check-in', date: 'Mar 5', risk: 'amber' as const },
+    { label: 'Quick log: itching (moderate)', date: 'Feb 28', risk: 'amber' as const },
+    { label: 'Salon visit: Wash + Treatment', date: 'Feb 25', risk: 'green' as const, icon: 'scissors' },
+    { label: 'Stylist observation', date: 'Feb 25', risk: 'amber' as const, icon: 'eye' },
+    { label: 'Mid-cycle check-in', date: 'Feb 20', risk: 'green' as const },
+    { label: 'Wash day check-in', date: 'Feb 12', risk: 'green' as const },
   ];
 
   const size = 120;
@@ -330,6 +333,63 @@ const HomePage = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* Check-In Prompt Modal */}
+      <AnimatePresence>
+        {showCheckInModal && !dismissedCheckInModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-foreground/30 z-[55] flex items-center justify-center px-6"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-card rounded-3xl p-6 max-w-sm w-full shadow-card"
+            >
+              {!onboardingData.isWornOutOnly ? (
+                <>
+                  <p className="text-foreground leading-relaxed mb-6">
+                    Hey — your braids have been in for 14 days. Quick scalp check? Takes about a minute.
+                  </p>
+                  <button
+                    onClick={() => { setDismissedCheckInModal(true); navigate('/mid-cycle'); }}
+                    className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3"
+                  >
+                    Start check-in
+                  </button>
+                  <button
+                    onClick={() => setDismissedCheckInModal(true)}
+                    className="w-full text-center text-sm text-muted-foreground py-2"
+                  >
+                    Remind me later
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-foreground leading-relaxed mb-6">
+                    Wash day? Let's see how your scalp did this cycle.
+                  </p>
+                  <button
+                    onClick={() => { setDismissedCheckInModal(true); navigate('/wash-day'); }}
+                    className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3"
+                  >
+                    Start assessment
+                  </button>
+                  <button
+                    onClick={() => setDismissedCheckInModal(true)}
+                    className="w-full text-center text-sm text-muted-foreground py-2"
+                  >
+                    Not washing today
+                  </button>
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Quick Log Modal */}
       <AnimatePresence>

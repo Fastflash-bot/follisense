@@ -770,82 +770,87 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Step 5: Baseline Response — dedicated full page */}
-            {step === 5 && baselineResultScreen === 'green' && (
-              <div>
-                <div className="flex justify-center mb-6 pt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-primary/15 flex items-center justify-center">
-                    <Check size={32} className="text-primary" strokeWidth={1.8} />
-                  </motion.div>
-                </div>
-                <h2 className="text-xl font-semibold text-foreground text-center mb-3">Everything looks good</h2>
-                <p className="text-muted-foreground text-center mb-8 leading-relaxed">Your scalp and hair seem to be in a healthy place right now. We'll use this as your baseline and track how things change over time.</p>
-              </div>
-            )}
+            {/* Step 5: Baseline Response — dedicated full page, dynamically built from answers */}
+            {step === 5 && (() => {
+              const bItch = baselineAnswers.itch || '';
+              const bTenderness = baselineAnswers.tenderness || '';
+              const bHairline = baselineAnswers.hairline || '';
+              const bHairHealth = baselineAnswers.hairHealth || '';
+              const risk = computeBaselineRisk(bItch, bTenderness, bHairline, bHairHealth);
+              const symptoms = buildBaselineFlaggedSymptoms(bItch, bTenderness, bHairline, bHairHealth);
+              const tips = getBaselineTips(bItch, bTenderness, bHairline, bHairHealth);
 
-            {step === 5 && baselineResultScreen === 'amber' && (
-              <div>
-                <div className="flex justify-center mb-6 pt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-warning/15 flex items-center justify-center">
-                    <Eye size={32} className="text-warning" strokeWidth={1.8} />
-                  </motion.div>
+              if (risk === 'green') return (
+                <div>
+                  <div className="flex justify-center mb-6 pt-8">
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-primary/15 flex items-center justify-center">
+                      <Check size={32} className="text-primary" strokeWidth={1.8} />
+                    </motion.div>
+                  </div>
+                  <h2 className="text-xl font-semibold text-foreground text-center mb-3">Everything looks good</h2>
+                  <p className="text-muted-foreground text-center mb-8 leading-relaxed">Your scalp and hair seem to be in a healthy place right now. We'll use this as your baseline and track how things change over time.</p>
                 </div>
-                <h2 className="text-xl font-semibold text-foreground text-center mb-3">Thanks for sharing that</h2>
-                <p className="text-muted-foreground text-center mb-6 leading-relaxed">
-                  You've flagged a few things we'll want to keep an eye on. We've noted {getBaselineModerateSymptoms(itch, tenderness, hairline, baselineAnswers.hairHealth || '').join(', ')} as your starting point. As you check in over the coming weeks, we'll track whether these improve, stay the same, or need attention.
-                </p>
-                <div className="card-elevated p-5 mb-8">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-warning/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Sparkles size={16} className="text-warning" strokeWidth={1.8} />
+              );
+
+              if (risk === 'amber') return (
+                <div>
+                  <div className="flex justify-center mb-6 pt-8">
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-warning/15 flex items-center justify-center">
+                      <Eye size={32} className="text-warning" strokeWidth={1.8} />
+                    </motion.div>
+                  </div>
+                  <h2 className="text-xl font-semibold text-foreground text-center mb-3">Thanks for sharing that</h2>
+                  <p className="text-muted-foreground text-center mb-6 leading-relaxed">
+                    {buildBaselineAmberBody(symptoms)}
+                  </p>
+                  <div className="card-elevated p-5 mb-8">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-full bg-warning/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Sparkles size={16} className="text-warning" strokeWidth={1.8} />
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{tips[0]}</p>
                     </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{getBaselineTipForSymptoms(itch, tenderness, hairline, baselineAnswers.hairHealth || '')}</p>
                   </div>
                 </div>
-              </div>
-            )}
+              );
 
-            {step === 5 && baselineResultScreen === 'red' && (
-              <div>
-                <div className="flex justify-center mb-6 pt-8">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-destructive/15 flex items-center justify-center">
-                    <Stethoscope size={32} className="text-destructive" strokeWidth={1.8} />
-                  </motion.div>
-                </div>
-                <h2 className="text-xl font-semibold text-foreground text-center mb-3">We hear you, and we're glad you're here</h2>
-                <p className="text-muted-foreground text-center mb-6 leading-relaxed">
-                  What you're describing — {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).join(' and ')} — sounds like something worth getting professional advice on. You don't need to wait for a full cycle of tracking to take action.
-                </p>
-                <div className="card-elevated p-5 mb-4">
-                  <h3 className="font-semibold mb-3">Who can help</h3>
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Trichologist</strong> — specialises in hair and scalp conditions. Best first step for hair-specific concerns.</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Dermatologist</strong> — can investigate skin and scalp conditions in depth and prescribe treatment.</p>
-                    <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">GP</strong> — can run blood tests, check for underlying causes, and refer you onwards.</p>
+              // Red
+              return (
+                <div>
+                  <div className="flex justify-center mb-6 pt-8">
+                    <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5, ease: 'easeOut' }} className="w-20 h-20 rounded-full bg-destructive/15 flex items-center justify-center">
+                      <Stethoscope size={32} className="text-destructive" strokeWidth={1.8} />
+                    </motion.div>
                   </div>
-                </div>
-                <div className="card-elevated p-5 mb-4">
-                  <h3 className="font-semibold mb-3">In the meantime</h3>
-                  <div className="space-y-2">
-                    {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).includes('scalp itching') && (
-                      <p className="text-sm text-muted-foreground leading-relaxed">• A gentle, fragrance-free scalp oil can help soothe irritation while you wait for an appointment.</p>
-                    )}
-                    {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).includes('tenderness') && (
-                      <p className="text-sm text-muted-foreground leading-relaxed">• Avoid any styles that pull on tender areas. If your current style hurts, it's okay to take it down early.</p>
-                    )}
-                    {getBaselineSevereFlaggedSymptoms(itch, tenderness, hairline).includes('hairline changes') && (
-                      <p className="text-sm text-muted-foreground leading-relaxed">• Give your hairline a complete break from tension — no tight styles, no edge control, no pulling.</p>
-                    )}
+                  <h2 className="text-xl font-semibold text-foreground text-center mb-3">We hear you, and we're glad you're here</h2>
+                  <p className="text-muted-foreground text-center mb-6 leading-relaxed">
+                    {buildBaselineRedBody(symptoms)}
+                  </p>
+                  <div className="card-elevated p-5 mb-4">
+                    <h3 className="font-semibold mb-3">Who can help</h3>
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Trichologist</strong> — specialises in hair and scalp conditions. Best first step for hair-specific concerns.</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">Dermatologist</strong> — can investigate skin and scalp conditions in depth and prescribe treatment.</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed"><strong className="text-foreground">GP</strong> — can run blood tests, check for underlying causes, and refer you onwards.</p>
+                    </div>
                   </div>
+                  <div className="card-elevated p-5 mb-4">
+                    <h3 className="font-semibold mb-3">In the meantime</h3>
+                    <div className="space-y-2">
+                      {tips.map((tip, i) => (
+                        <p key={i} className="text-sm text-muted-foreground leading-relaxed">• {tip}</p>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl bg-accent p-4 mb-4">
+                    <p className="text-sm text-muted-foreground leading-relaxed">Setting up ScalpSense now means you'll be building a symptom timeline that's really useful to bring to any consultation.</p>
+                  </div>
+                  <button onClick={() => navigate('/clinician-summary')} className="w-full h-12 rounded-xl border-2 border-border font-semibold text-sm btn-press mb-4 flex items-center justify-center gap-2">
+                    <Stethoscope size={16} strokeWidth={1.8} /> View your baseline summary
+                  </button>
                 </div>
-                <div className="rounded-2xl bg-accent p-4 mb-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">Setting up ScalpSense now means you'll be building a symptom timeline that's really useful to bring to any consultation.</p>
-                </div>
-                <button onClick={() => navigate('/clinician-summary')} className="w-full h-12 rounded-xl border-2 border-border font-semibold text-sm btn-press mb-4 flex items-center justify-center gap-2">
-                  <Stethoscope size={16} strokeWidth={1.8} /> View your baseline summary
-                </button>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Step 6: Baseline photos */}
             {step === 6 && (

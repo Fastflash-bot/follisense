@@ -2,6 +2,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, Eye, Stethoscope, ArrowLeft, Leaf } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import type { HealthProfileData } from '@/contexts/AppContext';
 
 type RiskLevel = 'green' | 'amber' | 'red';
 
@@ -23,13 +24,22 @@ const computeRisk = (checkIn: { itch?: string; tenderness?: string; hairline?: s
   return 'amber';
 };
 
+const hasTelogenTriggers = (hp: HealthProfileData): string[] => {
+  const triggers: string[] = [];
+  if (hp.pregnancyStatus === 'Postpartum (within 12 months)') triggers.push('postpartum status');
+  const validStressors = hp.recentStressors.filter(s => s !== 'None of these' && s !== 'Prefer not to say');
+  triggers.push(...validStressors);
+  return triggers;
+};
+
 const RiskOutput = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { currentCheckIn, riskOverride, setRiskOverride } = useApp();
+  const { currentCheckIn, riskOverride, setRiskOverride, healthProfile } = useApp();
 
   const paramRisk = searchParams.get('risk') as RiskLevel | null;
   const risk: RiskLevel = paramRisk || riskOverride || computeRisk(currentCheckIn);
+  const telogenTriggers = hasTelogenTriggers(healthProfile);
 
   const circleColors: Record<RiskLevel, string> = {
     green: 'bg-primary',
@@ -120,6 +130,15 @@ const RiskOutput = () => {
                 </ol>
               </div>
 
+              {telogenTriggers.length > 0 && (
+                <div className="rounded-2xl bg-accent p-5 mb-4">
+                  <h3 className="font-semibold mb-2">Worth knowing</h3>
+                  <p className="text-sm text-muted-foreground">
+                    You've mentioned {telogenTriggers.join(', ')}. Increased shedding can be a normal temporary response to these changes — this is sometimes called telogen effluvium. It usually resolves on its own within 6–12 months, but it's still worth monitoring. If you're concerned, a professional can help distinguish between temporary shedding and other causes.
+                  </p>
+                </div>
+              )}
+
               <div className="card-elevated p-5 mb-8">
                 <h3 className="font-semibold mb-2">We'll reassess</h3>
                 <p className="text-sm text-muted-foreground">
@@ -158,6 +177,15 @@ const RiskOutput = () => {
                   View clinical summary
                 </button>
               </div>
+
+              {telogenTriggers.length > 0 && (
+                <div className="rounded-2xl bg-accent p-5 mb-4">
+                  <h3 className="font-semibold mb-2">Worth knowing</h3>
+                  <p className="text-sm text-muted-foreground">
+                    You've mentioned {telogenTriggers.join(', ')}. Increased shedding can be a normal temporary response to these changes — this is sometimes called telogen effluvium. It usually resolves on its own within 6–12 months, but it's still worth monitoring. If you're concerned, a professional can help distinguish between temporary shedding and other causes.
+                  </p>
+                </div>
+              )}
 
               <div className="card-elevated p-5 mb-8">
                 <h3 className="font-semibold mb-2">Who to see</h3>

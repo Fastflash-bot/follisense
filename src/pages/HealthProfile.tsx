@@ -14,7 +14,7 @@ const HealthProfile = () => {
     setHealthProfile({ ...hp, [key]: value });
   };
 
-  const toggleMulti = (key: 'medicalConditions' | 'skinConditions', value: string) => {
+  const toggleMulti = (key: 'medicalConditions' | 'skinConditions' | 'recentStressors', value: string) => {
     const arr = hp[key];
     update(key, arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value]);
   };
@@ -30,7 +30,7 @@ const HealthProfile = () => {
   const isSectionComplete = (key: string) => {
     switch (key) {
       case 'scalp': return !!(hp.sweat && hp.exercise && hp.heatStyling && hp.satinCovering);
-      case 'medical': return !!(hp.medicalConditions.length > 0 && hp.pregnancyStatus && hp.medications);
+      case 'medical': return !!(hp.medicalConditions.length > 0 && hp.pregnancyStatus && hp.medications && hp.recentStressors.length > 0);
       case 'blood': return !!hp.lastBloodTest;
       case 'skin': return !!(hp.skinConditions.length > 0 && hp.sensitiveSkin);
       case 'hair': return !!(hp.previousHairLoss && hp.diagnosedCondition && hp.familyHistory);
@@ -156,6 +156,23 @@ const HealthProfile = () => {
                 <div>
                   <p className="text-sm font-medium text-foreground mb-2">Are you currently pregnant, postpartum, or breastfeeding?</p>
                   <RadioGroup value={hp.pregnancyStatus} options={['No', 'Pregnant', 'Postpartum (within 12 months)', 'Breastfeeding', 'Prefer not to say']} onChange={v => update('pregnancyStatus', v)} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Have you experienced any major changes or stressors in the last 6 months?</p>
+                  <MultiSelect
+                    selected={hp.recentStressors}
+                    options={[
+                      'Pregnancy or childbirth',
+                      'Significant emotional stress (bereavement, relationship breakdown, job loss)',
+                      'Major illness, surgery, or hospitalisation',
+                      'Significant weight loss or dietary change',
+                      'Started or stopped hormonal contraception',
+                      'Started or stopped HRT',
+                      'None of these',
+                      'Prefer not to say',
+                    ]}
+                    onToggle={v => toggleMulti('recentStressors', v)}
+                  />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground mb-2">Are you taking any medications that might affect your hair?</p>

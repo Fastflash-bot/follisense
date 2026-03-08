@@ -8,6 +8,8 @@ export interface OnboardingData {
   baselineItch: string;
   baselineTenderness: string;
   baselineHairline: string;
+  scalpProducts: string[];
+  productFrequency: string;
 }
 
 export interface CheckInData {
@@ -16,8 +18,28 @@ export interface CheckInData {
   hairline: string;
   flaking?: string;
   shedding?: string;
+  newProducts?: string;
+  newProductDetails?: string;
   type: 'mid-cycle' | 'wash-day';
   date: string;
+}
+
+export interface SalonVisit {
+  id: string;
+  date: string;
+  services: string[];
+  stylistName?: string;
+  notes?: string;
+}
+
+export interface ClientObservation {
+  id: string;
+  clientName: string;
+  date: string;
+  observations: string[];
+  photos: string[];
+  notes?: string;
+  risk: 'green' | 'amber' | 'red';
 }
 
 export interface CycleEntry {
@@ -38,8 +60,14 @@ interface AppContextType {
   currentCheckIn: CheckInData | null;
   setCurrentCheckIn: (d: CheckInData | null) => void;
   history: CycleEntry[];
+  salonVisits: SalonVisit[];
+  addSalonVisit: (v: SalonVisit) => void;
   riskOverride: 'green' | 'amber' | 'red' | null;
   setRiskOverride: (r: 'green' | 'amber' | 'red' | null) => void;
+  stylistMode: boolean;
+  setStylistMode: (v: boolean) => void;
+  clientObservations: ClientObservation[];
+  addClientObservation: (o: ClientObservation) => void;
   resetAll: () => void;
 }
 
@@ -51,6 +79,8 @@ const defaultOnboarding: OnboardingData = {
   baselineItch: '',
   baselineTenderness: '',
   baselineHairline: '',
+  scalpProducts: [],
+  productFrequency: '',
 };
 
 const demoHistory: CycleEntry[] = [
@@ -61,6 +91,18 @@ const demoHistory: CycleEntry[] = [
   { id: '5', style: 'Braids', startDate: 'Apr 3', endDate: 'Present', days: 14, risk: 'green' },
 ];
 
+const demoSalonVisits: SalonVisit[] = [
+  { id: 'sv1', date: 'Feb 2', services: ['Wash', 'Style installation'], stylistName: 'Ama' },
+  { id: 'sv2', date: 'Mar 19', services: ['Style removal/takedown', 'Treatment'], stylistName: 'Ama', notes: 'Deep conditioning treatment' },
+];
+
+const demoClientObservations: ClientObservation[] = [
+  { id: 'co1', clientName: 'A.M.', date: 'Mar 5', observations: ['Thinning at hairline / edges', 'Signs of traction damage'], photos: ['Hairline / edges'], notes: 'Recommended loosening edges on next install', risk: 'amber' },
+  { id: 'co2', clientName: 'T.K.', date: 'Mar 3', observations: ['Nothing of concern'], photos: [], risk: 'green' },
+  { id: 'co3', clientName: 'S.J.', date: 'Feb 28', observations: ['Excessive flaking or buildup', 'Scalp redness or irritation'], photos: ['Crown / vertex'], notes: 'Suggested anti-dandruff shampoo', risk: 'amber' },
+  { id: 'co4', clientName: 'R.B.', date: 'Feb 20', observations: ['Thinning at crown / vertex', 'Tender or sore areas'], photos: ['Crown / vertex', 'Hairline / edges'], risk: 'red' },
+];
+
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
@@ -68,12 +110,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [onboardingData, setOnboardingData] = useState<OnboardingData>(defaultOnboarding);
   const [currentCheckIn, setCurrentCheckIn] = useState<CheckInData | null>(null);
   const [riskOverride, setRiskOverride] = useState<'green' | 'amber' | 'red' | null>(null);
+  const [stylistMode, setStylistMode] = useState(false);
+  const [salonVisits, setSalonVisits] = useState<SalonVisit[]>(demoSalonVisits);
+  const [clientObservations, setClientObservations] = useState<ClientObservation[]>(demoClientObservations);
+
+  const addSalonVisit = (v: SalonVisit) => setSalonVisits(prev => [v, ...prev]);
+  const addClientObservation = (o: ClientObservation) => setClientObservations(prev => [o, ...prev]);
 
   const resetAll = () => {
     setOnboardingComplete(false);
     setOnboardingData(defaultOnboarding);
     setCurrentCheckIn(null);
     setRiskOverride(null);
+    setStylistMode(false);
+    setSalonVisits(demoSalonVisits);
+    setClientObservations(demoClientObservations);
   };
 
   return (
@@ -82,7 +133,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       onboardingData, setOnboardingData,
       currentCheckIn, setCurrentCheckIn,
       history: demoHistory,
+      salonVisits, addSalonVisit,
       riskOverride, setRiskOverride,
+      stylistMode, setStylistMode,
+      clientObservations, addClientObservation,
       resetAll,
     }}>
       {children}

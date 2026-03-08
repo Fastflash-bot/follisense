@@ -1,11 +1,23 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { User, ChevronRight, Leaf, Lightbulb } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarPicker } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+
+const serviceOptions = ['Wash', 'Treatment', 'Style installation', 'Style removal/takedown', 'Trim', 'Colour', 'Other'];
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { onboardingData, history } = useApp();
+  const { onboardingData, history, salonVisits, addSalonVisit } = useApp();
+  const [showSalonForm, setShowSalonForm] = useState(false);
+  const [visitDate, setVisitDate] = useState<Date>(new Date());
+  const [services, setServices] = useState<string[]>([]);
+  const [stylistName, setStylistName] = useState('');
+  const [visitNotes, setVisitNotes] = useState('');
 
   const currentStyle = onboardingData.protectiveStyles[0] || 'Braids';
   const currentDay = 14;
@@ -21,12 +33,28 @@ const HomePage = () => {
     { label: 'Wash day check-in', date: 'Feb 6', risk: 'amber' as const },
   ];
 
-  // Progress arc
   const size = 120;
   const stroke = 8;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (progress / 100) * circumference;
+
+  const toggleService = (s: string) => setServices(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+
+  const handleSaveSalon = () => {
+    addSalonVisit({
+      id: `sv-${Date.now()}`,
+      date: format(visitDate, 'MMM d'),
+      services,
+      stylistName: stylistName || undefined,
+      notes: visitNotes || undefined,
+    });
+    setShowSalonForm(false);
+    setServices([]);
+    setStylistName('');
+    setVisitNotes('');
+    setVisitDate(new Date());
+  };
 
   return (
     <div className="page-container pt-6">
@@ -71,6 +99,21 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+
+        {/* Salon visit card */}
+        <button
+          onClick={() => setShowSalonForm(true)}
+          className="card-elevated p-4 mb-4 w-full flex items-center gap-3 text-left"
+        >
+          <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+            <Scissors size={20} className="text-foreground" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1">
+            <p className="font-medium text-foreground text-sm">Log a salon visit</p>
+            <p className="text-xs text-muted-foreground">Track appointments and services</p>
+          </div>
+          <ChevronRight size={18} className="text-muted-foreground" />
+        </button>
 
         {/* Next action */}
         <div className="card-elevated p-5 mb-6">
@@ -123,6 +166,107 @@ const HomePage = () => {
           </div>
         </div>
       </motion.div>
+
+      {/* Salon Visit Modal */}
+      <AnimatePresence>
+        {showSalonForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-foreground/30 z-50 flex items-end justify-center"
+          >
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="bg-card rounded-t-3xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold">Log a salon visit</h3>
+                  <button onClick={() => setShowSalonForm(false)} className="p-1">
+                    <X size={22} className="text-muted-foreground" strokeWidth={1.8} />
+                  </button>
+                </div>
+
+                {/* Date picker */}
+                <div className="mb-5">
+                  <label className="text-sm font-medium text-foreground mb-2 block">Date of visit</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-left text-sm flex items-center gap-2">
+                        <Calendar size={16} className="text-muted-foreground" />
+                        <span className="text-foreground">{format(visitDate, 'PPP')}</span>
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarPicker
+                        mode="single"
+                        selected={visitDate}
+                        onSelect={(d) => d && setVisitDate(d)}
+                        initialFocus
+                        className={cn("p-3 pointer-events-auto")}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                {/* Services */}
+                <div className="mb-5">
+                  <label className="text-sm font-medium text-foreground mb-2 block">What was done?</label>
+                  <div className="flex flex-wrap gap-2">
+                    {serviceOptions.map(s => (
+                      <button
+                        key={s}
+                        onClick={() => toggleService(s)}
+                        className={`pill-option ${services.includes(s) ? 'selected' : ''}`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Stylist name */}
+                <div className="mb-5">
+                  <label className="text-sm font-medium text-foreground mb-2 block">Stylist name (optional)</label>
+                  <input
+                    type="text"
+                    value={stylistName}
+                    onChange={e => setStylistName(e.target.value)}
+                    placeholder="e.g. Ama"
+                    className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  />
+                </div>
+
+                {/* Notes */}
+                <div className="mb-6">
+                  <label className="text-sm font-medium text-foreground mb-2 block">Any notes? (optional)</label>
+                  <textarea
+                    value={visitNotes}
+                    onChange={e => setVisitNotes(e.target.value)}
+                    placeholder="e.g. Deep conditioning treatment"
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
+                  />
+                </div>
+
+                <button
+                  onClick={handleSaveSalon}
+                  disabled={services.length === 0}
+                  className={`w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors ${
+                    services.length > 0 ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'
+                  }`}
+                >
+                  Save visit
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

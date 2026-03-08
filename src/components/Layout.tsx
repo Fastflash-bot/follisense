@@ -1,19 +1,29 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Clock, BookOpen, User } from 'lucide-react';
+import { Home, Clock, BookOpen, User, Users } from 'lucide-react';
+import { useApp } from '@/contexts/AppContext';
 
-const tabs = [
+const consumerTabs = [
   { path: '/home', icon: Home, label: 'Home' },
   { path: '/history', icon: Clock, label: 'History' },
   { path: '/learn', icon: BookOpen, label: 'Learn' },
   { path: '/profile', icon: User, label: 'Profile' },
 ];
 
+const stylistTabs = [
+  { path: '/stylist', icon: Home, label: 'Home' },
+  { path: '/stylist/clients', icon: Users, label: 'Clients' },
+  { path: '/stylist/profile', icon: User, label: 'Profile' },
+];
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { stylistMode } = useApp();
 
-  const hiddenNavPaths = ['/', '/onboarding', '/mid-cycle', '/wash-day', '/results', '/clinician-summary'];
-  const showNav = !hiddenNavPaths.some(p => location.pathname.startsWith(p));
+  const hiddenNavPaths = ['/', '/onboarding', '/mid-cycle', '/wash-day', '/results', '/clinician-summary', '/stylist/observation'];
+  const showNav = !hiddenNavPaths.some(p => location.pathname === p);
+
+  const tabs = stylistMode ? stylistTabs : consumerTabs;
 
   return (
     <div className="min-h-screen bg-background">

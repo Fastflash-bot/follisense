@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, TrendingUp, Minus, ArrowUp } from 'lucide-react';
+import { ChevronDown, Minus, ArrowUp, Scissors } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
+type TimelineItem = {
+  type: 'cycle' | 'salon';
+  id: string;
+  date: string;
+  sortKey: string;
+};
+
 const HistoryPage = () => {
-  const { history } = useApp();
+  const { history, salonVisits } = useApp();
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const trends = [
@@ -13,6 +20,18 @@ const HistoryPage = () => {
     { label: 'Hairline', status: 'Worth monitoring', icon: ArrowUp, color: 'text-warning' },
     { label: 'Shedding', status: 'Normal range', icon: Minus, color: 'text-primary' },
   ];
+
+  // Build a merged timeline
+  const cycleItems: TimelineItem[] = [...history].reverse().map(e => ({
+    type: 'cycle', id: e.id, date: e.startDate, sortKey: e.id,
+  }));
+
+  const salonItems: TimelineItem[] = salonVisits.map(v => ({
+    type: 'salon', id: v.id, date: v.date, sortKey: v.id,
+  }));
+
+  // Interleave: cycles first, then salons inserted by position
+  const allItems = [...cycleItems, ...salonItems];
 
   return (
     <div className="page-container pt-6">
@@ -23,6 +42,7 @@ const HistoryPage = () => {
         <div className="relative mb-8">
           <div className="absolute left-[15px] top-4 bottom-4 w-0.5 bg-border" />
           <div className="space-y-3">
+            {/* Cycle entries */}
             {[...history].reverse().map(entry => (
               <div key={entry.id} className="relative pl-10">
                 <div className={`absolute left-[9px] top-5 w-3 h-3 rounded-full border-2 border-card ${
@@ -53,28 +73,66 @@ const HistoryPage = () => {
                         className="overflow-hidden"
                       >
                         <div className="pt-3 mt-3 border-t border-border space-y-1.5">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Itch</span>
-                            <span className="text-foreground">{entry.checkIn.itch}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Tenderness</span>
-                            <span className="text-foreground">{entry.checkIn.tenderness}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Hairline</span>
-                            <span className="text-foreground">{entry.checkIn.hairline}</span>
-                          </div>
-                          {entry.checkIn.flaking && (
-                            <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Flaking</span>
-                              <span className="text-foreground">{entry.checkIn.flaking}</span>
+                          {[
+                            { label: 'Itch', val: entry.checkIn.itch },
+                            { label: 'Tenderness', val: entry.checkIn.tenderness },
+                            { label: 'Hairline', val: entry.checkIn.hairline },
+                            { label: 'Flaking', val: entry.checkIn.flaking },
+                            { label: 'Shedding', val: entry.checkIn.shedding },
+                          ].filter(r => r.val).map(r => (
+                            <div key={r.label} className="flex justify-between text-sm">
+                              <span className="text-muted-foreground">{r.label}</span>
+                              <span className="text-foreground">{r.val}</span>
                             </div>
-                          )}
-                          {entry.checkIn.shedding && (
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              </div>
+            ))}
+
+            {/* Salon visit entries */}
+            {salonVisits.map(visit => (
+              <div key={visit.id} className="relative pl-10">
+                <div className="absolute left-[9px] top-5 w-3 h-3 rounded-full border-2 border-card bg-secondary" />
+                <button
+                  onClick={() => setExpanded(expanded === visit.id ? null : visit.id)}
+                  className="card-elevated p-4 w-full text-left border-l-4 border-l-secondary"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Scissors size={16} className="text-muted-foreground flex-shrink-0" strokeWidth={1.5} />
+                      <div>
+                        <p className="font-medium text-foreground">Salon visit</p>
+                        <p className="text-xs text-muted-foreground">{visit.date}{visit.stylistName ? ` · ${visit.stylistName}` : ''}</p>
+                      </div>
+                    </div>
+                    <ChevronDown
+                      size={18}
+                      className={`text-muted-foreground transition-transform ${expanded === visit.id ? 'rotate-180' : ''}`}
+                    />
+                  </div>
+
+                  <AnimatePresence>
+                    {expanded === visit.id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-3 mt-3 border-t border-border space-y-1.5">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Services</span>
+                            <span className="text-foreground text-right">{visit.services.join(', ')}</span>
+                          </div>
+                          {visit.notes && (
                             <div className="flex justify-between text-sm">
-                              <span className="text-muted-foreground">Shedding</span>
-                              <span className="text-foreground">{entry.checkIn.shedding}</span>
+                              <span className="text-muted-foreground">Notes</span>
+                              <span className="text-foreground text-right">{visit.notes}</span>
                             </div>
                           )}
                         </div>

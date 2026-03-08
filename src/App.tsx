@@ -15,6 +15,9 @@ import ClinicianSummary from "./pages/ClinicianSummary";
 import HistoryPage from "./pages/HistoryPage";
 import LearnPage from "./pages/LearnPage";
 import ProfilePage from "./pages/ProfilePage";
+import StylistHome from "./pages/StylistHome";
+import StylistObservation from "./pages/StylistObservation";
+import StylistClients from "./pages/StylistClients";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +41,10 @@ const App = () => (
               <Route path="/history" element={<HistoryPage />} />
               <Route path="/learn" element={<LearnPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/stylist" element={<StylistHome />} />
+              <Route path="/stylist/observation" element={<StylistObservation />} />
+              <Route path="/stylist/clients" element={<StylistClients />} />
+              <Route path="/stylist/profile" element={<ProfilePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

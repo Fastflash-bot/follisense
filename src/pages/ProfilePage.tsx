@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, ChevronRight, Shield, Info, Trash2, Leaf } from 'lucide-react';
+import { User, ChevronRight, Shield, Trash2, Leaf, Repeat } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { onboardingData, resetAll } = useApp();
+  const { onboardingData, resetAll, stylistMode, setStylistMode } = useApp();
 
   const [reminders, setReminders] = useState({
     midCycle: true,
@@ -23,6 +23,11 @@ const ProfilePage = () => {
     navigate('/');
   };
 
+  const handleModeSwitch = () => {
+    setStylistMode(!stylistMode);
+    navigate(stylistMode ? '/home' : '/stylist');
+  };
+
   return (
     <div className="page-container pt-6">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
@@ -34,26 +39,51 @@ const ProfilePage = () => {
           <h1 className="text-2xl font-semibold">Your profile</h1>
         </div>
 
-        {/* Hair settings */}
+        {/* Mode switch */}
         <div className="mb-6">
-          <h3 className="text-label mb-3">Hair & Style Settings</h3>
-          <div className="card-elevated divide-y divide-border">
-            {[
-              { label: 'Hair type', value: hairTypeLabel[onboardingData.hairType] || 'Not set' },
-              { label: 'Preferred styles', value: onboardingData.protectiveStyles.join(', ') || 'Not set' },
-              { label: 'Cycle length', value: onboardingData.cycleLength || 'Not set' },
-              { label: 'Wash frequency', value: onboardingData.washFrequency || 'Not set' },
-            ].map(item => (
-              <div key={item.label} className="flex items-center justify-between p-4">
-                <span className="text-sm text-foreground">{item.label}</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">{item.value}</span>
-                  <ChevronRight size={16} className="text-muted-foreground" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={handleModeSwitch}
+            className="card-elevated w-full p-5 flex items-center gap-4 border-2 border-secondary"
+          >
+            <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+              <Repeat size={22} className="text-foreground" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 text-left">
+              <p className="font-semibold text-foreground">
+                {stylistMode ? 'Switch to Personal Mode' : 'Switch to Stylist Mode'}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {stylistMode ? 'Go back to tracking your own scalp health' : 'Document scalp observations for your clients'}
+              </p>
+            </div>
+            <ChevronRight size={18} className="text-muted-foreground" />
+          </button>
         </div>
+
+        {/* Hair settings */}
+        {!stylistMode && (
+          <div className="mb-6">
+            <h3 className="text-label mb-3">Hair & Style Settings</h3>
+            <div className="card-elevated divide-y divide-border">
+              {[
+                { label: 'Hair type', value: hairTypeLabel[onboardingData.hairType] || 'Not set' },
+                { label: 'Preferred styles', value: onboardingData.protectiveStyles.join(', ') || 'Not set' },
+                { label: 'Cycle length', value: onboardingData.cycleLength || 'Not set' },
+                { label: 'Wash frequency', value: onboardingData.washFrequency || 'Not set' },
+                { label: 'Products', value: onboardingData.scalpProducts.join(', ') || 'Not set' },
+                { label: 'Product frequency', value: onboardingData.productFrequency || 'Not set' },
+              ].map(item => (
+                <div key={item.label} className="flex items-center justify-between p-4">
+                  <span className="text-sm text-foreground">{item.label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground max-w-[160px] truncate">{item.value}</span>
+                    <ChevronRight size={16} className="text-muted-foreground" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Notifications */}
         <div className="mb-6">

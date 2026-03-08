@@ -16,7 +16,7 @@ const LearnPage = () => {
   const [showConditionGuide, setShowConditionGuide] = useState(false);
   const pillsRef = useRef<HTMLDivElement>(null);
 
-  const isMale = onboardingData.gender === 'A man';
+  const isMale = onboardingData.gender === 'man';
 
   const sortedArticles = useMemo(() => {
     let filtered = articles;

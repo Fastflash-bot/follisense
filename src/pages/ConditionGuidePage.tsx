@@ -28,9 +28,9 @@ const ConditionDetail = ({ condition, onBack }: { condition: ConsumerCondition; 
   const allAnswered = totalAnswered === condition.selfCheck.length;
 
   const getResultMessage = () => {
-    if (yesCount <= 1) return { text: `This probably isn't ${condition.name}, but if you're concerned, it's always worth checking.`, color: 'text-emerald-700', bg: 'bg-emerald-50' };
-    if (yesCount < condition.selfCheck.length) return { text: `Some of what you're describing is consistent with ${condition.name}. Consider mentioning it at your next check-in or speaking to a professional.`, color: 'text-amber-700', bg: 'bg-amber-50' };
-    return { text: `What you're describing sounds like it could be ${condition.name}. We'd recommend seeing a trichologist or dermatologist. The earlier it's assessed, the more options you'll have.`, color: 'text-red-700', bg: 'bg-red-50' };
+    if (yesCount <= 1) return { text: `This probably isn't ${condition.name}, but if you're concerned, it's always worth checking.`, color: 'text-primary', bg: 'bg-sage-light' };
+    if (yesCount < condition.selfCheck.length) return { text: `Some of what you're describing is consistent with ${condition.name}. Consider mentioning it at your next check-in or speaking to a professional.`, color: 'text-warning', bg: 'bg-warning/10' };
+    return { text: `What you're describing sounds like it could be ${condition.name}. We'd recommend seeing a trichologist or dermatologist. The earlier it's assessed, the more options you'll have.`, color: 'text-destructive', bg: 'bg-destructive/10' };
   };
 
   return (

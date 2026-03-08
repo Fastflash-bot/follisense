@@ -20,12 +20,10 @@ const hairTypes = [
 
 const chemicalOptionsSimple = [
   'No, fully natural',
-  'Previously processed, growing out',
   'Yes',
-  'Not sure',
+  'Previously processed, currently growing out',
 ];
-const chemicalSubOptions = ['Relaxed or permed', 'Texturised', 'Colour treated', 'Bleached', 'Multiple'];
-const chemicalMultipleOptions = ['Relaxed', 'Texturised', 'Colour treated', 'Bleached'];
+const chemicalTypeOptions = ['Relaxed or permed', 'Texturised', 'Colour treated', 'Bleached'];
 
 const lastChemicalTreatmentOptions = [
   'Within the last month', '1 to 3 months ago', '3 to 6 months ago',

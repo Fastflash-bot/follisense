@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, ChevronRight, Shield, Trash2, Leaf, Repeat, Heart, Camera, RefreshCw, Target, Check, Calendar } from 'lucide-react';
+import { User, ChevronRight, Shield, Trash2, Leaf, Repeat, Heart, Camera, RefreshCw, Target, Check, Calendar, Microscope } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 const goalOptions = [

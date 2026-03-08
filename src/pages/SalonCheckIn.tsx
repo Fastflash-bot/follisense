@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Camera, Upload, MapPin, Check, X, MessageSquare, ClipboardCheck, ChevronRight } from 'lucide-react';
-import { useApp } from '@/contexts/AppContext';
+import { ArrowLeft, Camera, Upload, Check, X, ClipboardCheck } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const regions = ['Front hairline', 'Crown / vertex', 'Nape', 'Left temple', 'Right temple', 'Part line', 'Area of concern'];

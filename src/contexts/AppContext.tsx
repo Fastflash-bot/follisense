@@ -79,6 +79,8 @@ export interface HealthProfileData {
   skinConditions: string[];
   skinConditionDetails: string;
   sensitiveSkin: string;
+  // Life changes / stressors
+  recentStressors: string[];
   // Hair history
   previousHairLoss: string;
   diagnosedCondition: string;

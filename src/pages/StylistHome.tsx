@@ -52,7 +52,12 @@ const StylistHome = () => {
           <span className="text-sm font-semibold text-foreground">ScalpSense</span>
           <span className="text-[10px] font-medium bg-secondary text-foreground px-2 py-0.5 rounded-full">Stylist</span>
         </div>
-        <h1 className="text-2xl font-semibold mb-1">ScalpSense for Stylists</h1>
+        <h1 className="text-2xl font-semibold mb-0.5">Hi {userName || 'there'}</h1>
+        {stylistProfile?.role && (
+          <p className="text-sm text-muted-foreground mb-1">
+            {stylistProfile.role}{stylistProfile.businessName ? ` at ${stylistProfile.businessName}` : ''}
+          </p>
+        )}
         <p className="text-muted-foreground text-sm mb-6">Document scalp observations for your clients</p>
 
         {/* New observation button */}

@@ -152,6 +152,7 @@ export const stylistConditions: StylistCondition[] = [
     whatToTell: '"Your scalp looks irritated from the chemical treatment. Let it heal completely before any further processing. If it\'s blistering or weeping, see a doctor."',
     whatYouCanDo: 'Do not apply any further chemicals to the area. Do not install a tight style over damaged scalp. Allow full healing before any styling.',
     severityGuide: 'Mild redness = monitor. Blistering, open wounds, or persistent rawness = refer.',
+    darkerSkinNote: 'On darker skin: Fresh chemical burns may appear darker, ashy, or slightly purple rather than red. In severe cases you may see lighter patches where the skin has been damaged. Scarring from repeated burns often presents as hypopigmented (lighter) smooth patches on brown skin.',
   },
 ];
 

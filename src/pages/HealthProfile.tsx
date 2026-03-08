@@ -30,7 +30,7 @@ const HealthProfile = () => {
   const isSectionComplete = (key: string) => {
     switch (key) {
       case 'scalp': return !!(hp.sweat && hp.exercise && hp.heatStyling && hp.satinCovering);
-      case 'medical': return !!(hp.medicalConditions.length > 0 && hp.pregnancyStatus && hp.medications);
+      case 'medical': return !!(hp.medicalConditions.length > 0 && hp.pregnancyStatus && hp.medications && hp.recentStressors.length > 0);
       case 'blood': return !!hp.lastBloodTest;
       case 'skin': return !!(hp.skinConditions.length > 0 && hp.sensitiveSkin);
       case 'hair': return !!(hp.previousHairLoss && hp.diagnosedCondition && hp.familyHistory);

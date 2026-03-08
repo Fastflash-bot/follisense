@@ -392,8 +392,8 @@ const Onboarding = () => {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-[430px] mx-auto px-6">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="max-w-[430px] mx-auto px-6 flex-1 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between py-4">
           {step > 0 ? (
@@ -409,6 +409,7 @@ const Onboarding = () => {
           <div className="w-10" />
         </div>
 
+        <div className="flex-1 overflow-y-auto min-h-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={step === 4 ? `4-${baselineStep}-${baselineAck ? 'ack' : 'q'}` : step}

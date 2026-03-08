@@ -256,6 +256,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Is the area red, raw, or sore?' },
       { question: 'Can you see a clear boundary between affected and normal scalp?' },
     ],
+    photoGallery: [
+      { label: 'Chemical irritation', description: 'Chemical irritation on the scalp after a relaxer treatment on darker skin' },
+      { label: 'Chemical burn', description: 'Active chemical burn showing rawness and blistering at the hairline' },
+      { label: 'Scarring from repeated burns', description: 'Permanent scarring and hair loss from repeated chemical burns on darker skin' },
+    ],
     actionSteps: [
       'Stop all chemical and heat treatments on the affected area immediately',
       'Let it heal completely before any further processing',
@@ -268,6 +273,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If there's blistering, open wounds, or persistent rawness, see a doctor. If you're seeing permanent bare patches from repeated damage, a dermatologist can assess.",
     relatedArticleId: undefined,
     dermnetUrl: 'https://dermnetnz.org/topics/chemical-burn',
+    externalLinkLabel: 'DermNet NZ — Chemical burns',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could this be chemical damage?', 'Will my hair grow back after a chemical burn?', 'What should I tell my doctor about this?'],
   },
 ];

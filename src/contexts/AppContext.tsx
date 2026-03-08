@@ -262,6 +262,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [baselineRisk, setBaselineRisk] = useState<'green' | 'amber' | 'red' | null>(null);
   const [baselineDate, setBaselineDate] = useState<string | null>(null);
   const [quickLogs, setQuickLogs] = useState<QuickLogEntry[]>([]);
+  const [research, setResearch] = useState<ResearchData>({ consented: false, consentDate: null, photoCount: 0, dismissed: false });
+  const [checkInCount, setCheckInCount] = useState(3); // demo: 3 completed
 
   const addSalonVisit = (v: SalonVisit) => setSalonVisits(prev => [v, ...prev]);
   const addClientObservation = (o: ClientObservation) => setClientObservations(prev => [o, ...prev]);

@@ -129,7 +129,7 @@ const ReferralGuide = () => (
         <li>If they decide to see a professional, they already have a documented history with photos to bring to the appointment</li>
       </ol>
       <p className="text-sm text-muted-foreground mt-3">
-        You don't need to manage the referral. Your job is to notice, document, and encourage. ScalpSense handles the rest.
+        You don't need to manage the referral. Your job is to notice, document, and encourage. FolliSense handles the rest.
       </p>
     </div>
 

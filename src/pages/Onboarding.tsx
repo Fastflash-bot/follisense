@@ -892,8 +892,8 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Step 7: Menstrual cycle (skipped for men) */}
-            {step === 7 && !skipMenstrual && (
+            {/* Step 8: Menstrual cycle (skipped for men) */}
+            {step === 8 && !skipMenstrual && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-2">
                   {isNeutral ? 'Do you want to track your hormonal cycle?' : 'Do you want to link your menstrual cycle?'}

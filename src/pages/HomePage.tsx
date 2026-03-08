@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 
 const serviceOptions = ['Wash', 'Treatment', 'Style installation', 'Style removal/takedown', 'Trim', 'Colour', 'Other'];
 
-const dailyTips = [
+const protectiveStyleTips = [
   "Quick thought — a satin pillowcase tonight could help protect your edges while you sleep",
   "A light scalp oil massage today can help with circulation — even over your protective style",
   "If your braids feel tight around the hairline, don't tough it out — loosen or remove the ones causing pain",
@@ -18,6 +18,16 @@ const dailyTips = [
   "Try pressing gently with a fingertip instead of scratching — it relieves itch without damaging the scalp",
   "Your wash day is coming up in about 5 days — start thinking about whether you'll reinstall or give your hair a break",
   "If you're exercising today, a light spritz of scalp refresh spray afterwards can help with sweat buildup under your style",
+];
+
+const wornOutTips = [
+  "Using heat today? A heat protectant on mid-lengths and ends helps — but don't forget your scalp can burn too",
+  "If you're restyling daily, try to keep tension low around your hairline — edges are delicate",
+  "Sleeping with your hair out? A satin pillowcase or bonnet reduces friction and breakage overnight",
+  "Washing more than twice a week? Your scalp might be overcompensating with oil. Try stretching to every 4–5 days",
+  "Sun exposure on your parting and hairline can cause scalp damage — consider a scalp SPF spray if you're outside a lot",
+  "Staying hydrated helps your scalp too — aim for 2 litres today",
+  "Try pressing gently with a fingertip instead of scratching — it relieves itch without damaging the scalp",
 ];
 
 const lutealTips = [

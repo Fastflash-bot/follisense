@@ -12,7 +12,7 @@ const serviceOptions = ['Wash', 'Treatment', 'Style installation', 'Style remova
 
 const protectiveStyleTips = [
   "Quick thought — a satin pillowcase tonight could help protect your edges while you sleep",
-  "A light scalp oil massage today can help with circulation — even over your protective style",
+  "A gentle scalp massage with your fingertips can help with circulation. You don't need to add product for this to work.",
   "If your braids feel tight around the hairline, don't tough it out — loosen or remove the ones causing pain",
   "Staying hydrated helps your scalp too — aim for 2 litres today",
   "Try pressing gently with a fingertip instead of scratching — it relieves itch without damaging the scalp",

@@ -21,6 +21,7 @@ import StylistObservation from "./pages/StylistObservation";
 import StylistClients from "./pages/StylistClients";
 import ChatPage from "./pages/ChatPage";
 import ProductDirectory from "./pages/ProductDirectory";
+import ResearchProgramme from "./pages/ResearchProgramme";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

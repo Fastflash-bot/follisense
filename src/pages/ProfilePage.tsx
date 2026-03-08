@@ -266,7 +266,7 @@ const ProfilePage = () => {
         )}
 
         {/* Menstrual cycle settings — hidden for male users */}
-        {!stylistMode && onboardingData.gender !== 'man' && (
+        {onboardingData.gender !== 'man' && (
           <div className="mb-6">
             <h3 className="text-label mb-3">Menstrual Cycle</h3>
             <div className="card-elevated p-4">

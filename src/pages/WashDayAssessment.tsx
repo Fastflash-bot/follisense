@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, X, Camera } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
-const steps = [
+const symptomSteps = [
   {
     key: 'itch',
     q: 'How itchy has your scalp been this cycle?',
@@ -54,6 +54,14 @@ const steps = [
       { label: 'Alarming amount', desc: "Far more than I've ever seen" },
     ],
   },
+  {
+    key: 'newProducts',
+    q: 'Any new products this cycle?',
+    options: [
+      { label: 'No, same routine', desc: 'No changes to your product lineup' },
+      { label: 'Yes, I tried something new', desc: 'You introduced a new product' },
+    ],
+  },
 ];
 
 const WashDayAssessment = () => {
@@ -61,21 +69,29 @@ const WashDayAssessment = () => {
   const { setCurrentCheckIn } = useApp();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [showPhoto, setShowPhoto] = useState(false);
+  const [newProductText, setNewProductText] = useState('');
   const [photoSaved, setPhotoSaved] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const totalSteps = steps.length + 1; // +1 for photo step
-  const isPhotoStep = currentStep === steps.length;
-  const currentQ = steps[currentStep];
+  const totalSteps = symptomSteps.length + 1; // +1 for photo step
+  const isProductFollowUp = currentStep === 5 && answers.newProducts === 'Yes, I tried something new';
+  const isPhotoStep = currentStep === symptomSteps.length;
+  const currentQ = symptomSteps[currentStep];
 
   const selectAnswer = (val: string) => {
     setAnswers(prev => ({ ...prev, [currentQ.key]: val }));
-    setTimeout(() => {
-      if (currentStep < steps.length) {
-        setCurrentStep(currentStep + 1);
-      }
-    }, 300);
+    // If new products = "No, same routine", skip follow-up and go to photo
+    if (currentQ.key === 'newProducts' && val === 'No, same routine') {
+      setTimeout(() => setCurrentStep(symptomSteps.length), 300);
+    } else if (currentQ.key === 'newProducts' && val === 'Yes, I tried something new') {
+      // Stay on step to show text input — don't auto-advance
+    } else {
+      setTimeout(() => setCurrentStep(prev => prev + 1), 300);
+    }
+  };
+
+  const handleProductContinue = () => {
+    setCurrentStep(symptomSteps.length); // go to photo step
   };
 
   const handleSubmit = () => {
@@ -85,6 +101,8 @@ const WashDayAssessment = () => {
       hairline: answers.hairline,
       flaking: answers.flaking,
       shedding: answers.shedding,
+      newProducts: answers.newProducts,
+      newProductDetails: newProductText || undefined,
       type: 'wash-day',
       date: new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }),
     });
@@ -101,7 +119,7 @@ const WashDayAssessment = () => {
           </button>
           <div className="flex gap-1">
             {Array.from({ length: totalSteps }).map((_, i) => (
-              <div key={i} className={`h-1 w-6 rounded-full transition-colors duration-300 ${i <= currentStep ? 'bg-primary' : 'bg-border'}`} />
+              <div key={i} className={`h-1 w-5 rounded-full transition-colors duration-300 ${i <= currentStep ? 'bg-primary' : 'bg-border'}`} />
             ))}
           </div>
           <button onClick={() => setShowConfirm(true)} className="p-2 -mr-2">
@@ -133,6 +151,30 @@ const WashDayAssessment = () => {
                   </button>
                 ))}
               </div>
+
+              {/* Show text input when user selected "Yes, I tried something new" */}
+              {isProductFollowUp && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6"
+                >
+                  <label className="text-sm font-medium text-foreground mb-2 block">What did you try? (optional)</label>
+                  <input
+                    type="text"
+                    value={newProductText}
+                    onChange={e => setNewProductText(e.target.value)}
+                    placeholder="e.g. New edge control gel"
+                    className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+                  />
+                  <button
+                    onClick={handleProductContinue}
+                    className="w-full h-12 mt-4 bg-primary text-primary-foreground rounded-xl font-semibold text-sm btn-press"
+                  >
+                    Continue
+                  </button>
+                </motion.div>
+              )}
             </motion.div>
           ) : (
             <motion.div

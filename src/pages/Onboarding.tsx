@@ -5,26 +5,26 @@ import { ArrowLeft, HelpCircle } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 
 const hairTypes = [
-  { id: '3b', label: '3b', desc: 'Loose, springy curls', icon: '〰️' },
-  { id: '3c', label: '3c', desc: 'Tight, corkscrew curls', icon: '🌀' },
-  { id: '4a', label: '4a', desc: 'Dense, S-shaped coils', icon: '〰️' },
-  { id: '4b', label: '4b', desc: 'Z-shaped, tightly coiled', icon: '⚡' },
-  { id: '4c', label: '4c', desc: 'Very tight, densely packed coils', icon: '•' },
-  { id: 'unsure', label: 'Not sure', desc: "That's okay — lots of people have a mix of different curl patterns", icon: '?' },
+  { id: '3b', label: '3b', desc: 'Loose, springy curls' },
+  { id: '3c', label: '3c', desc: 'Tight, corkscrew curls' },
+  { id: '4a', label: '4a', desc: 'Dense, S-shaped coils' },
+  { id: '4b', label: '4b', desc: 'Z-shaped, tightly coiled' },
+  { id: '4c', label: '4c', desc: 'Very tight, densely packed coils' },
+  { id: 'unsure', label: 'Not sure', desc: "That's okay — lots of people have a mix of different curl patterns" },
 ];
 
 const styleOptions = ['Braids', 'Twists', 'Locs', 'Weave / sew-in', 'Wig', 'Wash and go', 'Other'];
-
 const cycleLengths = ['1–2 weeks', '2–4 weeks', '4–6 weeks', '6+ weeks', 'It varies'];
 const washFrequencies = ['Weekly', 'Every 2 weeks', 'Less than every 2 weeks', 'Only at takedown'];
-
 const severities = ['None', 'Mild', 'Moderate', 'Severe'];
 const tendernessSeverities = ['None', 'Mild', 'Moderate', 'Severe'];
 const hairlineConcerns = ['No concerns', 'Slight concern', 'Noticeable change', 'Very concerned'];
 
+const productOptions = ['Scalp oil', 'Leave-in conditioner', 'Edge control / gel', 'Anti-dandruff treatment', 'Growth serum / treatment', 'Co-wash', 'Clarifying shampoo', 'Other'];
+const productFrequencies = ['Daily', 'Every few days', 'Weekly', 'Only on wash day', 'Rarely'];
+
 const CurlIcon = ({ type }: { type: string }) => {
   if (type === 'unsure') return <HelpCircle size={24} className="text-muted-foreground" strokeWidth={1.5} />;
-  
   const patterns: Record<string, React.ReactNode> = {
     '3b': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 20 C10 8, 14 24, 18 12 C20 6, 24 18, 24 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-foreground"/></svg>,
     '3c': <svg width="28" height="28" viewBox="0 0 28 28"><path d="M6 18 C8 10, 10 22, 12 14 C14 6, 16 22, 18 14 C20 6, 22 18, 24 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-foreground"/></svg>,
@@ -37,7 +37,7 @@ const CurlIcon = ({ type }: { type: string }) => {
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { setOnboardingComplete, setOnboardingData, onboardingData } = useApp();
+  const { setOnboardingComplete, setOnboardingData } = useApp();
   const [step, setStep] = useState(1);
   const [hairType, setHairType] = useState('');
   const [styles, setStyles] = useState<string[]>([]);
@@ -46,12 +46,13 @@ const Onboarding = () => {
   const [itch, setItch] = useState('');
   const [tenderness, setTenderness] = useState('');
   const [hairline, setHairline] = useState('');
+  const [products, setProducts] = useState<string[]>([]);
+  const [prodFreq, setProdFreq] = useState('');
 
-  const totalSteps = 4;
+  const totalSteps = 5;
 
-  const toggleStyle = (s: string) => {
-    setStyles(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
-  };
+  const toggleStyle = (s: string) => setStyles(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+  const toggleProduct = (p: string) => setProducts(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
 
   const canProceed = () => {
     switch (step) {
@@ -59,6 +60,7 @@ const Onboarding = () => {
       case 2: return styles.length > 0;
       case 3: return !!cycleLen && !!washFreq;
       case 4: return !!itch && !!tenderness && !!hairline;
+      case 5: return products.length > 0 && !!prodFreq;
       default: return false;
     }
   };
@@ -75,6 +77,8 @@ const Onboarding = () => {
         baselineItch: itch,
         baselineTenderness: tenderness,
         baselineHairline: hairline,
+        scalpProducts: products,
+        productFrequency: prodFreq,
       });
       setOnboardingComplete(true);
       navigate('/home');
@@ -89,19 +93,13 @@ const Onboarding = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[430px] mx-auto px-6">
-        {/* Top bar */}
         <div className="flex items-center justify-between py-4">
           <button onClick={handleBack} className="p-2 -ml-2 text-foreground">
             <ArrowLeft size={22} strokeWidth={1.8} />
           </button>
           <div className="flex gap-2">
             {Array.from({ length: totalSteps }).map((_, i) => (
-              <div
-                key={i}
-                className={`h-1 w-10 rounded-full transition-colors duration-300 ${
-                  i < step ? 'bg-primary' : 'bg-border'
-                }`}
-              />
+              <div key={i} className={`h-1 w-8 rounded-full transition-colors duration-300 ${i < step ? 'bg-primary' : 'bg-border'}`} />
             ))}
           </div>
           <div className="w-10" />
@@ -164,26 +162,13 @@ const Onboarding = () => {
                 <p className="text-muted-foreground mb-6">How long do you typically keep a style in?</p>
                 <div className="flex flex-wrap gap-2 mb-8">
                   {cycleLengths.map(c => (
-                    <button
-                      key={c}
-                      onClick={() => setCycleLen(c)}
-                      className={`pill-option ${cycleLen === c ? 'selected' : ''}`}
-                    >
-                      {c}
-                    </button>
+                    <button key={c} onClick={() => setCycleLen(c)} className={`pill-option ${cycleLen === c ? 'selected' : ''}`}>{c}</button>
                   ))}
                 </div>
-
                 <p className="text-muted-foreground mb-4">How often do you wash or cleanse your scalp during a protective style?</p>
                 <div className="flex flex-wrap gap-2">
                   {washFrequencies.map(w => (
-                    <button
-                      key={w}
-                      onClick={() => setWashFreq(w)}
-                      className={`pill-option ${washFreq === w ? 'selected' : ''}`}
-                    >
-                      {w}
-                    </button>
+                    <button key={w} onClick={() => setWashFreq(w)} className={`pill-option ${washFreq === w ? 'selected' : ''}`}>{w}</button>
                   ))}
                 </div>
               </div>
@@ -193,7 +178,6 @@ const Onboarding = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-2">Quick baseline — how's your scalp right now?</h2>
                 <p className="text-muted-foreground mb-6">This helps us set your starting point</p>
-
                 <div className="space-y-6">
                   <div>
                     <p className="font-medium text-foreground mb-3">Any current scalp itching?</p>
@@ -222,6 +206,30 @@ const Onboarding = () => {
                 </div>
               </div>
             )}
+
+            {step === 5 && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-2">What products do you use on your scalp?</h2>
+                <p className="text-muted-foreground mb-6">This helps us understand what might be affecting your scalp health</p>
+                <div className="grid grid-cols-2 gap-3 mb-8">
+                  {productOptions.map(p => (
+                    <button
+                      key={p}
+                      onClick={() => toggleProduct(p)}
+                      className={`selection-card text-center py-5 ${products.includes(p) ? 'selected' : ''}`}
+                    >
+                      <p className="font-medium text-foreground text-sm">{p}</p>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4">How often do you apply products to your scalp?</p>
+                <div className="flex flex-wrap gap-2">
+                  {productFrequencies.map(f => (
+                    <button key={f} onClick={() => setProdFreq(f)} className={`pill-option ${prodFreq === f ? 'selected' : ''}`}>{f}</button>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -230,9 +238,7 @@ const Onboarding = () => {
             onClick={handleNext}
             disabled={!canProceed()}
             className={`w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors ${
-              canProceed()
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-border text-muted-foreground cursor-not-allowed'
+              canProceed() ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'
             }`}
           >
             {step === totalSteps ? 'Set up my cycle' : 'Next'}

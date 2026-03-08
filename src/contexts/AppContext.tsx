@@ -68,6 +68,7 @@ interface AppContextType {
   setStylistMode: (v: boolean) => void;
   clientObservations: ClientObservation[];
   addClientObservation: (o: ClientObservation) => void;
+  stylistObservations: StylistObservationEntry[];
   resetAll: () => void;
 }
 
@@ -101,6 +102,21 @@ const demoClientObservations: ClientObservation[] = [
   { id: 'co2', clientName: 'T.K.', date: 'Mar 3', observations: ['Nothing of concern'], photos: [], risk: 'green' },
   { id: 'co3', clientName: 'S.J.', date: 'Feb 28', observations: ['Excessive flaking or buildup', 'Scalp redness or irritation'], photos: ['Crown / vertex'], notes: 'Suggested anti-dandruff shampoo', risk: 'amber' },
   { id: 'co4', clientName: 'R.B.', date: 'Feb 20', observations: ['Thinning at crown / vertex', 'Tender or sore areas'], photos: ['Crown / vertex', 'Hairline / edges'], risk: 'red' },
+];
+
+// Dummy stylist observations visible in consumer History
+export interface StylistObservationEntry {
+  id: string;
+  date: string;
+  stylistName: string;
+  observations: string[];
+  notes?: string;
+  risk: 'green' | 'amber' | 'red';
+}
+
+const demoStylistObservations: StylistObservationEntry[] = [
+  { id: 'so1', date: 'Mar 5', stylistName: 'Ama', observations: ['Thinning at hairline / edges', 'Signs of traction damage'], notes: 'Recommended loosening edges on next install', risk: 'amber' },
+  { id: 'so2', date: 'Feb 2', stylistName: 'Ama', observations: ['Nothing of concern'], risk: 'green' },
 ];
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -137,6 +153,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       riskOverride, setRiskOverride,
       stylistMode, setStylistMode,
       clientObservations, addClientObservation,
+      stylistObservations: demoStylistObservations,
       resetAll,
     }}>
       {children}

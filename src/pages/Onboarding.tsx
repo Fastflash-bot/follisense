@@ -471,7 +471,7 @@ const Onboarding = () => {
       nextCheckIn.setDate(nextCheckIn.getDate() + 7);
 
       setOnboardingData({
-        gender, hairType, chemicalProcessing, lastChemicalTreatment,
+        gender, hairType, chemicalProcessing: chemicalProcessing === 'Yes' ? `Yes, ${chemicalSubSelection.toLowerCase()}` : chemicalProcessing, lastChemicalTreatment,
         chemicalProcessingMultiple: chemicalMultiple,
         protectiveStyles: styles, otherStyle, protectiveStyleFrequency: protectiveFreq,
         isWornOutOnly, cycleLength: cycleLen, cycleLengthMin: cycleLenMin, cycleLengthMax: cycleLenMax,

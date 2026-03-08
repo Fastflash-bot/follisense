@@ -126,7 +126,7 @@ export const articles: Article[] = [
     content: [
       'Porosity is how easily your hair absorbs and holds moisture. Low porosity hair repels water and product tends to sit on top. High porosity hair absorbs quickly but loses moisture fast.',
       'Most chemically processed or heat damaged hair is high porosity. Knowing your porosity helps you choose the right products.',
-      'Low porosity: use lighter products, apply to damp warm hair, avoid heavy butters. High porosity: use heavier creams and butters, seal with oils, layer products using the LOC or LCO method.',
+      'Low porosity: use lighter products, apply to damp warm hair, avoid heavy butters. High porosity: use heavier creams and butters on the hair shaft, layer products using the LOC or LCO method.',
     ],
     relatedIds: ['hair-breakage', 'protein-moisture', 'dry-ends'],
   },

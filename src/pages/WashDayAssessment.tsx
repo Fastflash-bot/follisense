@@ -125,6 +125,7 @@ const WashDayAssessment = () => {
   const [photoSaved, setPhotoSaved] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showHairIntro, setShowHairIntro] = useState(false);
+  const [acknowledgment, setAcknowledgment] = useState<string | null>(null);
 
   const totalSteps = allSteps.length + 1; // +1 for photo step
   const isProductStep = currentStep === allSteps.length - 1;
@@ -133,16 +134,32 @@ const WashDayAssessment = () => {
   const isHairIntroStep = currentStep === scalpSteps.length && !showHairIntro;
   const currentQ = allSteps[currentStep];
 
-  const selectAnswer = (val: string) => {
+  const selectAnswer = (val: string, optIndex: number) => {
     setAnswers(prev => ({ ...prev, [currentQ.key]: val }));
     if (currentQ.key === 'newProducts' && val === 'No, same routine') {
-      setTimeout(() => setCurrentStep(allSteps.length), 300);
+      const ack = getAcknowledgment(0, 2);
+      setAcknowledgment(ack);
     } else if (currentQ.key === 'newProducts' && val === 'Yes, I tried something new') {
-      // Stay on step to show text input
+      // Stay on step to show text input — no acknowledgment
     } else {
-      setTimeout(() => setCurrentStep(prev => prev + 1), 300);
+      const ack = getAcknowledgment(optIndex, currentQ.options.length);
+      setAcknowledgment(ack);
     }
   };
+
+  useEffect(() => {
+    if (!acknowledgment) return;
+    const timer = setTimeout(() => {
+      const wasProduct = currentQ?.key === 'newProducts' && answers.newProducts === 'No, same routine';
+      setAcknowledgment(null);
+      if (wasProduct) {
+        setCurrentStep(allSteps.length);
+      } else {
+        setCurrentStep(prev => prev + 1);
+      }
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [acknowledgment]);
 
   const handleProductContinue = () => {
     setCurrentStep(allSteps.length);

@@ -819,16 +819,38 @@ const Onboarding = () => {
                 <div className="mt-8">
                   <h3 className="text-base font-medium text-foreground mb-1">How do you care for your scalp during a protective style?</h3>
                   <p className="text-muted-foreground text-sm mb-4">How often do you wash or cleanse your scalp?</p>
-                  <div className="flex flex-wrap gap-2">
-                    {washFrequencyOptions.map(w => (
-                      <button key={w} onClick={() => { setWashFreq(w); if (w !== 'It depends on the style') setWashFreqPerCycle(''); }} className={`pill-option ${washFreq === w ? 'selected' : ''}`}>{w}</button>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {['Once a week or more', 'Less than once a week'].map(o => (
+                      <button key={o} onClick={() => { setWashFreqBucket(o); setWashFreqDetail(''); setWashFreqPerCycle(''); setWashFreq(o); }} className={`pill-option ${washFreqBucket === o ? 'selected' : ''}`}>{o}</button>
                     ))}
                   </div>
-                  {washFreq === 'It depends on the style' && (
+                  {washFreqBucket === 'Once a week or more' && (
+                    <div className="rounded-2xl bg-accent p-4 mt-3 space-y-2">
+                      <p className="text-sm font-medium text-foreground mb-2">How many times a week?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['Once a week', 'Twice a week', 'More than twice a week'].map(o => (
+                          <button key={o} onClick={() => { setWashFreqDetail(o); setWashFreq(o); }} className={`pill-option ${washFreqDetail === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {washFreqBucket === 'Less than once a week' && (
+                    <div className="rounded-2xl bg-accent p-4 mt-3 space-y-2">
+                      <p className="text-sm font-medium text-foreground mb-2">How often?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['Every 2 weeks', 'Every 3 to 4 weeks', 'Only at takedown', 'It depends'].map(o => (
+                          <button key={o} onClick={() => { setWashFreqDetail(o); setWashFreq(o); if (o !== 'It depends') setWashFreqPerCycle(''); }} className={`pill-option ${washFreqDetail === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {washFreqDetail === 'It depends' && (
                     <div className="rounded-2xl bg-accent p-4 mt-3 space-y-2">
                       <p className="text-sm font-medium text-foreground mb-2">On average, roughly how many times per cycle do you cleanse your scalp?</p>
                       <div className="flex flex-wrap gap-2">
-                        {washPerCycleOptions.map(o => (<button key={o} onClick={() => setWashFreqPerCycle(o)} className={`pill-option ${washFreqPerCycle === o ? 'selected' : ''}`}>{o}</button>))}
+                        {['0 (not at all)', '1', '2 to 3', '4+'].map(o => (
+                          <button key={o} onClick={() => setWashFreqPerCycle(o)} className={`pill-option ${washFreqPerCycle === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -836,7 +858,14 @@ const Onboarding = () => {
                 <div className="mt-8">
                   <p className="text-sm font-medium text-foreground mb-3">Between washes, do you do anything for your scalp?</p>
                   <div className="flex flex-wrap gap-2">
-                    {currentBetweenWashOptions.map(o => (<button key={o} onClick={() => toggleBetweenWash(o)} className={`pill-option ${betweenWashCare.includes(o) ? 'selected' : ''}`}>{o}</button>))}
+                    {currentBetweenWashOptions.map(o => {
+                      const isNothing = o === 'Nothing — I leave it alone until wash day';
+                      const nothingSelected = betweenWashCare.includes('Nothing — I leave it alone until wash day');
+                      const disabled = nothingSelected && !isNothing;
+                      return (
+                        <button key={o} onClick={() => !disabled && toggleBetweenWash(o)} className={`pill-option ${betweenWashCare.includes(o) ? 'selected' : ''} ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}>{o}</button>
+                      );
+                    })}
                   </div>
                   {betweenWashCare.includes('Other') && (
                     <input type="text" value={otherBetweenWash} onChange={e => setOtherBetweenWash(e.target.value)} placeholder="What else do you do?" className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3" />

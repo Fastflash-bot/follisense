@@ -120,6 +120,8 @@ const photoAreas = [
 
 const WashDayAssessment = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isRegularCheckIn = searchParams.get('mode') === 'regular';
   const { setCurrentCheckIn, baselinePhotos } = useApp();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});

@@ -29,7 +29,7 @@ const StylistSignUpPage = () => {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="max-w-[430px] w-full">
         <div className="flex items-center justify-center gap-2 mb-2">
           <Leaf size={24} className="text-primary" strokeWidth={1.8} />
-          <span className="text-xl font-semibold text-foreground">ScalpSense</span>
+          <span className="text-xl font-semibold text-foreground">FolliSense</span>
           <span className="text-[10px] font-medium bg-secondary text-foreground px-2 py-0.5 rounded-full">Stylist</span>
         </div>
         <h1 className="text-2xl font-semibold text-foreground text-center mb-1">Join ScalpSense as a stylist</h1>

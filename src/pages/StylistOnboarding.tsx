@@ -22,7 +22,7 @@ const StylistOnboarding = () => {
   const { setStylistMode } = useApp();
   const [step, setStep] = useState(0);
   const [profile, setProfile] = useState<StylistProfile>({
-    role: '', otherRole: '', experience: '', businessName: '', city: '', country: '',
+    role: [], otherRole: '', experience: '', businessName: '', city: '', country: '',
     workplace: '', clientCount: '', services: [], otherService: '', goals: [],
   });
 

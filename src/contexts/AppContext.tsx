@@ -303,6 +303,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       baselineRisk, setBaselineRisk,
       baselineDate, setBaselineDate,
       quickLogs, addQuickLog,
+      research, setResearch, incrementResearchPhotos,
+      checkInCount, setCheckInCount,
       resetAll,
     }}>
       {children}

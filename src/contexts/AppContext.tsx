@@ -2,13 +2,17 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface OnboardingData {
   hairType: string;
+  chemicalProcessing: string;
+  chemicalProcessingMultiple: string[];
   protectiveStyles: string[];
+  otherStyle: string;
   cycleLength: string;
   washFrequency: string;
   baselineItch: string;
   baselineTenderness: string;
   baselineHairline: string;
   scalpProducts: string[];
+  otherProduct: string;
   productFrequency: string;
 }
 
@@ -133,13 +137,17 @@ interface AppContextType {
 
 const defaultOnboarding: OnboardingData = {
   hairType: '',
+  chemicalProcessing: '',
+  chemicalProcessingMultiple: [],
   protectiveStyles: [],
+  otherStyle: '',
   cycleLength: '',
   washFrequency: '',
   baselineItch: '',
   baselineTenderness: '',
   baselineHairline: '',
   scalpProducts: [],
+  otherProduct: '',
   productFrequency: '',
 };
 

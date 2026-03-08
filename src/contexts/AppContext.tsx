@@ -209,6 +209,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setSalonVisits(demoSalonVisits);
     setClientObservations(demoClientObservations);
     setHealthProfile(defaultHealthProfile);
+    setBaselinePhotos([]);
   };
 
   return (

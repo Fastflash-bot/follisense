@@ -48,7 +48,6 @@ const ProfilePage = () => {
   const hairTypeLabel: Record<string, string> = { '3b': '3b', '3c': '3c', '4a': '4a', '4b': '4b', '4c': '4c', 'unsure': 'Not sure' };
 
   const handleDelete = () => { resetAll(); navigate('/'); };
-  const handleModeSwitch = () => { setStylistMode(!stylistMode); navigate(stylistMode ? '/home' : '/stylist'); };
   const handleRetakePhoto = (area: string) => {
     const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     setBaselinePhotos(baselinePhotos.map(p => p.area === area ? { ...p, date: today } : p));

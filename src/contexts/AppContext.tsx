@@ -155,6 +155,8 @@ const defaultHealthProfile: HealthProfileData = {
 };
 
 interface AppContextType {
+  userName: string;
+  setUserName: (n: string) => void;
   onboardingComplete: boolean;
   setOnboardingComplete: (v: boolean) => void;
   onboardingData: OnboardingData;

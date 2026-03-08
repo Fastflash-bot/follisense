@@ -17,7 +17,7 @@ const goalOptions = [
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { onboardingData, setOnboardingData, resetAll, stylistMode, setStylistMode, baselinePhotos, setBaselinePhotos } = useApp();
+  const { onboardingData, setOnboardingData, resetAll, stylistMode, setStylistMode, baselinePhotos, setBaselinePhotos, research } = useApp();
 
   const [notifications, setNotifications] = useState({
     dailyTip: true, midCycle: true, washDay: true, washApproaching: true, productReminders: false, weeklySummary: false,

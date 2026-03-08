@@ -292,8 +292,10 @@ const genderOptions = [
 
 const Onboarding = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { setOnboardingComplete, setOnboardingData, setBaselinePhotos, setBaselineRisk, setBaselineDate } = useApp();
-  const [step, setStep] = useState(0); // Start at step 0 (gender)
+  const initialStep = parseInt(searchParams.get('step') || '0', 10);
+  const [step, setStep] = useState(initialStep);
   const [gender, setGender] = useState('');
   const [hairType, setHairType] = useState('');
   const [chemicalProcessing, setChemicalProcessing] = useState('');

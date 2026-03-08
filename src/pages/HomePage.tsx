@@ -50,7 +50,7 @@ const menstruationTips = [
 ];
 
 const quickLogSymptoms = [
-  'Itching', 'Tenderness / soreness', 'Flaking', 'Thinning / shedding', 'Breakage', 'Bumps or irritation', 'Something else',
+  'Itching', 'Tenderness / soreness', 'Flaking', 'Thinning / shedding', 'Breakage', 'Bumps or irritation', 'Razor bumps / ingrown hairs', 'Something else',
 ];
 
 const quickLogSeverities = [

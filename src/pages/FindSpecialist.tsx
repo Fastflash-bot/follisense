@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Leaf, Mail } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 const FindSpecialist = () => {
   const navigate = useNavigate();

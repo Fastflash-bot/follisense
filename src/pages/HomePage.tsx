@@ -539,8 +539,8 @@ const HomePage = () => {
                     {quickSeverity === 'Moderate' && (
                       <div>
                         <div className="w-12 h-12 rounded-full bg-warning/15 flex items-center justify-center mx-auto mb-4"><AlertTriangle size={22} className="text-warning" strokeWidth={1.8} /></div>
-                        <h4 className="font-semibold text-center mb-2">Here are some things to try</h4>
-                        <p className="text-sm text-muted-foreground text-center mb-4">If it gets worse, you can do a full check-in anytime.</p>
+                        <h4 className="font-semibold text-center mb-2">Okay, that's really helpful to know</h4>
+                        <p className="text-sm text-muted-foreground text-center mb-4">Here are some things to try. If it gets worse, you can do a full check-in anytime.</p>
                         <div className="card-elevated p-4 mb-6">
                           <ol className="space-y-3">
                             {getQuickLogTips(quickSymptoms).map((tip, i) => (

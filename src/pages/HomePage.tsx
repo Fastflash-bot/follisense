@@ -163,12 +163,6 @@ const HomePage = () => {
                 <p className="font-semibold text-lg text-foreground">{currentStyle}</p>
                 <p className="text-sm text-muted-foreground mt-1">Installed Feb 24</p>
                 <p className="text-sm text-muted-foreground">Next wash day: Mar 10</p>
-                {cycleInfo && (
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="w-2 h-2 rounded-full bg-primary" />
-                    <span className="text-xs text-muted-foreground">Cycle day {cycleInfo.day}</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>

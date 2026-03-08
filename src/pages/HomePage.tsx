@@ -20,15 +20,6 @@ const dailyTips = [
   "Tip: If you're exercising today, a light spritz of scalp refresh spray afterwards can help with sweat buildup under your style",
 ];
 
-const lutealTips = [
-  "You're in the second half of your cycle — increased scalp oiliness or sensitivity is normal right now",
-  "Hormonal changes in your luteal phase can make your scalp more reactive — be gentle with any products",
-];
-
-const menstruationTips = [
-  "Some women notice more shedding around their period — this is usually temporary and hormonal",
-  "During your period, your scalp may feel more sensitive. Keep styling tension low.",
-];
 
 const quickLogSymptoms = [
   'Itching', 'Tenderness / soreness', 'Flaking', 'Thinning / shedding', 'Bumps or irritation', 'Something else',

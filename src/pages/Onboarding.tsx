@@ -568,7 +568,7 @@ const Onboarding = () => {
                     <Eye size={32} className="text-warning-foreground" strokeWidth={1.8} />
                   </motion.div>
                 </div>
-                <h2 className="text-2xl font-semibold text-center mb-2">Thanks for sharing — a couple of things to note</h2>
+                <h2 className="text-lg font-medium text-foreground text-center mb-2">Thanks for sharing — a couple of things to note</h2>
                 <p className="text-muted-foreground text-center mb-6">You have some symptoms worth tracking from the start. We'll factor this into your first check-in so we can see how things develop.</p>
                 <div className="card-elevated p-5 mb-4">
                   <h3 className="font-semibold mb-3">In the meantime</h3>

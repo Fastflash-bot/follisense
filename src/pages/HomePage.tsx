@@ -266,6 +266,18 @@ const HomePage = () => {
           </button>
         )}
 
+        {/* Routine card */}
+        <button onClick={() => navigate('/my-routine')} className="card-elevated p-5 mb-4 w-full text-left flex items-center gap-4 border-2 border-primary/20">
+          <div className="w-12 h-12 rounded-xl bg-sage-light flex items-center justify-center flex-shrink-0">
+            <Sparkles size={22} className="text-primary" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-foreground text-sm">Your personalised routine is ready</p>
+            <p className="text-xs text-muted-foreground mt-0.5">A scalp and hair care plan built around your life</p>
+          </div>
+          <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+        </button>
+
         {/* Today's tip card */}
         <div className="rounded-2xl bg-secondary/50 p-4 mb-4">
           <p className="text-sm text-foreground leading-relaxed">{todayTip}</p>

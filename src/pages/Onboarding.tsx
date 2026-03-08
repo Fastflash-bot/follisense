@@ -307,7 +307,7 @@ const Onboarding = () => {
   const [hairProdFreq, setHairProdFreq] = useState('');
   const [showMoreStyles, setShowMoreStyles] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState<Record<string, boolean>>({});
-  const [baselineResultScreen, setBaselineResultScreen] = useState<'amber' | 'red' | null>(null);
+  const [baselineResultScreen, setBaselineResultScreen] = useState<'green' | 'amber' | 'red' | null>(null);
 
   // Menstrual
   const [menstrualTracking, setMenstrualTracking] = useState('');

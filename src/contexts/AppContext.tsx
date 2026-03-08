@@ -13,7 +13,12 @@ export interface OnboardingData {
   protectiveStyles: string[];
   otherStyle: string;
   cycleLength: string;
+  cycleLengthMin: string;
+  cycleLengthMax: string;
   washFrequency: string;
+  washFrequencyPerCycle: string;
+  betweenWashCare: string[];
+  otherBetweenWashCare: string;
   baselineItch: string;
   baselineTenderness: string;
   baselineHairline: string;
@@ -150,7 +155,12 @@ const defaultOnboarding: OnboardingData = {
   protectiveStyles: [],
   otherStyle: '',
   cycleLength: '',
+  cycleLengthMin: '',
+  cycleLengthMax: '',
   washFrequency: '',
+  washFrequencyPerCycle: '',
+  betweenWashCare: [],
+  otherBetweenWashCare: '',
   baselineItch: '',
   baselineTenderness: '',
   baselineHairline: '',

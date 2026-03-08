@@ -34,7 +34,25 @@ const styleOptions = [
 ];
 
 const cycleLengths = ['1–2 weeks', '2–4 weeks', '4–6 weeks', '6+ weeks', 'It varies'];
-const washFrequencies = ['Weekly', 'Every 2 weeks', 'Less than every 2 weeks', 'Only at takedown'];
+const washFrequencyOptions = [
+  'More than once a week',
+  'About once a week',
+  'Every 2 weeks',
+  'Every 3–4 weeks',
+  'Only when I take the style down',
+  'It depends on the style',
+];
+const washPerCycleOptions = ['0 (not at all)', '1', '2–3', '4+'];
+const cycleLengthMinOptions = ['Less than 1 week', '1–2 weeks', '2–4 weeks', '4–6 weeks'];
+const cycleLengthMaxOptions = ['2–4 weeks', '4–6 weeks', '6–8 weeks', '8+ weeks'];
+const betweenWashOptions = [
+  'Apply oil or serum to the scalp',
+  'Use a scalp refresh spray or dry shampoo',
+  'Rinse with water only',
+  'Massage / manipulate the scalp',
+  'Nothing — I leave it alone until wash day',
+  'Other',
+];
 const severities = ['None', 'Mild', 'Moderate', 'Severe'];
 const tendernessSeverities = ['None', 'Mild', 'Moderate', 'Severe'];
 const hairlineConcerns = ['No concerns', 'Slight concern', 'Noticeable change', 'Very concerned'];
@@ -83,7 +101,12 @@ const Onboarding = () => {
   const [styles, setStyles] = useState<string[]>([]);
   const [otherStyle, setOtherStyle] = useState('');
   const [cycleLen, setCycleLen] = useState('');
+  const [cycleLenMin, setCycleLenMin] = useState('');
+  const [cycleLenMax, setCycleLenMax] = useState('');
   const [washFreq, setWashFreq] = useState('');
+  const [washFreqPerCycle, setWashFreqPerCycle] = useState('');
+  const [betweenWashCare, setBetweenWashCare] = useState<string[]>([]);
+  const [otherBetweenWash, setOtherBetweenWash] = useState('');
   const [itch, setItch] = useState('');
   const [tenderness, setTenderness] = useState('');
   const [hairline, setHairline] = useState('');
@@ -105,12 +128,18 @@ const Onboarding = () => {
   const toggleStyle = (s: string) => setStyles(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
   const toggleProduct = (p: string) => setProducts(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleChemMulti = (v: string) => setChemicalMultiple(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
+  const toggleBetweenWash = (v: string) => setBetweenWashCare(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
 
   const canProceed = () => {
     switch (step) {
       case 1: return !!hairType && !!chemicalProcessing && (chemicalProcessing !== 'Multiple' || chemicalMultiple.length > 0);
       case 2: return styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
-      case 3: return !!cycleLen && !!washFreq;
+      case 3: {
+        const cycleOk = !!cycleLen && (cycleLen !== 'It varies' || (!!cycleLenMin && !!cycleLenMax));
+        const washOk = !!washFreq && (washFreq !== 'It depends on the style' || !!washFreqPerCycle);
+        const betweenOk = betweenWashCare.length > 0 && (!betweenWashCare.includes('Other') || otherBetweenWash.trim().length > 0);
+        return cycleOk && washOk && betweenOk;
+      }
       case 4: return !!itch && !!tenderness && !!hairline;
       case 5: return true; // photo step — always can proceed (skip or capture)
       case 6: return products.length > 0 && !!prodFreq && (!products.includes('Other') || otherProduct.trim().length > 0);
@@ -137,7 +166,12 @@ const Onboarding = () => {
         protectiveStyles: styles,
         otherStyle,
         cycleLength: cycleLen,
+        cycleLengthMin: cycleLenMin,
+        cycleLengthMax: cycleLenMax,
         washFrequency: washFreq,
+        washFrequencyPerCycle: washFreqPerCycle,
+        betweenWashCare,
+        otherBetweenWashCare: otherBetweenWash,
         baselineItch: itch,
         baselineTenderness: tenderness,
         baselineHairline: hairline,
@@ -287,16 +321,69 @@ const Onboarding = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-2">Your cycle</h2>
                 <p className="text-muted-foreground mb-6">How long do you typically keep a style in?</p>
-                <div className="flex flex-wrap gap-2 mb-8">
+                <div className="flex flex-wrap gap-2 mb-2">
                   {cycleLengths.map(c => (
-                    <button key={c} onClick={() => setCycleLen(c)} className={`pill-option ${cycleLen === c ? 'selected' : ''}`}>{c}</button>
+                    <button key={c} onClick={() => { setCycleLen(c); if (c !== 'It varies') { setCycleLenMin(''); setCycleLenMax(''); } }} className={`pill-option ${cycleLen === c ? 'selected' : ''}`}>{c}</button>
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-4">How often do you wash or cleanse your scalp during a protective style?</p>
-                <div className="flex flex-wrap gap-2">
-                  {washFrequencies.map(w => (
-                    <button key={w} onClick={() => setWashFreq(w)} className={`pill-option ${washFreq === w ? 'selected' : ''}`}>{w}</button>
-                  ))}
+                {cycleLen === 'It varies' && (
+                  <div className="rounded-2xl bg-accent p-4 mt-3 mb-2 space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-2">What's the shortest you'd keep a style in?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {cycleLengthMinOptions.map(o => (
+                          <button key={o} onClick={() => setCycleLenMin(o)} className={`pill-option ${cycleLenMin === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-2">What's the longest?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {cycleLengthMaxOptions.map(o => (
+                          <button key={o} onClick={() => setCycleLenMax(o)} className={`pill-option ${cycleLenMax === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">We'll set your check-ins based on your typical range.</p>
+                  </div>
+                )}
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-1">How do you care for your scalp during a protective style?</h3>
+                  <p className="text-muted-foreground text-sm mb-4">How often do you wash or wet your scalp?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {washFrequencyOptions.map(w => (
+                      <button key={w} onClick={() => { setWashFreq(w); if (w !== 'It depends on the style') setWashFreqPerCycle(''); }} className={`pill-option ${washFreq === w ? 'selected' : ''}`}>{w}</button>
+                    ))}
+                  </div>
+                  {washFreq === 'It depends on the style' && (
+                    <div className="rounded-2xl bg-accent p-4 mt-3 space-y-2">
+                      <p className="text-sm font-medium text-foreground mb-2">On average, roughly how many times per cycle do you cleanse your scalp?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {washPerCycleOptions.map(o => (
+                          <button key={o} onClick={() => setWashFreqPerCycle(o)} className={`pill-option ${washFreqPerCycle === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-8">
+                  <p className="text-sm font-medium text-foreground mb-3">Between washes, do you do anything for your scalp?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {betweenWashOptions.map(o => (
+                      <button key={o} onClick={() => toggleBetweenWash(o)} className={`pill-option ${betweenWashCare.includes(o) ? 'selected' : ''}`}>{o}</button>
+                    ))}
+                  </div>
+                  {betweenWashCare.includes('Other') && (
+                    <input
+                      type="text"
+                      value={otherBetweenWash}
+                      onChange={e => setOtherBetweenWash(e.target.value)}
+                      placeholder="What else do you do?"
+                      className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3"
+                    />
+                  )}
                 </div>
               </div>
             )}

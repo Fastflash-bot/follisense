@@ -404,8 +404,7 @@ const Onboarding = () => {
   // Map actual step to logical step (accounting for menstrual skip)
   const getLogicalStep = (s: number) => {
     if (!skipMenstrual) return s;
-    // For men: 0-6 are same, 7 becomes goals (was 8)
-    if (s >= 7) return s + 1; // shift to skip menstrual
+    if (s >= 8) return s + 1; // shift to skip menstrual
     return s;
   };
 

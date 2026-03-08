@@ -831,8 +831,8 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Step 5: Baseline photos */}
-            {step === 5 && (
+            {/* Step 6: Baseline photos */}
+            {step === 6 && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-2">Capture your starting point</h2>
                 <p className="text-muted-foreground mb-6">A baseline photo helps you spot gradual changes that are hard to notice day to day</p>

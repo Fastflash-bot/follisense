@@ -872,10 +872,10 @@ const Onboarding = () => {
               </div>
             )}
 
-            {step === 3 && !isMale && isWornOutOnly && (
+            {step === 4 && !isMale && isWornOutOnly && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">Your routine</h2>
-                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[3]}</p>
+                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[4]}</p>
                 <p className="text-muted-foreground mb-6">How often do you wash your hair?</p>
                 <div className="mb-8">
                   <div className="flex flex-wrap gap-2">

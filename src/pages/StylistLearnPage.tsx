@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ChevronRight, Eye, ArrowUpRight, AlertTriangle, Shield, BookOpen, Play, Flame, Star, Info, Heart, ExternalLink, Camera } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Eye, ArrowUpRight, AlertTriangle, Shield, BookOpen, Play, Flame, Star, Info, Heart, ExternalLink, Camera, ImageIcon } from 'lucide-react';
 import { stylistConditions, StylistCondition, getConditionById } from '@/data/stylistConditions';
+import { consumerConditions } from '@/data/conditionGuide';
 import ScalpIllustration from '@/components/ScalpIllustration';
 import { toast } from '@/hooks/use-toast';
 
@@ -28,6 +29,7 @@ const dermnetLinks: Record<string, { name: string; url: string }> = {
 
 const ConditionDetail = ({ condition, onBack }: { condition: StylistCondition; onBack: () => void }) => {
   const link = dermnetLinks[condition.id];
+  const consumerCond = consumerConditions.find(c => c.id === condition.id);
 
   return (
     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2 }}>
@@ -54,6 +56,25 @@ const ConditionDetail = ({ condition, onBack }: { condition: StylistCondition; o
           </div>
         ))}
       </div>
+
+      {/* Photo gallery placeholders */}
+      {consumerCond && (
+        <div className="mb-5">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Reference photos</h3>
+          <p className="text-[11px] text-muted-foreground mb-3">Photos on textured hair and darker skin tones — placeholders for now</p>
+          <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {consumerCond.photoGallery.map((photo, i) => (
+              <div key={i} className="flex-shrink-0 w-[200px]">
+                <div className="w-[200px] h-[150px] rounded-xl border-2 border-dashed border-border bg-muted/30 flex flex-col items-center justify-center gap-2 mb-2">
+                  <ImageIcon size={24} className="text-muted-foreground/50" />
+                  <span className="text-[10px] text-muted-foreground text-center px-3 leading-tight">{photo.description}</span>
+                </div>
+                <p className="text-xs font-medium text-foreground">{photo.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Darker skin note */}
       <div className="rounded-xl bg-secondary/60 border border-secondary p-4 mb-4">

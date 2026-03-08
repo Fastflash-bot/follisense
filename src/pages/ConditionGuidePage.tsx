@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ChevronRight, ExternalLink, Shield, AlertTriangle, Eye, Search as SearchIcon, CheckCircle2, XCircle, ArrowRight, MessageCircle, Camera } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ExternalLink, Shield, AlertTriangle, Eye, Search as SearchIcon, CheckCircle2, XCircle, ArrowRight, MessageCircle, Camera, ImageIcon } from 'lucide-react';
 import { consumerConditions, ConsumerCondition } from '@/data/conditionGuide';
 import { stylistConditions, getConditionById as getStylistCondition } from '@/data/stylistConditions';
 import ScalpIllustration from '@/components/ScalpIllustration';
@@ -48,10 +48,27 @@ const ConditionDetail = ({ condition, onBack }: { condition: ConsumerCondition; 
         <p className="text-sm text-muted-foreground leading-relaxed">{condition.whatIsIt}</p>
       </div>
 
-      {/* Section 2: What does it look like? */}
+      {/* Section 2: Photo gallery placeholders */}
+      <div className="mb-5">
+        <h3 className="text-sm font-semibold text-foreground mb-3">What does it look like?</h3>
+        <p className="text-xs text-muted-foreground mb-3">Reference photos on textured hair and darker skin tones</p>
+        <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {condition.photoGallery.map((photo, i) => (
+            <div key={i} className="flex-shrink-0 w-[200px]">
+              <div className="w-[200px] h-[150px] rounded-xl border-2 border-dashed border-border bg-muted/30 flex flex-col items-center justify-center gap-2 mb-2">
+                <ImageIcon size={24} className="text-muted-foreground/50" />
+                <span className="text-[10px] text-muted-foreground text-center px-3 leading-tight">{photo.description}</span>
+              </div>
+              <p className="text-xs font-medium text-foreground">{photo.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Illustrated diagrams */}
       {stylistCond && (
         <div className="mb-5">
-          <h3 className="text-sm font-semibold text-foreground mb-3">What does it look like?</h3>
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Illustrated guide</h3>
           <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
             {stylistCond.stages.map((stage, i) => (
               <div key={i} className="flex-shrink-0 w-[160px]">
@@ -65,28 +82,13 @@ const ConditionDetail = ({ condition, onBack }: { condition: ConsumerCondition; 
           </div>
 
           {/* Darker skin note */}
-          <div className="rounded-xl bg-secondary/60 border border-secondary p-4 mt-3 mb-3">
+          <div className="rounded-xl bg-secondary/60 border border-secondary p-4 mt-3">
             <div className="flex items-center gap-2 mb-2">
               <Eye size={14} className="text-primary" />
               <h4 className="text-xs font-semibold text-foreground">How it presents on darker skin</h4>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">{stylistCond.darkerSkinNote}</p>
           </div>
-
-          {/* DermNet link */}
-          <a
-            href={condition.dermnetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card-elevated p-4 flex items-center gap-3 mb-3"
-          >
-            <Camera size={18} className="text-primary flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground">{condition.name}</p>
-              <p className="text-xs text-muted-foreground">View clinical reference photos on DermNet NZ</p>
-            </div>
-            <ExternalLink size={14} className="text-muted-foreground flex-shrink-0" />
-          </a>
         </div>
       )}
 
@@ -163,8 +165,15 @@ const ConditionDetail = ({ condition, onBack }: { condition: ConsumerCondition; 
             <ChevronRight size={16} className="text-muted-foreground" />
           </button>
         )}
+        <a href={condition.externalLinkUrl} target="_blank" rel="noopener noreferrer" className="card-elevated p-4 flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-foreground">{condition.externalLinkLabel}</p>
+            <p className="text-xs text-muted-foreground">Opens in your browser — you will leave the app</p>
+          </div>
+          <ExternalLink size={14} className="text-muted-foreground" />
+        </a>
         <a href={condition.dermnetUrl} target="_blank" rel="noopener noreferrer" className="card-elevated p-4 flex items-center gap-3">
-          <div className="flex-1"><p className="text-sm font-medium text-foreground">DermNet NZ</p><p className="text-xs text-muted-foreground">Clinical reference</p></div>
+          <div className="flex-1"><p className="text-sm font-medium text-foreground">DermNet NZ — Clinical reference</p><p className="text-xs text-muted-foreground">Opens in your browser</p></div>
           <ExternalLink size={14} className="text-muted-foreground" />
         </a>
       </div>

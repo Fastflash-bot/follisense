@@ -2,17 +2,25 @@ export interface SelfCheckQuestion {
   question: string;
 }
 
+export interface PhotoPlaceholder {
+  label: string;
+  description: string;
+}
+
 export interface ConsumerCondition {
   id: string;
   name: string;
   summary: string;
   whatIsIt: string;
   selfCheck: SelfCheckQuestion[];
+  photoGallery: PhotoPlaceholder[];
   actionSteps: string[];
   dontDo: string[];
   whenToSee: string;
   relatedArticleId?: string;
   dermnetUrl: string;
+  externalLinkLabel: string;
+  externalLinkUrl: string;
   chatPrompts: string[];
 }
 
@@ -28,6 +36,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Have you noticed it getting gradually worse over months?' },
       { question: 'Is the affected area sore or tender after a new installation?' },
     ],
+    photoGallery: [
+      { label: 'Early stage — hairline', description: 'Early stage traction alopecia showing thinning at the hairline and temples' },
+      { label: 'Moderate — temple recession', description: 'Moderate traction alopecia with visible recession at the temples from tight braids' },
+      { label: 'Advanced — follicle scarring', description: 'Advanced traction alopecia with smooth, shiny skin and no visible follicles at hairline' },
+    ],
     actionSteps: [
       'Reduce tension immediately — ask your stylist for a looser installation',
       'Give your hair breaks between protective styles (at least 1–2 weeks)',
@@ -40,6 +53,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If you've noticed visible thinning or bare patches, see a trichologist or dermatologist. Early intervention can mean the difference between regrowth and permanent loss.",
     relatedArticleId: 'traction-alopecia',
     dermnetUrl: 'https://dermnetnz.org/topics/traction-alopecia',
+    externalLinkLabel: 'British Association of Dermatologists',
+    externalLinkUrl: 'https://www.bad.org.uk',
     chatPrompts: ['Could I have traction alopecia?', "What's the difference between traction alopecia and normal shedding?", 'What should I tell my doctor about this?'],
   },
   {
@@ -53,6 +68,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Does it come and go but never fully clear up?' },
       { question: 'Is it itchy?' },
     ],
+    photoGallery: [
+      { label: 'Mild — oily flaking', description: 'Mild seborrheic dermatitis with yellowish, oily flakes along the part line' },
+      { label: 'Moderate — with irritation', description: 'Moderate seborrheic dermatitis with flaking and visible irritation on darker skin' },
+      { label: 'Behind the ears', description: 'Seborrheic dermatitis presenting behind the ear on textured hair' },
+    ],
     actionSteps: [
       'Try a medicated shampoo with ketoconazole or zinc pyrithione',
       'Cleanse your scalp regularly, even under protective styles',
@@ -65,6 +85,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If over-the-counter medicated shampoos aren't helping after 2–3 weeks, see a dermatologist for a prescription-strength treatment.",
     relatedArticleId: 'seb-derm',
     dermnetUrl: 'https://dermnetnz.org/topics/seborrhoeic-dermatitis',
+    externalLinkLabel: 'DermNet NZ — Seborrheic dermatitis',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have seborrheic dermatitis?', "What's the difference between dandruff and seb derm?", 'What should I tell my doctor about this?'],
   },
   {
@@ -78,6 +100,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Did it appear suddenly?' },
       { question: 'Is the rest of your hair unaffected?' },
     ],
+    photoGallery: [
+      { label: 'Single smooth patch', description: 'Alopecia areata presenting as a single smooth, round bald patch on the scalp' },
+      { label: 'Multiple patches', description: 'Multiple patches of alopecia areata on darker skin' },
+      { label: 'Exclamation point hairs', description: 'Close-up showing exclamation point hairs at the edge of an alopecia areata patch' },
+    ],
     actionSteps: [
       'See a dermatologist for confirmation and treatment options',
       "Don't panic — many cases resolve on their own",
@@ -90,6 +117,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: 'See a dermatologist if you notice smooth, round bald patches appearing. Treatment is most effective when started early.',
     relatedArticleId: 'alopecia-areata',
     dermnetUrl: 'https://dermnetnz.org/topics/alopecia-areata',
+    externalLinkLabel: 'DermNet NZ — Alopecia areata',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have alopecia areata?', "What's the difference between alopecia areata and traction alopecia?", 'What should I tell my doctor about this?'],
   },
   {
@@ -101,6 +130,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Is the thinning at the very top or crown of your head?' },
       { question: 'Does the affected area feel tender or tingly?' },
       { question: 'Has it been spreading outward over time?' },
+    ],
+    photoGallery: [
+      { label: 'Early — crown thinning', description: 'Early CCCA showing subtle thinning at the crown on textured hair' },
+      { label: 'Moderate — spreading', description: 'Moderate CCCA with visible spreading from the centre of the crown' },
+      { label: 'Advanced — scarring', description: 'Advanced CCCA with smooth scarred scalp at the vertex' },
     ],
     actionSteps: [
       'See a dermatologist as soon as possible — early treatment is critical',
@@ -114,6 +148,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: 'Any unexplained thinning at the crown should be assessed by a dermatologist. CCCA requires medical treatment.',
     relatedArticleId: 'ccca',
     dermnetUrl: 'https://dermnetnz.org/topics/central-centrifugal-cicatricial-alopecia',
+    externalLinkLabel: 'American Academy of Dermatology',
+    externalLinkUrl: 'https://www.aad.org',
     chatPrompts: ['Could I have CCCA?', "What's the difference between CCCA and normal thinning?", 'What should I tell my doctor about this?'],
   },
   {
@@ -125,6 +161,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Are the patches raised with thick silvery or white scales?' },
       { question: 'Do the patches have a clear defined border?' },
       { question: 'Do you have psoriasis anywhere else on your body?' },
+    ],
+    photoGallery: [
+      { label: 'Mild — scalp plaque', description: 'Mild scalp psoriasis showing a defined silvery plaque near the hairline' },
+      { label: 'Moderate — multiple plaques', description: 'Moderate scalp psoriasis with multiple raised plaques on darker skin' },
+      { label: 'Extending beyond hairline', description: 'Scalp psoriasis extending beyond the hairline onto the forehead' },
     ],
     actionSteps: [
       'See a dermatologist for proper diagnosis and treatment',
@@ -138,6 +179,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: 'Always see a dermatologist. Psoriasis is a chronic condition that benefits from medical management.',
     relatedArticleId: undefined,
     dermnetUrl: 'https://dermnetnz.org/topics/scalp-psoriasis',
+    externalLinkLabel: 'DermNet NZ — Scalp psoriasis',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have scalp psoriasis?', "What's the difference between psoriasis and dandruff?", 'What should I tell my doctor about this?'],
   },
   {
@@ -149,6 +192,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Are there small bumps or pimple-like spots on your scalp?' },
       { question: 'Did they appear after getting a new style installed or a haircut?' },
       { question: 'Are they concentrated along where the style sits?' },
+    ],
+    photoGallery: [
+      { label: 'Mild — small bumps', description: 'Mild folliculitis showing small bumps at hair follicles on the scalp' },
+      { label: 'Post-installation', description: 'Folliculitis bumps along the installation line after a fresh protective style' },
+      { label: 'Moderate — at nape', description: 'Moderate folliculitis at the nape of the neck after a lineup on darker skin' },
     ],
     actionSteps: [
       'Keep the area clean and avoid touching it',
@@ -162,6 +210,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If the bumps are spreading, painful, pus-filled, or don't clear up within 1–2 weeks, see a doctor.",
     relatedArticleId: undefined,
     dermnetUrl: 'https://dermnetnz.org/topics/folliculitis',
+    externalLinkLabel: 'DermNet NZ — Folliculitis',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have folliculitis?', 'Is folliculitis contagious?', 'What should I tell my doctor about this?'],
   },
   {
@@ -175,6 +225,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Is it itchy?' },
       { question: 'Has anyone in your household had a similar patch?' },
     ],
+    photoGallery: [
+      { label: 'Black dot pattern', description: 'Tinea capitis showing characteristic black dot pattern where hairs have broken at the scalp' },
+      { label: 'Scaling with hair loss', description: 'Tinea capitis with scaling and patchy hair loss on darker skin' },
+      { label: 'Ring-shaped border', description: 'Tinea capitis showing a raised ring-shaped border on the scalp' },
+    ],
     actionSteps: [
       'See a doctor as soon as possible — this requires prescription medication',
       'Avoid sharing combs, brushes, pillowcases, or hats',
@@ -187,6 +242,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: 'See a doctor promptly. Tinea capitis is contagious and requires oral antifungal treatment.',
     relatedArticleId: undefined,
     dermnetUrl: 'https://dermnetnz.org/topics/tinea-capitis',
+    externalLinkLabel: 'DermNet NZ — Tinea capitis',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could I have a scalp fungal infection?', 'Is tinea capitis contagious?', 'What should I tell my doctor about this?'],
   },
   {
@@ -198,6 +255,11 @@ export const consumerConditions: ConsumerCondition[] = [
       { question: 'Did the irritation appear after a chemical treatment or heat styling?' },
       { question: 'Is the area red, raw, or sore?' },
       { question: 'Can you see a clear boundary between affected and normal scalp?' },
+    ],
+    photoGallery: [
+      { label: 'Chemical irritation', description: 'Chemical irritation on the scalp after a relaxer treatment on darker skin' },
+      { label: 'Chemical burn', description: 'Active chemical burn showing rawness and blistering at the hairline' },
+      { label: 'Scarring from repeated burns', description: 'Permanent scarring and hair loss from repeated chemical burns on darker skin' },
     ],
     actionSteps: [
       'Stop all chemical and heat treatments on the affected area immediately',
@@ -211,6 +273,8 @@ export const consumerConditions: ConsumerCondition[] = [
     whenToSee: "If there's blistering, open wounds, or persistent rawness, see a doctor. If you're seeing permanent bare patches from repeated damage, a dermatologist can assess.",
     relatedArticleId: undefined,
     dermnetUrl: 'https://dermnetnz.org/topics/chemical-burn',
+    externalLinkLabel: 'DermNet NZ — Chemical burns',
+    externalLinkUrl: 'https://dermnetnz.org',
     chatPrompts: ['Could this be chemical damage?', 'Will my hair grow back after a chemical burn?', 'What should I tell my doctor about this?'],
   },
 ];

@@ -13,6 +13,9 @@ export interface OnboardingData {
   lastChemicalTreatment: string;
   chemicalProcessingMultiple: string[];
   protectiveStyles: string[];
+  barberFrequency: string;
+  locRetwistFrequency: string;
+  maleStyleFrequency: string;
   otherStyle: string;
   protectiveStyleFrequency: string;
   isWornOutOnly: boolean;

@@ -488,6 +488,9 @@ const Onboarding = () => {
         menstrualCycleLength: skipMenstrual ? '' : menstrualCycleLength,
         hormonalContraception: skipMenstrual ? '' : hormonalContraception,
         goals,
+        barberFrequency: '',
+        locRetwistFrequency: '',
+        maleStyleFrequency: '',
       });
       setOnboardingComplete(true);
       navigate('/home');

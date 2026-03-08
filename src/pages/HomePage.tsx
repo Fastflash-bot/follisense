@@ -8,7 +8,7 @@ import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
-const serviceOptions = ['Wash', 'Treatment', 'Style installation', 'Style removal/takedown', 'Trim', 'Colour', 'Other'];
+const serviceOptions = ['Wash', 'Treatment', 'Style installation', 'Style removal/takedown', 'Trim', 'Colour', 'Lineup or shape-up', 'Retwist (locs)', 'Barber fade or cut', 'Scalp treatment', 'Other'];
 
 const protectiveStyleTips = [
   "Quick thought — a satin pillowcase tonight could help protect your edges while you sleep",
@@ -16,8 +16,18 @@ const protectiveStyleTips = [
   "If your braids feel tight around the hairline, don't tough it out — loosen or remove the ones causing pain",
   "Staying hydrated helps your scalp too — aim for 2 litres today",
   "Try pressing gently with a fingertip instead of scratching — it relieves itch without damaging the scalp",
-  "Your wash day is coming up in about 5 days — start thinking about whether you'll reinstall or give your hair a break",
+  "Your wash day is coming up — start thinking about whether you'll reinstall or give your hair a break",
   "If you're exercising today, a light spritz of scalp refresh spray afterwards can help with sweat buildup under your style",
+];
+
+const maleTips = [
+  "Wearing your durag tonight? Make sure your hairline isn't under too much tension from the tie",
+  "If your barber is lining you up every week, give your edges a break now and then",
+  "Cornrows feeling tight? Don't tough it out. Loosen the front ones to protect your hairline",
+  "Sweat buildup under a wave cap can irritate your scalp. A quick rinse or scalp wipe helps",
+  "If your locs are pulling at the root, that's traction. Talk to your loctician about lighter retwists",
+  "Staying hydrated helps your scalp too — aim for 2 litres today",
+  "Try pressing gently with a fingertip instead of scratching — it relieves itch without damaging the scalp",
 ];
 
 const wornOutTips = [
@@ -125,7 +135,8 @@ const HomePage = () => {
   })();
 
   // Determine tip based on user type and menstrual phase
-  const dailyTips = onboardingData.isWornOutOnly ? wornOutTips : protectiveStyleTips;
+  const isMale = onboardingData.gender === 'man';
+  const dailyTips = isMale ? maleTips : onboardingData.isWornOutOnly ? wornOutTips : protectiveStyleTips;
   let todayTip = dailyTips[dayOfYear % dailyTips.length];
   if (cycleDay) {
     if (cycleDay >= 1 && cycleDay <= 5) {
@@ -324,7 +335,7 @@ const HomePage = () => {
             <Scissors size={20} className="text-foreground" strokeWidth={1.5} />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-foreground text-sm">Log a salon visit</p>
+            <p className="font-medium text-foreground text-sm">{isMale ? 'Log a salon or barber visit' : 'Log a salon visit'}</p>
             <p className="text-xs text-muted-foreground">Track appointments and services</p>
           </div>
           <ChevronRight size={18} className="text-muted-foreground" />
@@ -383,7 +394,7 @@ const HomePage = () => {
             <Lightbulb size={20} className="text-primary mt-0.5 flex-shrink-0" strokeWidth={1.8} />
             <div>
               <p className="text-sm text-foreground">
-                <strong>Did you know?</strong> Traction alopecia affects up to 1 in 3 women who regularly wear tight hairstyles.
+                <strong>Did you know?</strong> Traction alopecia affects up to 1 in 3 people who regularly wear tight hairstyles.
               </p>
               <button onClick={() => navigate('/learn')} className="text-sm text-primary font-medium mt-2">Learn more</button>
             </div>
@@ -600,7 +611,7 @@ const HomePage = () => {
             <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 300 }} className="bg-card rounded-t-3xl w-full max-w-[430px] max-h-[85vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold">Log a salon visit</h3>
+                  <h3 className="text-lg font-semibold">{isMale ? 'Log a salon or barber visit' : 'Log a salon visit'}</h3>
                   <button onClick={() => setShowSalonForm(false)} className="p-1"><X size={22} className="text-muted-foreground" strokeWidth={1.8} /></button>
                 </div>
                 <div className="mb-5">

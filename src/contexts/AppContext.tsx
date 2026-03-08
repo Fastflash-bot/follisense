@@ -7,8 +7,10 @@ export interface BaselinePhoto {
 }
 
 export interface OnboardingData {
+  gender: string;
   hairType: string;
   chemicalProcessing: string;
+  lastChemicalTreatment: string;
   chemicalProcessingMultiple: string[];
   protectiveStyles: string[];
   otherStyle: string;
@@ -188,8 +190,10 @@ interface AppContextType {
 }
 
 const defaultOnboarding: OnboardingData = {
+  gender: '',
   hairType: '',
   chemicalProcessing: '',
+  lastChemicalTreatment: '',
   chemicalProcessingMultiple: [],
   protectiveStyles: [],
   otherStyle: '',

@@ -149,7 +149,7 @@ const HealthProfile = () => {
                   <p className="text-sm font-medium text-foreground mb-2">Do you have any of the following conditions?</p>
                   <MultiSelect
                     selected={hp.medicalConditions}
-                    options={['PCOS', 'Thyroid condition', 'Iron deficiency / anaemia', 'Vitamin D deficiency', 'Autoimmune condition', 'Diabetes', 'Eczema / dermatitis', 'Psoriasis', 'Seborrheic dermatitis', 'None of these', 'Prefer not to say']}
+                    options={['PCOS', 'Thyroid condition', 'Iron deficiency / anaemia', 'Vitamin D deficiency', 'Autoimmune condition', 'Diabetes', 'Eczema / dermatitis', 'Psoriasis', 'Seborrheic dermatitis', 'Androgenetic alopecia (male pattern hair loss)', 'None of these', 'Prefer not to say']}
                     onToggle={v => toggleMulti('medicalConditions', v)}
                   />
                 </div>
@@ -251,7 +251,7 @@ const HealthProfile = () => {
                   <p className="text-sm font-medium text-foreground mb-2">Do you experience any skin conditions on your body?</p>
                   <MultiSelect
                     selected={hp.skinConditions}
-                    options={['Eczema', 'Psoriasis', 'Keratosis pilaris', 'Hyperpigmentation', 'Keloid scarring', 'Acne', 'None', 'Other']}
+                    options={['Eczema', 'Psoriasis', 'Keratosis pilaris', 'Hyperpigmentation', 'Keloid scarring', 'Acne', 'Folliculitis or razor bumps', 'None', 'Other']}
                     onToggle={v => toggleMulti('skinConditions', v)}
                   />
                   {hp.skinConditions.includes('Other') && (

@@ -19,18 +19,21 @@ const ClinicianSummary = () => {
   const chemLabel = () => {
     const cp = onboardingData.chemicalProcessing;
     if (!cp || cp === 'No, fully natural') return null;
-    if (cp === 'Multiple') return onboardingData.chemicalProcessingMultiple?.join(', ') || 'Multiple (unspecified)';
-    return cp;
+    let label = cp;
+    if (cp === 'Multiple') label = onboardingData.chemicalProcessingMultiple?.join(', ') || 'Multiple (unspecified)';
+    if (onboardingData.lastChemicalTreatment) label += ` — last treated: ${onboardingData.lastChemicalTreatment}`;
+    return label;
   };
 
-  const fields = [
-    { label: 'Hair type', value: hairTypeLabel[onboardingData.hairType] || 'Not specified' },
-    ...(chemLabel() ? [{ label: 'Chemical processing', value: chemLabel()! }] : []),
-    { label: 'Current protective style', value: onboardingData.protectiveStyles.join(', ') || 'Not specified' },
-    { label: 'Typical cycle length', value: onboardingData.cycleLength || 'Not specified' },
-    { label: 'Current cycle duration', value: '28 days' },
-    { label: 'Wash frequency', value: onboardingData.washFrequency || 'Not specified' },
-  ];
+  // Build profile fields dynamically
+  const fields: { label: string; value: string }[] = [];
+  if (onboardingData.hairType) fields.push({ label: 'Hair type', value: hairTypeLabel[onboardingData.hairType] || onboardingData.hairType });
+  const chem = chemLabel();
+  if (chem) fields.push({ label: 'Chemical processing', value: chem });
+  if (onboardingData.protectiveStyles.length > 0) fields.push({ label: 'Current style(s)', value: onboardingData.protectiveStyles.join(', ') });
+  if (onboardingData.cycleLength) fields.push({ label: 'Typical cycle length', value: onboardingData.cycleLength });
+  if (onboardingData.washFrequency) fields.push({ label: 'Wash frequency', value: onboardingData.washFrequency });
+  if (onboardingData.wornOutWashFrequency) fields.push({ label: 'Wash frequency', value: onboardingData.wornOutWashFrequency });
 
   // Menstrual data
   const menstrualFields: { label: string; value: string }[] = [];
@@ -51,25 +54,76 @@ const ClinicianSummary = () => {
     if (onboardingData.hormonalContraception) menstrualFields.push({ label: 'Hormonal contraception', value: onboardingData.hormonalContraception });
     const status = onboardingData.menstrualCycleLength === 'Irregular' ? 'Irregular' : 'Regular';
     menstrualFields.push({ label: 'Menstrual status', value: status });
-  } else if (onboardingData.menstrualTracking) {
-    menstrualFields.push({ label: 'Menstrual tracking', value: 'Not tracking' });
   }
 
-  const symptoms = [
-    { label: 'Itch', value: currentCheckIn?.itch || 'Moderate' },
-    { label: 'Tenderness', value: currentCheckIn?.tenderness || 'Yes, noticeably' },
-    { label: 'Flaking', value: currentCheckIn?.flaking || 'Some flaking' },
-    { label: 'Hairline changes', value: currentCheckIn?.hairline || 'Looks a bit thinner' },
-    { label: 'Shedding', value: currentCheckIn?.shedding || 'More than usual' },
-  ];
+  // Symptoms: only show if check-in data exists
+  const hasCheckIn = !!currentCheckIn;
+  const symptoms: { label: string; value: string }[] = [];
+  if (hasCheckIn) {
+    if (currentCheckIn.itch) symptoms.push({ label: 'Itch', value: currentCheckIn.itch });
+    if (currentCheckIn.tenderness) symptoms.push({ label: 'Tenderness', value: currentCheckIn.tenderness });
+    if (currentCheckIn.flaking) symptoms.push({ label: 'Flaking', value: currentCheckIn.flaking });
+    if (currentCheckIn.hairline) symptoms.push({ label: 'Hairline changes', value: currentCheckIn.hairline });
+    if (currentCheckIn.shedding) symptoms.push({ label: 'Shedding', value: currentCheckIn.shedding });
+  }
+
+  // Hair condition from check-in
+  const hairCondition: { label: string; value: string }[] = [];
+  if (hasCheckIn) {
+    if (currentCheckIn.hairFeel) hairCondition.push({ label: 'Current texture/feel', value: currentCheckIn.hairFeel });
+    if (currentCheckIn.hairBreakage) hairCondition.push({ label: 'Breakage', value: currentCheckIn.hairBreakage });
+    if (currentCheckIn.hairAppearance) hairCondition.push({ label: 'Overall appearance', value: currentCheckIn.hairAppearance });
+    if (currentCheckIn.hairConcern) hairCondition.push({ label: 'Hair concern', value: currentCheckIn.hairConcern });
+  }
+
+  // Baseline comparison
+  const baselineFields: { label: string; value: string }[] = [];
+  if (onboardingData.baselineItch) baselineFields.push({ label: 'Baseline itch', value: onboardingData.baselineItch });
+  if (onboardingData.baselineTenderness) baselineFields.push({ label: 'Baseline tenderness', value: onboardingData.baselineTenderness });
+  if (onboardingData.baselineHairline) baselineFields.push({ label: 'Baseline hairline', value: onboardingData.baselineHairline });
+  if (onboardingData.baselineHairHealth) baselineFields.push({ label: 'Baseline hair health', value: onboardingData.baselineHairHealth });
+
+  // Products
+  const hasScalpProducts = onboardingData.scalpProducts.length > 0;
+  const hasHairProducts = onboardingData.hairProducts.length > 0 && !onboardingData.hairProducts.every(p => p === 'None');
 
   const negatives = symptoms.filter(s => ['None', 'No', 'Normal', 'No change'].includes(s.value));
+
+  // Health context
+  const hp = healthProfile;
+  const contextItems: { label: string; value: string }[] = [];
+  if (hp.medicalConditions.length > 0 && !hp.medicalConditions.includes('None of these') && !hp.medicalConditions.includes('Prefer not to say')) contextItems.push({ label: 'Medical conditions', value: hp.medicalConditions.join(', ') });
+  if (hp.pregnancyStatus && hp.pregnancyStatus !== 'No' && hp.pregnancyStatus !== 'Prefer not to say') contextItems.push({ label: 'Reproductive status', value: hp.pregnancyStatus });
+  if (hp.medications === 'Yes') contextItems.push({ label: 'Medications', value: hp.medicationDetails || 'Yes (unspecified)' });
+  Object.entries(hp.bloodLevels).forEach(([marker, level]) => { if (level === 'Low') contextItems.push({ label: marker, value: 'Low' }); });
+  if (hp.skinConditions.length > 0 && !hp.skinConditions.includes('None')) {
+    const items = hp.skinConditions.filter(s => s !== 'Other');
+    if (hp.skinConditions.includes('Other') && hp.skinConditionDetails) items.push(hp.skinConditionDetails);
+    if (items.length) contextItems.push({ label: 'Skin conditions', value: items.join(', ') });
+  }
+  if (hp.previousHairLoss && hp.previousHairLoss !== 'No') contextItems.push({ label: 'Previous hair loss', value: hp.previousHairLoss });
+  if (hp.diagnosedCondition === 'Yes') contextItems.push({ label: 'Diagnosed condition', value: hp.diagnosedConditionDetails || 'Yes (unspecified)' });
+  if (hp.familyHistory === 'Yes') contextItems.push({ label: 'Family history', value: 'Hair loss / thinning' });
+  const telogenTriggers: string[] = [];
+  if (hp.pregnancyStatus === 'Postpartum (within 12 months)') telogenTriggers.push('Postpartum (within 12 months)');
+  const validStressors = (hp.recentStressors || []).filter(s => s !== 'None of these' && s !== 'Prefer not to say');
+  telogenTriggers.push(...validStressors);
+  if (telogenTriggers.length > 0) contextItems.push({ label: 'Potential TE triggers', value: telogenTriggers.join(', ') });
+
+  const hasHealthContext = contextItems.length > 0;
 
   const handleShare = async () => {
     if (navigator.share) {
       try { await navigator.share({ title: 'ScalpSense Clinical Summary', text: 'Patient-reported scalp symptom summary' }); } catch { /* cancelled */ }
     } else { toast('Share feature coming soon'); }
   };
+
+  const FieldRow = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex justify-between text-sm">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-foreground text-right max-w-[55%]">{value}</span>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,113 +156,77 @@ const ClinicianSummary = () => {
           )}
 
           {/* Profile */}
-          <div className="card-elevated p-4 mb-4">
-            <h3 className="text-label mb-3">Patient Profile</h3>
-            <div className="space-y-2.5">
-              {fields.map(f => (
-                <div key={f.label} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{f.label}</span>
-                  <span className="font-medium text-foreground text-right max-w-[55%]">{f.value}</span>
-                </div>
-              ))}
-              {menstrualFields.map(f => (
-                <div key={f.label} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{f.label}</span>
-                  <span className="font-medium text-foreground text-right max-w-[55%]">{f.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="card-elevated p-4 mb-4">
-            <h3 className="text-label mb-3">Symptoms Reported (This Cycle)</h3>
-            <div className="space-y-2.5">
-              {symptoms.map(s => (
-                <div key={s.label} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{s.label}</span>
-                  <span className="font-medium text-foreground">{s.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Hair Condition */}
-          <div className="card-elevated p-4 mb-4">
-            <h3 className="text-label mb-3">Hair Condition Observations</h3>
-            <div className="space-y-2.5">
-              {[
-                { label: 'Current texture/feel', value: currentCheckIn?.hairFeel || onboardingData.baselineHairHealth || 'Not assessed' },
-                { label: 'Breakage', value: currentCheckIn?.hairBreakage || 'Not assessed' },
-                { label: 'Overall appearance', value: currentCheckIn?.hairAppearance || 'Not assessed' },
-                { label: 'Trend', value: 'First assessment' },
-              ].map(item => (
-                <div key={item.label} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="font-medium text-foreground text-right max-w-[55%]">{item.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Products */}
-          {onboardingData.scalpProducts.length > 0 && (
+          {fields.length > 0 && (
             <div className="card-elevated p-4 mb-4">
-              <h3 className="text-label mb-3">Products Used</h3>
-              <div className="space-y-1">
-                {onboardingData.scalpProducts.map(p => (<p key={p} className="text-sm text-foreground">• {p}</p>))}
-                {currentCheckIn?.newProductDetails && (
-                  <p className="text-sm text-foreground mt-2"><strong>New this cycle:</strong> {currentCheckIn.newProductDetails}</p>
+              <h3 className="text-label mb-3">Patient Profile</h3>
+              <div className="space-y-2.5">
+                {fields.map(f => <FieldRow key={f.label} label={f.label} value={f.value} />)}
+                {menstrualFields.map(f => <FieldRow key={f.label} label={f.label} value={f.value} />)}
+              </div>
+            </div>
+          )}
+
+          {/* Symptoms */}
+          {symptoms.length > 0 && (
+            <div className="card-elevated p-4 mb-4">
+              <h3 className="text-label mb-3">Symptoms Reported ({currentCheckIn?.type === 'wash-day' ? 'Wash Day' : 'Mid-Cycle'} — {currentCheckIn?.date})</h3>
+              <div className="space-y-2.5">
+                {symptoms.map(s => <FieldRow key={s.label} label={s.label} value={s.value} />)}
+                {currentCheckIn?.newProducts === 'Yes, I tried something new' && currentCheckIn?.newProductDetails && (
+                  <FieldRow label="New product this cycle" value={currentCheckIn.newProductDetails} />
                 )}
               </div>
             </div>
           )}
 
-          {/* Trend */}
-          <div className="card-elevated p-4 mb-4">
-            <h3 className="text-label mb-3">Symptom Trend</h3>
-            <p className="text-sm text-foreground">Itch and tenderness have increased over the last 2 cycles</p>
-            <div className="flex gap-4 mt-3">
-              <div className="flex items-center gap-1.5 text-xs"><span className="text-warning">↑</span><span className="text-muted-foreground">Itch trending up</span></div>
-              <div className="flex items-center gap-1.5 text-xs"><span className="text-warning">↑</span><span className="text-muted-foreground">Tenderness trending up</span></div>
+          {/* Hair Condition */}
+          {hairCondition.length > 0 && (
+            <div className="card-elevated p-4 mb-4">
+              <h3 className="text-label mb-3">Hair Condition Observations</h3>
+              <div className="space-y-2.5">
+                {hairCondition.map(item => <FieldRow key={item.label} label={item.label} value={item.value} />)}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Baseline comparison */}
+          {baselineFields.length > 0 && baselineDate && (
+            <div className="card-elevated p-4 mb-4">
+              <h3 className="text-label mb-3">Baseline Assessment ({baselineDate})</h3>
+              <div className="space-y-2.5">
+                {baselineFields.map(item => <FieldRow key={item.label} label={item.label} value={item.value} />)}
+              </div>
+            </div>
+          )}
+
+          {/* Products */}
+          {(hasScalpProducts || hasHairProducts) && (
+            <div className="card-elevated p-4 mb-4">
+              <h3 className="text-label mb-3">Products Used</h3>
+              {hasScalpProducts && (
+                <div className="mb-3">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Scalp products ({onboardingData.scalpProductFrequency || onboardingData.productFrequency})</p>
+                  {onboardingData.scalpProducts.map(p => (<p key={p} className="text-sm text-foreground">• {p}</p>))}
+                </div>
+              )}
+              {hasHairProducts && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Hair products ({onboardingData.hairProductFrequency})</p>
+                  {onboardingData.hairProducts.filter(p => p !== 'None').map(p => (<p key={p} className="text-sm text-foreground">• {p}</p>))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Health context */}
-          {(() => {
-            const hp = healthProfile;
-            const contextItems: { label: string; value: string }[] = [];
-            if (hp.medicalConditions.length > 0 && !hp.medicalConditions.includes('None of these') && !hp.medicalConditions.includes('Prefer not to say')) contextItems.push({ label: 'Medical conditions', value: hp.medicalConditions.join(', ') });
-            if (hp.pregnancyStatus && hp.pregnancyStatus !== 'No' && hp.pregnancyStatus !== 'Prefer not to say') contextItems.push({ label: 'Reproductive status', value: hp.pregnancyStatus });
-            if (hp.medications === 'Yes') contextItems.push({ label: 'Medications', value: hp.medicationDetails || 'Yes (unspecified)' });
-            Object.entries(hp.bloodLevels).forEach(([marker, level]) => { if (level === 'Low') contextItems.push({ label: marker, value: 'Low' }); });
-            if (hp.skinConditions.length > 0 && !hp.skinConditions.includes('None')) {
-              const items = hp.skinConditions.filter(s => s !== 'Other');
-              if (hp.skinConditions.includes('Other') && hp.skinConditionDetails) items.push(hp.skinConditionDetails);
-              if (items.length) contextItems.push({ label: 'Skin conditions', value: items.join(', ') });
-            }
-            if (hp.previousHairLoss && hp.previousHairLoss !== 'No') contextItems.push({ label: 'Previous hair loss', value: hp.previousHairLoss });
-            if (hp.diagnosedCondition === 'Yes') contextItems.push({ label: 'Diagnosed condition', value: hp.diagnosedConditionDetails || 'Yes (unspecified)' });
-            if (hp.familyHistory === 'Yes') contextItems.push({ label: 'Family history', value: 'Hair loss / thinning' });
-            const telogenTriggers: string[] = [];
-            if (hp.pregnancyStatus === 'Postpartum (within 12 months)') telogenTriggers.push('Postpartum (within 12 months)');
-            const validStressors = (hp.recentStressors || []).filter(s => s !== 'None of these' && s !== 'Prefer not to say');
-            telogenTriggers.push(...validStressors);
-            if (telogenTriggers.length > 0) contextItems.push({ label: 'Potential TE triggers', value: telogenTriggers.join(', ') });
-            if (contextItems.length === 0) return null;
-            return (
-              <div className="card-elevated p-4 mb-4">
-                <h3 className="text-label mb-3">Patient Health Context</h3>
-                <div className="space-y-2.5">
-                  {contextItems.map(item => (
-                    <div key={item.label} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{item.label}</span>
-                      <span className="font-medium text-foreground text-right max-w-[55%]">{item.value}</span>
-                    </div>
-                  ))}
-                </div>
+          {hasHealthContext && (
+            <div className="card-elevated p-4 mb-4">
+              <h3 className="text-label mb-3">Patient Health Context</h3>
+              <div className="space-y-2.5">
+                {contextItems.map(item => <FieldRow key={item.label} label={item.label} value={item.value} />)}
               </div>
-            );
-          })()}
+            </div>
+          )}
 
           {negatives.length > 0 && (
             <div className="card-elevated p-4 mb-6">

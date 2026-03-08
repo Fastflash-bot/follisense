@@ -83,7 +83,7 @@ const ProfilePage = () => {
           <button onClick={handleModeSwitch} className="card-elevated w-full p-5 flex items-center gap-4 border-2 border-secondary">
             <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0"><Repeat size={22} className="text-foreground" strokeWidth={1.5} /></div>
             <div className="flex-1 text-left">
-              <p className="font-semibold text-foreground">{stylistMode ? 'Switch to Personal Mode' : 'Switch to Stylist Mode'}</p>
+              <p className="font-semibold text-foreground">{stylistMode ? 'Switch to Personal Mode' : 'Switch to Stylist or Barber Mode'}</p>
               <p className="text-xs text-muted-foreground mt-0.5">{stylistMode ? 'Go back to tracking your own scalp health' : 'Document scalp observations for your clients'}</p>
             </div>
             <ChevronRight size={18} className="text-muted-foreground" />

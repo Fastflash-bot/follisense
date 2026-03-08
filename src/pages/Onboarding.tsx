@@ -405,12 +405,12 @@ const Onboarding = () => {
     }
   };
 
-  const isLastStep = skipMenstrual ? step === 7 : step === 8;
+  const isLastStep = skipMenstrual ? step === 8 : step === 9;
 
   const handleSkip = () => {
     setSkippedSections(prev => [...prev, step]);
-    if (skipMenstrual && step === 6) {
-      setStep(7);
+    if (skipMenstrual && step === 7) {
+      setStep(8);
     } else {
       setStep(step + 1);
     }

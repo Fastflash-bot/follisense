@@ -216,6 +216,21 @@ const Onboarding = () => {
 
   const handleNext = () => {
     if (step < totalSteps) {
+      // Baseline risk check after Step 4
+      if (step === 4 && !baselineResultScreen) {
+        const risk = computeBaselineRisk(itch, tenderness, hairline);
+        const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+        setBaselineRisk(risk);
+        setBaselineDate(today);
+        if (risk !== 'green') {
+          setBaselineResultScreen(risk as 'amber' | 'red');
+          return;
+        }
+      }
+      // Clear baseline result screen when moving past step 4
+      if (step === 4 && baselineResultScreen) {
+        setBaselineResultScreen(null);
+      }
       // Save baseline photos when leaving photo step
       if (step === 5) {
         const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });

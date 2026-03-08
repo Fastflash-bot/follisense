@@ -169,8 +169,15 @@ const Onboarding = () => {
   const canProceed = () => {
     switch (step) {
       case 1: return !!hairType && !!chemicalProcessing && (chemicalProcessing !== 'Multiple' || chemicalMultiple.length > 0);
-      case 2: return styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
+      case 2: {
+        const stylesOk = styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
+        const freqOk = !hasProtectiveStyle || !!protectiveFreq;
+        return stylesOk && freqOk;
+      }
       case 3: {
+        if (isWornOutOnly) {
+          return !!wornOutWashFreq && !!restyleFreq;
+        }
         const cycleOk = !!cycleLen && (cycleLen !== 'It varies' || (!!cycleLenMin && !!cycleLenMax));
         const washOk = !!washFreq && (washFreq !== 'It depends on the style' || !!washFreqPerCycle);
         const betweenOk = betweenWashCare.length > 0 && (!betweenWashCare.includes('Other') || otherBetweenWash.trim().length > 0);

@@ -30,11 +30,6 @@ export interface OnboardingData {
   scalpProducts: string[];
   otherProduct: string;
   productFrequency: string;
-  // Menstrual cycle
-  menstrualTracking: string; // 'yes' | 'no' | 'no-menstruate'
-  lastPeriodDate: string;
-  menstrualCycleLength: string;
-  hormonalContraception: string;
   // Goals
   goals: string[];
 }

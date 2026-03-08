@@ -397,7 +397,7 @@ const Onboarding = () => {
             {/* Step 2: Hair styles */}
             {step === 2 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">How do you usually wear your hair?</h2>
+                <h2 className="text-lg font-medium text-foreground mb-2">How do you usually wear your hair?</h2>
                 <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
                 <div className="grid grid-cols-2 gap-3">
                   {styleOptions.slice(0, 8).map(s => (

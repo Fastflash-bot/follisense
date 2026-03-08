@@ -6,7 +6,7 @@ import { dummyLeaderboard } from '@/data/quizQuestions';
 import { useState, useEffect, useMemo } from 'react';
 
 interface StylistProfile {
-  role: string; businessName: string; [key: string]: any;
+  role: string | string[]; businessName: string; [key: string]: any;
 }
 
 const loadStylistProfile = (): StylistProfile | null => {

@@ -110,7 +110,7 @@ export const articles: Article[] = [
     content: [
       'Hair breaks for a few main reasons, and knowing which one you\'re dealing with changes the solution.',
       'Mechanical breakage is caused by manipulation, tight styling, rough detangling, or friction from cotton pillowcases and towel drying. The fix: gentler handling, satin accessories, finger detangling or a wide-tooth comb on conditioned hair.',
-      'Moisture deficit breakage means hair feels dry, straw-like, and snaps easily. The fix: deep conditioning, leave-in conditioner, sealing with an oil or butter.',
+      'Moisture deficit breakage means hair feels dry, straw-like, and snaps easily. The fix: deep conditioning, leave-in conditioner, and ensuring your hair retains moisture between washes.',
       'Protein deficit breakage means hair feels limp, stretchy, and mushy when wet. The fix: a protein treatment like Aphogee, rice water rinse, or a protein-based deep conditioner. Be careful though — too much protein causes the opposite problem.',
       'Chemical breakage comes from relaxers, colour, or bleach weakening the hair\'s internal structure. The fix: bond repair treatments like K18 or Olaplex, and time. Severely chemically damaged hair may need to be cut.',
       'Heat damage comes from flat irons, blow dryers, or hot combs used too frequently or at too high a temperature. This is usually permanent — damaged sections need to be trimmed out over time.',

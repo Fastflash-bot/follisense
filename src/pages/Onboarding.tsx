@@ -336,6 +336,53 @@ const Onboarding = () => {
 
             {step === 5 && (
               <div>
+                <h2 className="text-2xl font-semibold mb-2">Capture your starting point</h2>
+                <p className="text-muted-foreground mb-6">
+                  A baseline photo helps you spot gradual changes over time that are hard to notice day to day.
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  {baselineAreas.map(area => (
+                    <button
+                      key={area.id}
+                      onClick={() => setCapturedPhotos(prev => ({ ...prev, [area.id]: true }))}
+                      className={`selection-card w-full flex items-center gap-4 text-left ${area.optional ? 'border-dashed opacity-80' : ''} ${capturedPhotos[area.id] ? 'selected' : ''}`}
+                    >
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${capturedPhotos[area.id] ? 'bg-primary/10' : 'bg-accent'}`}>
+                        {capturedPhotos[area.id] ? (
+                          <Check size={22} className="text-primary" strokeWidth={2} />
+                        ) : (
+                          <Camera size={22} className="text-muted-foreground" strokeWidth={1.5} />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground text-sm">{area.label}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {capturedPhotos[area.id] ? 'Photo captured ✓' : area.desc}
+                        </p>
+                      </div>
+                      {area.optional && !capturedPhotos[area.id] && (
+                        <span className="text-xs text-muted-foreground bg-accent px-2 py-0.5 rounded-full">Optional</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="rounded-2xl bg-accent p-4 mb-4">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    🔒 Photos are stored on your device only — never uploaded, never shared unless you choose to. No AI analysis is applied.
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-accent p-4 mb-6">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    💡 For the best baseline, take photos in good natural light with your hair parted or pulled back so your scalp is visible.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {step === 6 && (
+              <div>
                 <h2 className="text-2xl font-semibold mb-2">What products do you use on your scalp?</h2>
                 <p className="text-muted-foreground mb-6">This helps us understand what might be affecting your scalp health</p>
                 <div className="grid grid-cols-2 gap-3">
@@ -391,14 +438,29 @@ const Onboarding = () => {
         </AnimatePresence>
 
         <div className="pb-8">
-          <button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className={`w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors ${
-              canProceed() ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'
-            }`}
-          >
-            {step === totalSteps ? 'Set up my cycle' : 'Next'}
+          {step === 5 ? (
+            <div className="space-y-3">
+              <button
+                onClick={handleNext}
+                className="w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors bg-primary text-primary-foreground"
+              >
+                {Object.values(capturedPhotos).some(Boolean) ? 'Continue' : 'Skip for now'}
+              </button>
+              {!Object.values(capturedPhotos).some(Boolean) && (
+                <p className="text-xs text-center text-muted-foreground">You can always add baseline photos later from your Profile.</p>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className={`w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors ${
+                canProceed() ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'
+              }`}
+            >
+              {step === totalSteps ? 'Set up my cycle' : 'Next'}
+            </button>
+          )}
           </button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useApp } from '@/contexts/AppContext';
 
 const consumerTabs = [
   { path: '/home', icon: Home, label: 'Home' },
+  { path: '/chat', icon: MessageCircle, label: 'Chat' },
   { path: '/history', icon: Clock, label: 'History' },
   { path: '/learn', icon: BookOpen, label: 'Learn' },
   { path: '/profile', icon: User, label: 'Profile' },

@@ -260,13 +260,13 @@ const Onboarding = () => {
 
   // ── Derived ──
   const isMale = gender === 'man';
-  const isNeutral = gender === 'non-binary' || gender === 'prefer-not-to-say';
+  const isNeutral = gender === 'prefer-not-to-say';
   const skipMenstrual = isMale;
 
   const styleOptions = isMale ? maleStyleOptions : isNeutral ? [...new Set([...femaleStyleOptions, ...maleStyleOptions])] : femaleStyleOptions;
-  const wornOutOnlyStyles = isMale ? wornOutOnlyStylesMale : wornOutOnlyStylesFemale;
-  const currentBetweenWashOptions = isMale ? betweenWashOptionsMale : betweenWashOptions;
-  const goalOptions = isMale ? maleGoalOptions : femaleGoalOptions;
+  const wornOutOnlyStyles = isMale ? wornOutOnlyStylesMale : isNeutral ? [...wornOutOnlyStylesFemale, ...wornOutOnlyStylesMale] : wornOutOnlyStylesFemale;
+  const currentBetweenWashOptions = isMale ? betweenWashOptionsMale : isNeutral ? [...new Set([...betweenWashOptions, ...betweenWashOptionsMale])] : betweenWashOptions;
+  const goalOptions = isMale ? maleGoalOptions : isNeutral ? [...new Set([...femaleGoalOptions, ...maleGoalOptions])] : femaleGoalOptions;
 
   const isWornOutOnly = styles.length > 0 && styles.every(s => wornOutOnlyStyles.includes(s));
   const hasProtectiveOrStretchedStyle = styles.length > 0 && styles.some(s => !wornOutOnlyStyles.includes(s) && s !== 'Other');

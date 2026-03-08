@@ -36,7 +36,7 @@ const scalpSteps = [
   },
   {
     key: 'hairline',
-    q: 'Any changes around your edges or temples?',
+    q: 'How are your edges looking?',
     options: [
       { label: 'No change', desc: 'Edges look the same as usual' },
       { label: 'Looks a bit thinner', desc: 'Slight difference, not sure' },

@@ -718,11 +718,11 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* ── Step 3: Routine / Cycle ── */}
-            {step === 3 && isMale && (
+            {/* ── Step 4: Routine / Cycle ── */}
+            {step === 4 && isMale && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">Your routine</h2>
-                <p className="text-xs text-muted-foreground mb-6">{sectionWhyText[3]}</p>
+                <p className="text-xs text-muted-foreground mb-6">{sectionWhyText[4]}</p>
 
                 {hasFadeOrShortMale && !hasLocsMale && !hasBraidsMale && (
                   <>

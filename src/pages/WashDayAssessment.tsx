@@ -27,7 +27,7 @@ const scalpSteps = [
   },
   {
     key: 'flaking',
-    q: 'Have you noticed any flaking or buildup?',
+    q: 'Noticed any flaking or buildup?',
     options: [
       { label: 'None', desc: 'Scalp looks clear' },
       { label: 'Some flaking', desc: 'Light flakes, some buildup' },

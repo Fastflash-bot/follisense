@@ -114,7 +114,7 @@ const ClinicianSummary = () => {
 
   const handleShare = async () => {
     if (navigator.share) {
-      try { await navigator.share({ title: 'ScalpSense Clinical Summary', text: 'Patient-reported scalp symptom summary' }); } catch { /* cancelled */ }
+      try { await navigator.share({ title: 'FolliSense Clinical Summary', text: 'Patient-reported scalp symptom summary' }); } catch { /* cancelled */ }
     } else { toast('Share feature coming soon'); }
   };
 

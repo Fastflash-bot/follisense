@@ -1,64 +1,151 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, Droplets, Stethoscope, Sparkles, Info, ChevronDown, Search, Brain, Users } from 'lucide-react';
-
-const articles = [
-  { icon: AlertTriangle, title: 'What is traction alopecia?', preview: 'How tight hairstyles can affect your hairline over time', content: 'Traction alopecia is a form of hair loss caused by prolonged tension on hair follicles. It commonly affects the hairline, temples, and edges — areas where tight styles pull the most. The good news: it\'s reversible if caught early. Adjusting tension, taking breaks between protective styles, and allowing your edges to rest can help. Research suggests it affects up to 1 in 3 people who regularly wear tight hairstyles.' },
-  { icon: Users, title: 'Traction alopecia in men', preview: 'Braids, locs, and durags can affect your hairline too', content: 'Traction alopecia isn\'t just a women\'s issue — it\'s increasingly common in men who wear tight cornrows, braids, locs, or use durags and wave caps regularly. The constant tension on the hairline and temples can cause gradual recession that\'s often mistaken for male pattern baldness. If you wear installed styles, ask your barber or stylist to keep the hairline loose. If you use a durag, avoid tying it so tight that it leaves marks. Early intervention makes a real difference.' },
-  { icon: Droplets, title: 'Understanding your wash cycle', preview: 'Why cycle-aware monitoring matters for protective styles', content: 'When you wear a protective style for weeks at a time, your scalp is largely hidden from view. This creates a visibility gap — symptoms can develop and progress without being noticed. Wash day is a natural checkpoint because it\'s when you take your style down (or at least access your scalp). By tracking symptoms at these consistent intervals, you can spot patterns that would otherwise go unnoticed.' },
-  { icon: Stethoscope, title: 'When to see a professional', preview: 'Signs that it\'s time to seek expert advice', content: 'Seek professional advice if you notice: persistent or worsening scalp pain, visible hairline recession that doesn\'t recover, significant hair loss during washing, or scalp inflammation that doesn\'t resolve. A trichologist specialises in hair and scalp conditions. A dermatologist can investigate skin-related causes. Your GP can provide referrals and rule out systemic causes. Early action consistently leads to better outcomes.' },
-  { icon: Sparkles, title: 'Scalp care between wash days', preview: 'Simple steps to keep your scalp healthy under protective styles', content: 'Keep your scalp healthy between washes with these tips: Apply a lightweight, non-comedogenic scalp oil to soothe dryness. Avoid re-tightening loose edges — this increases tension damage. Use a gentle, sulphate-free scalp rinse mid-cycle if itching increases. Sleep with a satin bonnet or pillowcase to reduce friction. Most importantly, listen to discomfort signals — pain means something needs to change.' },
-  { icon: Brain, title: 'Understanding telogen effluvium', preview: 'Why stress, hormones, and life changes can cause shedding', content: 'Telogen effluvium (TE) is a temporary form of hair shedding triggered by stress, hormonal changes, illness, or significant life events like childbirth. It happens when a larger-than-normal number of hair follicles enter the resting (telogen) phase at the same time. The shedding usually appears 2–4 months after the trigger and can be alarming, but it\'s almost always temporary. Most cases resolve within 6–12 months as the cycle normalises. If shedding persists beyond 12 months or is concentrated in specific areas, it\'s worth seeing a professional to rule out other causes.' },
-  { icon: Info, title: 'How ScalpSense works', preview: 'Your monitoring cycle explained', content: 'ScalpSense follows your protective style cycle, prompting check-ins at two key moments: mid-cycle (a quick 4-question check) and wash day (a more thorough 9-question assessment). Your responses are scored to identify patterns: green means your routine is working, amber suggests areas to watch, and red recommends professional consultation. The clinician summary feature creates a structured report you can share with a healthcare provider. ScalpSense doesn\'t diagnose — it helps you notice patterns and know when to act.' },
-];
+import { Search, Clock } from 'lucide-react';
+import { articles, categories, getArticleById, Article } from '@/data/learnArticles';
+import { useApp } from '@/contexts/AppContext';
+import ArticleView from '@/components/ArticleView';
 
 const LearnPage = () => {
-  const navigate = useNavigate();
-  const [expanded, setExpanded] = useState<number | null>(null);
+  const { onboardingData } = useApp();
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
+  const pillsRef = useRef<HTMLDivElement>(null);
+
+  const isMale = onboardingData.gender === 'A man';
+
+  const sortedArticles = useMemo(() => {
+    let filtered = articles;
+
+    // Filter by category
+    if (activeCategory !== 'All') {
+      filtered = filtered.filter(a => a.category === activeCategory);
+    }
+
+    // Filter by search
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        a =>
+          a.title.toLowerCase().includes(q) ||
+          a.preview.toLowerCase().includes(q) ||
+          a.category.toLowerCase().includes(q) ||
+          a.content.some(p => p.toLowerCase().includes(q))
+      );
+    }
+
+    // Prioritise men's hair for male users
+    if (isMale && activeCategory === 'All' && !searchQuery.trim()) {
+      const mens = filtered.filter(a => a.category === "Men's hair");
+      const rest = filtered.filter(a => a.category !== "Men's hair");
+      return [...mens, ...rest];
+    }
+
+    return filtered;
+  }, [activeCategory, searchQuery, isMale]);
+
+  const selectedArticle = selectedArticleId ? getArticleById(selectedArticleId) : null;
+
+  if (selectedArticle) {
+    return (
+      <div className="page-container pt-6">
+        <ArticleView
+          article={selectedArticle}
+          onBack={() => setSelectedArticleId(null)}
+          onNavigate={(id) => {
+            setSelectedArticleId(id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="page-container pt-6">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
         <h1 className="text-2xl font-semibold mb-1">Learn</h1>
-        <p className="text-muted-foreground mb-6">Understanding your scalp and hair health</p>
+        <p className="text-muted-foreground mb-5">Bite-sized guides for healthier hair and scalp</p>
 
-        <div className="space-y-3 mb-8">
-          {articles.map((article, i) => (
-            <button key={i} onClick={() => setExpanded(expanded === i ? null : i)} className="card-elevated p-5 w-full text-left">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-sage-light flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <article.icon size={20} className="text-primary" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-foreground text-[15px]">{article.title}</h3>
-                    <ChevronDown size={18} className={`text-muted-foreground transition-transform flex-shrink-0 ml-2 ${expanded === i ? 'rotate-180' : ''}`} />
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1">{article.preview}</p>
-                  <AnimatePresence>
-                    {expanded === i && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
-                        <p className="text-sm text-foreground mt-4 leading-relaxed">{article.content}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
+        {/* Search */}
+        <div className="relative mb-5">
+          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search topics"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+        </div>
+
+        {/* Category pills */}
+        <div
+          ref={pillsRef}
+          className="flex gap-2 overflow-x-auto pb-4 mb-2 scrollbar-hide -mx-1 px-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                activeCategory === cat
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-card border border-border text-foreground hover:bg-accent'
+              }`}
+            >
+              {cat}
             </button>
           ))}
         </div>
 
-        <button onClick={() => navigate('/find-specialist')} className="card-elevated p-5 w-full text-left mb-20 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-sage-light flex items-center justify-center flex-shrink-0">
-            <Search size={20} className="text-primary" strokeWidth={1.5} />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-semibold text-foreground text-[15px]">Find a specialist</h3>
-            <p className="text-sm text-muted-foreground mt-1">Professionals who understand textured hair</p>
-          </div>
-          <ChevronDown size={18} className="text-muted-foreground -rotate-90" />
-        </button>
+        {/* Articles */}
+        <div className="space-y-3 mb-20">
+          <AnimatePresence mode="popLayout">
+            {sortedArticles.length === 0 ? (
+              <motion.p
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center text-muted-foreground py-12 text-sm"
+              >
+                No articles found. Try a different search or category.
+              </motion.p>
+            ) : (
+              sortedArticles.map((article) => (
+                <motion.button
+                  key={article.id}
+                  layout
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => setSelectedArticleId(article.id)}
+                  className="card-elevated p-5 w-full text-left"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <span className="inline-block text-[11px] font-medium px-2 py-0.5 rounded-full bg-sage-light text-primary mb-2">
+                        {article.category}
+                      </span>
+                      <h3 className="font-semibold text-foreground text-[15px] leading-snug mb-1">
+                        {article.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                        {article.preview}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-muted-foreground text-xs mt-3">
+                    <Clock size={12} />
+                    <span>{article.readTime} min read</span>
+                  </div>
+                </motion.button>
+              ))
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
     </div>
   );

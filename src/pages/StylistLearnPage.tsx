@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ChevronRight, Eye, ArrowUpRight, AlertTriangle, Shield, BookOpen, Play, Flame, Star, Info, Heart, ExternalLink, Camera } from 'lucide-react';
 import { stylistConditions, StylistCondition, getConditionById } from '@/data/stylistConditions';
@@ -171,8 +171,17 @@ const ReferralGuide = () => (
 
 const StylistLearnPage = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedConditionId, setSelectedConditionId] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<'conditions' | 'refer'>('conditions');
+
+  useEffect(() => {
+    const conditionParam = searchParams.get('condition');
+    if (conditionParam && getConditionById(conditionParam)) {
+      setSelectedConditionId(conditionParam);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const selectedCondition = selectedConditionId ? getConditionById(selectedConditionId) : null;
 

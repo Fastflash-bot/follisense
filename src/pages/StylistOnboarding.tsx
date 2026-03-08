@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Leaf, Check } from 'lucide-react';
+import { Leaf, Check, ChevronDown } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Progress } from '@/components/ui/progress';
+
+const countries = [
+  'United Kingdom', 'United States', 'Nigeria', 'Ghana', 'South Africa', 'Jamaica', 'Canada',
+  'Kenya', 'Tanzania', 'Uganda', 'Zimbabwe', 'Cameroon', 'Senegal', 'Ethiopia', 'France',
+  'Germany', 'Netherlands', 'Ireland', 'Australia', 'New Zealand', 'Brazil', 'Trinidad and Tobago',
+  'Barbados', 'Bahamas', 'Bermuda', 'India', 'Pakistan', 'Bangladesh', 'United Arab Emirates',
+  'Saudi Arabia', 'Italy', 'Spain', 'Portugal', 'Belgium', 'Sweden', 'Norway', 'Denmark',
+  'Switzerland', 'Austria', 'Other',
+];
 
 const roles = ['Hairstylist', 'Braider', 'Barber', 'Loctician', 'Salon owner', 'Salon assistant or apprentice', 'Mobile or home-visit stylist', 'Other'];
 const experience = ['Less than 1 year', '1 to 3 years', '3 to 5 years', '5 to 10 years', '10+ years'];
@@ -61,7 +70,7 @@ const StylistOnboarding = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col px-6 pt-8 pb-6">
-      <div className="max-w-[430px] w-full mx-auto flex-1 flex flex-col">
+      <div className="max-w-[430px] w-full mx-auto flex-1 flex flex-col min-h-0">
         <div className="flex items-center gap-2 mb-4">
           <Leaf size={20} className="text-primary" strokeWidth={1.8} />
           <span className="text-sm font-semibold text-foreground">FolliSense</span>
@@ -105,7 +114,20 @@ const StylistOnboarding = () => {
                 <div><label className="text-sm font-medium text-foreground mb-1.5 block">Business or salon name</label><input type="text" value={profile.businessName} onChange={e => setProfile(p => ({ ...p, businessName: e.target.value }))} className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" /></div>
                 <div className="flex gap-3">
                   <div className="flex-1"><label className="text-sm font-medium text-foreground mb-1.5 block">City</label><input type="text" value={profile.city} onChange={e => setProfile(p => ({ ...p, city: e.target.value }))} className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" /></div>
-                  <div className="flex-1"><label className="text-sm font-medium text-foreground mb-1.5 block">Country</label><input type="text" value={profile.country} onChange={e => setProfile(p => ({ ...p, country: e.target.value }))} className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary" /></div>
+                  <div className="flex-1">
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">Country</label>
+                    <div className="relative">
+                      <select
+                        value={profile.country}
+                        onChange={e => setProfile(p => ({ ...p, country: e.target.value }))}
+                        className="w-full h-12 px-4 pr-10 rounded-xl border-2 border-border bg-card text-foreground text-sm focus:outline-none focus:border-primary appearance-none"
+                      >
+                        <option value="">Select</option>
+                        {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                      <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                    </div>
+                  </div>
                 </div>
               </div>
               <p className="text-sm font-medium text-foreground mb-3">Do you work from:</p>
@@ -145,9 +167,11 @@ const StylistOnboarding = () => {
           )}
         </motion.div>
 
-        <button onClick={handleNext} disabled={!canNext()} className={`w-full h-14 rounded-xl font-semibold text-base btn-press mt-6 transition-colors ${canNext() ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'}`}>
-          {step === 3 ? 'Get started' : 'Next'}
-        </button>
+        <div className="flex-shrink-0 pt-4 pb-2">
+          <button onClick={handleNext} disabled={!canNext()} className={`w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors ${canNext() ? 'bg-primary text-primary-foreground' : 'bg-border text-muted-foreground cursor-not-allowed'}`}>
+            {step === 3 ? 'Get started' : 'Next'}
+          </button>
+        </div>
       </div>
     </div>
   );

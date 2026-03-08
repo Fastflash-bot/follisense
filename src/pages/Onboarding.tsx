@@ -423,8 +423,8 @@ const Onboarding = () => {
     }
 
     // Check for micro-education transition
-    if (step === 3 && !showMicroEducation) {
-      const edu = getMicroEducation(3, {
+    if (step === 4 && !showMicroEducation) {
+      const edu = getMicroEducation(4, {
         washFreq: washFreqDetail || wornOutWashFreq || maleWashFreq,
         styles,
         isMale,
@@ -436,13 +436,13 @@ const Onboarding = () => {
     }
 
     if (!isLastStep) {
-      if (step === 5) {
+      if (step === 6) {
         const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         const photos = baselineAreas.filter(a => capturedPhotos[a.id]).map(a => ({ area: a.label, captured: true, date: today }));
         setBaselinePhotos(photos);
       }
-      if (skipMenstrual && step === 6) {
-        setStep(7);
+      if (skipMenstrual && step === 7) {
+        setStep(8);
       } else {
         setStep(step + 1);
       }

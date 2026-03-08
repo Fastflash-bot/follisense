@@ -158,6 +158,23 @@ const HealthProfile = () => {
                   <RadioGroup value={hp.pregnancyStatus} options={['No', 'Pregnant', 'Postpartum (within 12 months)', 'Breastfeeding', 'Prefer not to say']} onChange={v => update('pregnancyStatus', v)} />
                 </div>
                 <div>
+                  <p className="text-sm font-medium text-foreground mb-2">Have you experienced any major changes or stressors in the last 6 months?</p>
+                  <MultiSelect
+                    selected={hp.recentStressors}
+                    options={[
+                      'Pregnancy or childbirth',
+                      'Significant emotional stress (bereavement, relationship breakdown, job loss)',
+                      'Major illness, surgery, or hospitalisation',
+                      'Significant weight loss or dietary change',
+                      'Started or stopped hormonal contraception',
+                      'Started or stopped HRT',
+                      'None of these',
+                      'Prefer not to say',
+                    ]}
+                    onToggle={v => toggleMulti('recentStressors', v)}
+                  />
+                </div>
+                <div>
                   <p className="text-sm font-medium text-foreground mb-2">Are you taking any medications that might affect your hair?</p>
                   <RadioGroup value={hp.medications} options={['No', 'Yes', 'Not sure']} onChange={v => update('medications', v)} />
                   {hp.medications === 'Yes' && (

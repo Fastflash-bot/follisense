@@ -24,13 +24,22 @@ const computeRisk = (checkIn: { itch?: string; tenderness?: string; hairline?: s
   return 'amber';
 };
 
+const hasTelogenTriggers = (hp: HealthProfileData): string[] => {
+  const triggers: string[] = [];
+  if (hp.pregnancyStatus === 'Postpartum (within 12 months)') triggers.push('postpartum status');
+  const validStressors = hp.recentStressors.filter(s => s !== 'None of these' && s !== 'Prefer not to say');
+  triggers.push(...validStressors);
+  return triggers;
+};
+
 const RiskOutput = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { currentCheckIn, riskOverride, setRiskOverride } = useApp();
+  const { currentCheckIn, riskOverride, setRiskOverride, healthProfile } = useApp();
 
   const paramRisk = searchParams.get('risk') as RiskLevel | null;
   const risk: RiskLevel = paramRisk || riskOverride || computeRisk(currentCheckIn);
+  const telogenTriggers = hasTelogenTriggers(healthProfile);
 
   const circleColors: Record<RiskLevel, string> = {
     green: 'bg-primary',

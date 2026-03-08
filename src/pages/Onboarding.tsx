@@ -500,12 +500,12 @@ const Onboarding = () => {
       nextCheckIn.setDate(nextCheckIn.getDate() + 7);
 
       setOnboardingData({
-        gender, hairType, chemicalProcessing: chemicalProcessing === 'Yes' ? `Yes, ${chemicalSubSelection.toLowerCase()}` : chemicalProcessing, lastChemicalTreatment,
+        gender, hairType, chemicalProcessing, lastChemicalTreatment,
         chemicalProcessingMultiple: chemicalMultiple,
         protectiveStyles: styles, otherStyle, protectiveStyleFrequency: protectiveFreq,
         isWornOutOnly, cycleLength: cycleLen, cycleLengthMin: cycleLenMin, cycleLengthMax: cycleLenMax,
         washFrequency: washFreq, washFrequencyPerCycle: washFreqPerCycle,
-        betweenWashCare, otherBetweenWashCare: otherBetweenWash,
+        betweenWashCare: isMale ? maleBetweenCare : betweenWashCare, otherBetweenWashCare: isMale ? otherMaleBetweenCare : otherBetweenWash,
         wornOutWashFrequency: wornOutWashFreq, restyleFrequency: restyleFreq,
         baselineItch: baselineAnswers.itch || '', baselineTenderness: baselineAnswers.tenderness || '',
         baselineHairline: baselineAnswers.hairline || '', baselineHairHealth: baselineAnswers.hairHealth || '',
@@ -517,9 +517,9 @@ const Onboarding = () => {
         menstrualCycleLength: skipMenstrual ? '' : menstrualCycleLength,
         hormonalContraception: skipMenstrual ? '' : hormonalContraception,
         goals,
-        barberFrequency: '',
-        locRetwistFrequency: '',
-        maleStyleFrequency: '',
+        barberFrequency: barberFreq,
+        locRetwistFrequency: locRetwistFreq,
+        maleStyleFrequency: maleStyleDuration,
       });
       setOnboardingComplete(true);
       navigate('/home');

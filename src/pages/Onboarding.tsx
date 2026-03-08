@@ -1007,13 +1007,13 @@ const Onboarding = () => {
               );
             })()}
 
-            {/* ── Step 7: Menstrual (skipped for men — this step is goals for men) ── */}
-            {step === 7 && !skipMenstrual && (
+            {/* ── Step 8: Menstrual (skipped for men — this step is goals for men) ── */}
+            {step === 8 && !skipMenstrual && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">
                   {isNeutral ? 'Do you want to track your hormonal cycle?' : 'Do you want to link your menstrual cycle?'}
                 </h2>
-                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[7]}</p>
+                <p className="text-xs text-muted-foreground mb-3">{sectionWhyText[8]}</p>
                 <p className="text-muted-foreground mb-4">
                   {isNeutral ? 'Some people find it useful to track their hormonal cycle alongside scalp health' : 'Your hormones have a direct effect on your scalp'}
                 </p>

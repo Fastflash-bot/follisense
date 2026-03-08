@@ -200,8 +200,7 @@ const Onboarding = () => {
       case 4: return !!itch && !!tenderness && !!hairline && !!baselineHairHealth;
       case 5: return true; // photo step
       case 6: return products.length > 0 && !!prodFreq && (!products.includes('Other') || otherProduct.trim().length > 0);
-      case 7: return !!menstrualTracking && (menstrualTracking !== 'yes' || (!!menstrualCycleLen && !!hormonalContraception));
-      case 8: return goals.length > 0;
+      case 7: return goals.length > 0;
       default: return false;
     }
   };

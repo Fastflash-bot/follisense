@@ -38,6 +38,10 @@ export interface CheckInData {
   hairline: string;
   flaking?: string;
   shedding?: string;
+  hairFeel?: string;
+  hairBreakage?: string;
+  hairAppearance?: string;
+  hairConcern?: string;
   newProducts?: string;
   newProductDetails?: string;
   type: 'mid-cycle' | 'wash-day';

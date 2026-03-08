@@ -26,6 +26,7 @@ import ProductDirectory from "./pages/ProductDirectory";
 import ResearchProgramme from "./pages/ResearchProgramme";
 import FindSpecialist from "./pages/FindSpecialist";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import MyRoutine from "./pages/MyRoutine";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

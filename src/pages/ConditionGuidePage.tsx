@@ -165,8 +165,15 @@ const ConditionDetail = ({ condition, onBack }: { condition: ConsumerCondition; 
             <ChevronRight size={16} className="text-muted-foreground" />
           </button>
         )}
+        <a href={condition.externalLinkUrl} target="_blank" rel="noopener noreferrer" className="card-elevated p-4 flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-foreground">{condition.externalLinkLabel}</p>
+            <p className="text-xs text-muted-foreground">Opens in your browser — you will leave the app</p>
+          </div>
+          <ExternalLink size={14} className="text-muted-foreground" />
+        </a>
         <a href={condition.dermnetUrl} target="_blank" rel="noopener noreferrer" className="card-elevated p-4 flex items-center gap-3">
-          <div className="flex-1"><p className="text-sm font-medium text-foreground">DermNet NZ</p><p className="text-xs text-muted-foreground">Clinical reference</p></div>
+          <div className="flex-1"><p className="text-sm font-medium text-foreground">DermNet NZ — Clinical reference</p><p className="text-xs text-muted-foreground">Opens in your browser</p></div>
           <ExternalLink size={14} className="text-muted-foreground" />
         </a>
       </div>

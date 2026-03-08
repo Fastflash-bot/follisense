@@ -398,19 +398,19 @@ const HomePage = () => {
               ) : (
                 <>
                   <p className="text-foreground leading-relaxed mb-6">
-                    Wash day? Let's see how your scalp did this cycle.
+                    It's been 2 weeks — ready for a quick scalp check? Takes about 2 minutes.
                   </p>
                   <button
-                    onClick={() => { setDismissedCheckInModal(true); navigate('/wash-day'); }}
+                    onClick={() => { setDismissedCheckInModal(true); navigate('/wash-day?mode=regular'); }}
                     className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press mb-3"
                   >
-                    Start assessment
+                    Start check-in
                   </button>
                   <button
                     onClick={() => setDismissedCheckInModal(true)}
                     className="w-full text-center text-sm text-muted-foreground py-2"
                   >
-                    Not washing today
+                    Remind me later
                   </button>
                 </>
               )}

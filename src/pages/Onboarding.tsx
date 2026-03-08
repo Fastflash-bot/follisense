@@ -192,6 +192,7 @@ const Onboarding = () => {
     { id: 'hairline', label: 'Hairline — temples and edges', desc: 'Front-facing', optional: false },
     { id: 'crown', label: 'Crown and vertex', desc: 'Top of head', optional: false },
     { id: 'nape', label: 'Nape / back of neck', desc: 'Optional', optional: true },
+    { id: 'hair-condition', label: 'Hair condition — mid-lengths and ends', desc: 'Helps track breakage patterns and texture changes over time', optional: true },
   ];
 
   const toggleStyle = (s: string) => setStyles(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);

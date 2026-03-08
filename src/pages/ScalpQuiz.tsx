@@ -15,7 +15,7 @@ interface QuizState {
 
 const loadQuizState = (): QuizState => {
   try {
-    const saved = localStorage.getItem('scalpsense-quiz');
+    const saved = localStorage.getItem('follisense-quiz');
     if (saved) {
       const parsed = JSON.parse(saved);
       return { challengeHighScore: 0, ...parsed };

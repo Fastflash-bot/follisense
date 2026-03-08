@@ -13,7 +13,7 @@ const services = ['Braids (box braids, knotless, etc.)', 'Cornrows or flat twist
 const goals = ['Document scalp observations for my clients', 'Learn to spot scalp conditions early', 'Build trust with clients through better scalp care', 'Track client scalp health over time', 'Get referral guidance when I see something concerning', 'Stay up to date on scalp health knowledge', "I'm just exploring for now"];
 
 interface StylistProfile {
-  role: string; otherRole: string; experience: string; businessName: string; city: string; country: string;
+  role: string[]; otherRole: string; experience: string; businessName: string; city: string; country: string;
   workplace: string; clientCount: string; services: string[]; otherService: string; goals: string[];
 }
 

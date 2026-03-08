@@ -7,8 +7,10 @@ export interface BaselinePhoto {
 }
 
 export interface OnboardingData {
+  gender: string;
   hairType: string;
   chemicalProcessing: string;
+  lastChemicalTreatment: string;
   chemicalProcessingMultiple: string[];
   protectiveStyles: string[];
   otherStyle: string;

@@ -321,16 +321,69 @@ const Onboarding = () => {
               <div>
                 <h2 className="text-2xl font-semibold mb-2">Your cycle</h2>
                 <p className="text-muted-foreground mb-6">How long do you typically keep a style in?</p>
-                <div className="flex flex-wrap gap-2 mb-8">
+                <div className="flex flex-wrap gap-2 mb-2">
                   {cycleLengths.map(c => (
-                    <button key={c} onClick={() => setCycleLen(c)} className={`pill-option ${cycleLen === c ? 'selected' : ''}`}>{c}</button>
+                    <button key={c} onClick={() => { setCycleLen(c); if (c !== 'It varies') { setCycleLenMin(''); setCycleLenMax(''); } }} className={`pill-option ${cycleLen === c ? 'selected' : ''}`}>{c}</button>
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-4">How often do you wash or cleanse your scalp during a protective style?</p>
-                <div className="flex flex-wrap gap-2">
-                  {washFrequencies.map(w => (
-                    <button key={w} onClick={() => setWashFreq(w)} className={`pill-option ${washFreq === w ? 'selected' : ''}`}>{w}</button>
-                  ))}
+                {cycleLen === 'It varies' && (
+                  <div className="rounded-2xl bg-accent p-4 mt-3 mb-2 space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-2">What's the shortest you'd keep a style in?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {cycleLengthMinOptions.map(o => (
+                          <button key={o} onClick={() => setCycleLenMin(o)} className={`pill-option ${cycleLenMin === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-2">What's the longest?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {cycleLengthMaxOptions.map(o => (
+                          <button key={o} onClick={() => setCycleLenMax(o)} className={`pill-option ${cycleLenMax === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">We'll set your check-ins based on your typical range.</p>
+                  </div>
+                )}
+
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-1">How do you care for your scalp during a protective style?</h3>
+                  <p className="text-muted-foreground text-sm mb-4">How often do you wash or wet your scalp?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {washFrequencyOptions.map(w => (
+                      <button key={w} onClick={() => { setWashFreq(w); if (w !== 'It depends on the style') setWashFreqPerCycle(''); }} className={`pill-option ${washFreq === w ? 'selected' : ''}`}>{w}</button>
+                    ))}
+                  </div>
+                  {washFreq === 'It depends on the style' && (
+                    <div className="rounded-2xl bg-accent p-4 mt-3 space-y-2">
+                      <p className="text-sm font-medium text-foreground mb-2">On average, roughly how many times per cycle do you cleanse your scalp?</p>
+                      <div className="flex flex-wrap gap-2">
+                        {washPerCycleOptions.map(o => (
+                          <button key={o} onClick={() => setWashFreqPerCycle(o)} className={`pill-option ${washFreqPerCycle === o ? 'selected' : ''}`}>{o}</button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-8">
+                  <p className="text-sm font-medium text-foreground mb-3">Between washes, do you do anything for your scalp?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {betweenWashOptions.map(o => (
+                      <button key={o} onClick={() => toggleBetweenWash(o)} className={`pill-option ${betweenWashCare.includes(o) ? 'selected' : ''}`}>{o}</button>
+                    ))}
+                  </div>
+                  {betweenWashCare.includes('Other') && (
+                    <input
+                      type="text"
+                      value={otherBetweenWash}
+                      onChange={e => setOtherBetweenWash(e.target.value)}
+                      placeholder="What else do you do?"
+                      className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3"
+                    />
+                  )}
                 </div>
               </div>
             )}

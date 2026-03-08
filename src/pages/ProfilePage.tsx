@@ -453,7 +453,7 @@ const ProfilePage = () => {
             </div>
           </div>
           <div className="space-y-2">
-            <button className="card-elevated w-full p-4 text-left text-sm text-foreground flex items-center justify-between">Export my data <ChevronRight size={16} className="text-muted-foreground" /></button>
+            <button onClick={() => toast({ title: 'Coming soon', description: 'Data export will be available in a future update.' })} className="card-elevated w-full p-4 text-left text-sm text-foreground flex items-center justify-between">Export my data <ChevronRight size={16} className="text-muted-foreground" /></button>
             <button onClick={() => setShowChangePassword(!showChangePassword)} className="card-elevated w-full p-4 text-left text-sm text-foreground flex items-center gap-2">
               <Lock size={16} strokeWidth={1.5} /> Change password <ChevronRight size={16} className="text-muted-foreground ml-auto" />
             </button>

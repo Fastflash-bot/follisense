@@ -393,7 +393,19 @@ const Onboarding = () => {
   const toggleProduct = (p: string) => setProducts(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleHairProd = (p: string) => setHairProds(prev => prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]);
   const toggleChemMulti = (v: string) => setChemicalMultiple(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
-  const toggleBetweenWash = (v: string) => setBetweenWashCare(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v]);
+  const toggleBetweenWash = (v: string) => {
+    const nothingOption = 'Nothing — I leave it alone until wash day';
+    if (v === nothingOption) {
+      // If tapping Nothing, set it exclusively
+      setBetweenWashCare(prev => prev.includes(v) ? [] : [v]);
+    } else {
+      // If tapping anything else, deselect Nothing
+      setBetweenWashCare(prev => {
+        const without = prev.filter(x => x !== nothingOption);
+        return without.includes(v) ? without.filter(x => x !== v) : [...without, v];
+      });
+    }
+  };
   const toggleGoal = (g: string) => {
     setGoals(prev => {
       if (prev.includes(g)) return prev.filter(x => x !== g);

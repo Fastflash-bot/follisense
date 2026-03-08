@@ -175,6 +175,7 @@ const Onboarding = () => {
   const [showMoreStyles, setShowMoreStyles] = useState(false);
   const [showMoreProducts, setShowMoreProducts] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState<Record<string, boolean>>({});
+  const [baselineResultScreen, setBaselineResultScreen] = useState<'amber' | 'red' | null>(null);
 
   const totalSteps = 6;
 

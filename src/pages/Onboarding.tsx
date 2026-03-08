@@ -1,13 +1,52 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, HelpCircle, ChevronDown, Camera, Check, Leaf } from 'lucide-react';
+import { ArrowLeft, HelpCircle, ChevronDown, Camera, Check, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import ProductSearch from '@/components/ProductSearch';
+
+// Hair reference photos
+import bwType3 from '@/assets/hair/bw_type3.jpg';
+import bwType3c from '@/assets/hair/bw_type3_c.jpg';
+import bwType4a from '@/assets/hair/bw_type4_a.jpg';
+import bwType4b from '@/assets/hair/bw_type4_b.jpg';
+import bwType4c from '@/assets/hair/bw_type4_c.jpg';
+import bmType3 from '@/assets/hair/bm_type3.jpg';
+import bmType4 from '@/assets/hair/bm_type4.jpg';
+import bmType4Fade from '@/assets/hair/bm_type4_fade.jpg';
+import bmLocs from '@/assets/hair/bm_locs.jpg';
+
+// Photo sets by gender and hair type
+const hairPhotos: Record<string, Record<string, { src: string; label: string }[]>> = {
+  type3: {
+    female: [
+      { src: bwType3, label: 'Type 3: S-shaped curls, bouncy' },
+      { src: bwType3c, label: 'Type 3: Tighter curls, voluminous' },
+    ],
+    male: [
+      { src: bmType3, label: 'Type 3: Defined curls, medium density' },
+    ],
+  },
+  type4: {
+    female: [
+      { src: bwType4a, label: 'Type 4a: Defined coils, springy' },
+      { src: bwType4b, label: 'Type 4b: Z-pattern coils, dense' },
+      { src: bwType4c, label: 'Type 4c: Tight coils, significant shrinkage' },
+    ],
+    male: [
+      { src: bmType4, label: 'Type 4: Tight coils, dense, afro' },
+      { src: bmType4Fade, label: 'Type 4: Coily texture, fade' },
+    ],
+  },
+};
+
+const locsPhotos: Record<string, { src: string; label: string }> = {
+  male: { src: bmLocs, label: 'Locs' },
+};
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 

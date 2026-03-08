@@ -335,7 +335,7 @@ const HomePage = () => {
             <Scissors size={20} className="text-foreground" strokeWidth={1.5} />
           </div>
           <div className="flex-1">
-            <p className="font-medium text-foreground text-sm">Log a salon visit</p>
+            <p className="font-medium text-foreground text-sm">{isMale ? 'Log a salon or barber visit' : 'Log a salon visit'}</p>
             <p className="text-xs text-muted-foreground">Track appointments and services</p>
           </div>
           <ChevronRight size={18} className="text-muted-foreground" />

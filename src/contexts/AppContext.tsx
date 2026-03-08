@@ -190,10 +190,6 @@ const defaultOnboarding: OnboardingData = {
   scalpProducts: [],
   otherProduct: '',
   productFrequency: '',
-  menstrualTracking: '',
-  lastPeriodDate: '',
-  menstrualCycleLength: '',
-  hormonalContraception: '',
   goals: [],
 };
 

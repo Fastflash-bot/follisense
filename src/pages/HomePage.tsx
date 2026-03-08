@@ -79,6 +79,18 @@ const HomePage = () => {
   const [dismissedWashPrompt, setDismissedWashPrompt] = useState(false);
   const [dismissedCheckInModal, setDismissedCheckInModal] = useState(false);
   const [showCheckInModal, setShowCheckInModal] = useState(true);
+  const [showHealthNudge, setShowHealthNudge] = useState(false);
+  const [dismissedHealthNudge, setDismissedHealthNudge] = useState(false);
+
+  // Show health profile nudge 2 seconds after first visit
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!healthProfile.sweat && !healthProfile.medicalConditions.length) {
+        setShowHealthNudge(true);
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const [showQuickLog, setShowQuickLog] = useState(false);
   const [quickLogStep, setQuickLogStep] = useState(0);

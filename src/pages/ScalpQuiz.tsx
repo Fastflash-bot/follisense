@@ -347,11 +347,13 @@ const ScalpQuiz = () => {
                 <p className="text-sm font-semibold mb-1">
                   {isTimeout ? "Time's up!" : isCorrect ? "That's right!" : 'Not quite'}
                 </p>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-2">
                   {isTimeout
                     ? `The correct answer was ${currentQuestion.correctAnswer}. ${currentQuestion.incorrectExplanationTemplate}`
                     : isCorrect ? currentQuestion.correctExplanation : currentQuestion.incorrectExplanationTemplate}
                 </p>
+                {/* Skin tone tip */}
+                <p className="text-xs text-primary font-medium italic mb-2">{currentQuestion.skinToneTip}</p>
                 <p className="text-xs text-primary font-medium mb-1">
                   {isTimeout
                     ? '0 points — too slow!'

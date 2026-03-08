@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ChevronRight, Eye, ArrowUpRight, AlertTriangle, Shield, BookOpen, Play, Flame, Star } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Eye, ArrowUpRight, AlertTriangle, Shield, BookOpen, Play, Flame, Star, Info, Heart } from 'lucide-react';
 import { stylistConditions, StylistCondition, getConditionById } from '@/data/stylistConditions';
 import ScalpIllustration from '@/components/ScalpIllustration';
+import { toast } from '@/hooks/use-toast';
 
 const tagColor = (tag: string) => {
   switch (tag) {
@@ -27,7 +28,7 @@ const ConditionDetail = ({ condition, onBack }: { condition: StylistCondition; o
     <p className="text-sm text-muted-foreground mb-5">{condition.summary}</p>
 
     {/* Illustration carousel */}
-    <div className="flex gap-3 overflow-x-auto pb-3 mb-6 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div className="flex gap-3 overflow-x-auto pb-3 mb-4 -mx-1 px-1 scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
       {condition.stages.map((stage, i) => (
         <div key={i} className="flex-shrink-0 w-[160px]">
           <div className="w-[160px] h-[160px] rounded-xl overflow-hidden mb-2">
@@ -37,6 +38,15 @@ const ConditionDetail = ({ condition, onBack }: { condition: StylistCondition; o
           <p className="text-[11px] text-muted-foreground">{stage.annotation}</p>
         </div>
       ))}
+    </div>
+
+    {/* Darker skin note */}
+    <div className="rounded-xl bg-secondary/60 border border-secondary p-4 mb-6">
+      <div className="flex items-center gap-2 mb-2">
+        <Eye size={14} className="text-primary" />
+        <h4 className="text-xs font-semibold text-foreground">How it presents on darker skin</h4>
+      </div>
+      <p className="text-xs text-muted-foreground leading-relaxed">{condition.darkerSkinNote}</p>
     </div>
 
     {/* Detail sections */}
@@ -61,7 +71,7 @@ const DetailSection = ({ icon, title, content, italic }: { icon: React.ReactNode
 );
 
 const ReferralGuide = () => (
-  <div className="space-y-5 mb-20">
+  <div className="space-y-5 mb-6">
     <div className="card-elevated p-5">
       <h3 className="font-semibold text-foreground mb-2">Your role</h3>
       <p className="text-sm text-muted-foreground leading-relaxed">
@@ -126,18 +136,10 @@ const ReferralGuide = () => (
     <div className="card-elevated p-5">
       <h3 className="font-semibold text-foreground mb-2">Who to suggest they see</h3>
       <ul className="space-y-3 text-sm text-muted-foreground">
-        <li>
-          <span className="font-medium text-foreground">Trichologist:</span> specialises in hair and scalp conditions. Best first point of contact for hair loss concerns.
-        </li>
-        <li>
-          <span className="font-medium text-foreground">Dermatologist:</span> a skin specialist who can diagnose and treat scalp conditions medically. Usually requires a referral from a GP in the UK.
-        </li>
-        <li>
-          <span className="font-medium text-foreground">GP:</span> can do initial assessment, blood tests, and refer onwards. Good starting point if the client doesn't know where to go.
-        </li>
-        <li>
-          <span className="font-medium text-foreground">In the US:</span> dermatologists can be seen directly. The Skin of Color Society has a directory of dermatologists experienced with darker skin.
-        </li>
+        <li><span className="font-medium text-foreground">Trichologist:</span> specialises in hair and scalp conditions. Best first point of contact for hair loss concerns.</li>
+        <li><span className="font-medium text-foreground">Dermatologist:</span> a skin specialist who can diagnose and treat scalp conditions medically. Usually requires a referral from a GP in the UK.</li>
+        <li><span className="font-medium text-foreground">GP:</span> can do initial assessment, blood tests, and refer onwards. Good starting point if the client doesn't know where to go.</li>
+        <li><span className="font-medium text-foreground">In the US:</span> dermatologists can be seen directly. The Skin of Color Society has a directory of dermatologists experienced with darker skin.</li>
       </ul>
     </div>
   </div>
@@ -164,6 +166,19 @@ const StylistLearnPage = () => {
         <h1 className="text-2xl font-semibold mb-1">Stylist Reference Guide</h1>
         <p className="text-muted-foreground text-sm mb-4">Spot it, understand it, refer it</p>
 
+        {/* Disclaimer banner */}
+        <div className="rounded-xl bg-secondary/50 border border-secondary p-4 mb-5">
+          <div className="flex items-start gap-2.5">
+            <Info size={16} className="text-primary mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-foreground mb-1">A note on images</p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                High-quality clinical images of scalp conditions on darker skin tones are still significantly underrepresented in medical resources. Some reference illustrations here are generalised and may not reflect exactly how a condition presents on your clients. We're actively working to build a better visual library. In the meantime, focus on the descriptions of what to look for and where to look. Your eyes on a real scalp will always be more accurate than any reference image.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Quiz card */}
         {(() => {
           let quiz = { totalPoints: 0, currentStreak: 0 };
@@ -187,24 +202,10 @@ const StylistLearnPage = () => {
 
         {/* Section toggle */}
         <div className="flex gap-2 mb-6">
-          <button
-            onClick={() => setActiveSection('conditions')}
-            className={`flex-1 py-3 rounded-xl text-sm font-medium transition-colors ${
-              activeSection === 'conditions'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-card border border-border text-foreground'
-            }`}
-          >
+          <button onClick={() => setActiveSection('conditions')} className={`flex-1 py-3 rounded-xl text-sm font-medium transition-colors ${activeSection === 'conditions' ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-foreground'}`}>
             What am I looking at?
           </button>
-          <button
-            onClick={() => setActiveSection('refer')}
-            className={`flex-1 py-3 rounded-xl text-sm font-medium transition-colors ${
-              activeSection === 'refer'
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-card border border-border text-foreground'
-            }`}
-          >
+          <button onClick={() => setActiveSection('refer')} className={`flex-1 py-3 rounded-xl text-sm font-medium transition-colors ${activeSection === 'refer' ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-foreground'}`}>
             How to refer
           </button>
         </div>
@@ -215,19 +216,13 @@ const StylistLearnPage = () => {
               <h2 className="text-lg font-semibold text-foreground mb-1">Common scalp and hair conditions</h2>
               <p className="text-sm text-muted-foreground mb-4">Tap any condition to see what it looks like and what to do</p>
 
-              <div className="space-y-2.5 mb-20">
+              <div className="space-y-2.5 mb-8">
                 {stylistConditions.map((condition) => (
-                  <button
-                    key={condition.id}
-                    onClick={() => setSelectedConditionId(condition.id)}
-                    className="card-elevated p-4 w-full text-left flex items-center justify-between gap-3 btn-press"
-                  >
+                  <button key={condition.id} onClick={() => setSelectedConditionId(condition.id)} className="card-elevated p-4 w-full text-left flex items-center justify-between gap-3 btn-press">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="text-[15px] font-semibold text-foreground">{condition.name}</h3>
-                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${tagColor(condition.tag)}`}>
-                          {condition.tag}
-                        </span>
+                        <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${tagColor(condition.tag)}`}>{condition.tag}</span>
                       </div>
                       <p className="text-sm text-muted-foreground">{condition.summary}</p>
                     </div>
@@ -244,6 +239,23 @@ const StylistLearnPage = () => {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Why representation matters */}
+        <div className="card-elevated p-5 mb-20 border-l-4 border-l-primary">
+          <div className="flex items-center gap-2 mb-2">
+            <Heart size={15} className="text-primary" />
+            <h3 className="font-semibold text-foreground text-sm">Why representation matters in clinical education</h3>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+            Most medical training materials show skin conditions on lighter skin. That means many stylists and even some clinicians are less confident identifying conditions on darker skin tones. ScalpSense is working to change this. If you'd like to contribute to building better visual references for our community, let us know.
+          </p>
+          <button
+            onClick={() => toast({ title: 'Thank you', description: "We'll be in touch." })}
+            className="h-10 px-5 rounded-xl bg-primary text-primary-foreground text-sm font-medium btn-press"
+          >
+            I'd like to help
+          </button>
+        </div>
       </motion.div>
     </div>
   );

@@ -36,6 +36,8 @@ const StylistHome = () => {
     return () => window.removeEventListener('focus', handler);
   }, []);
 
+  const stylistProfile = loadStylistProfile();
+
   const userEntry = { rank: 5, name: 'You', points: quiz.totalPoints, bestStreak: quiz.bestStreak };
   const leaderboard = [...dummyLeaderboard, userEntry].sort((a, b) => b.points - a.points).map((e, i) => ({ ...e, rank: i + 1 }));
   const userRank = leaderboard.find(e => e.name === 'You')?.rank || 5;

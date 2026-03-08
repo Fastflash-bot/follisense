@@ -989,17 +989,11 @@ const Onboarding = () => {
         </AnimatePresence>
 
         <div className="pb-8">
-          {step === 4 && baselineResultScreen ? (
+          {step === 4 && baselineAck ? null : step === 4 ? null : step === 5 ? (
             <button onClick={handleNext} className="w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors bg-primary text-primary-foreground">
               {baselineResultScreen === 'red' ? 'Continue setup' : 'Continue'}
             </button>
-          ) : step === 4 && !baselineResultScreen && !baselineAck ? (
-            allBaselineAnswered && baselineStep === baselineQuestions.length - 1 ? (
-              <button onClick={handleNext} className="w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors bg-primary text-primary-foreground">
-                Continue
-              </button>
-            ) : null
-          ) : step === 5 ? (
+          ) : step === 6 ? (
             <div className="space-y-3">
               <button onClick={handleNext} className="w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors bg-primary text-primary-foreground">
                 {Object.values(capturedPhotos).some(Boolean) ? 'Continue' : 'Skip for now'}
@@ -1008,7 +1002,7 @@ const Onboarding = () => {
                 <p className="text-xs text-center text-muted-foreground">You can always add baseline photos later from your Profile.</p>
               )}
             </div>
-          ) : step === 4 && baselineAck ? null : (
+          ) : (
             <button
               onClick={handleNext}
               disabled={!canProceed()}

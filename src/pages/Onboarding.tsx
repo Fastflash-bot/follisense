@@ -442,13 +442,24 @@ const Onboarding = () => {
   const canProceed = () => {
     switch (step) {
       case 0: return !!gender;
-      case 1: return !!hairType && !!chemicalProcessing && (chemicalProcessing !== 'Yes' || !!chemicalSubSelection) && (chemicalSubSelection !== 'Multiple' || chemicalMultiple.length > 0) && (!showChemicalFollowUp || !!lastChemicalTreatment);
+      case 1: return !!hairType && !!chemicalProcessing && (chemicalProcessing !== 'Yes' || chemicalMultiple.length > 0) && (!showChemicalFollowUp || !!lastChemicalTreatment);
       case 2: {
         const stylesOk = styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
+        if (isMale) {
+          const freqOk = !hasMaleInstalledStyles || !!protectiveFreq;
+          return stylesOk && freqOk;
+        }
         const freqOk = isWornOutOnly || !!protectiveFreq;
         return stylesOk && freqOk;
       }
       case 3: {
+        if (isMale) {
+          const betweenOk = maleBetweenCare.length > 0 && (!maleBetweenCare.includes('Other') || otherMaleBetweenCare.trim().length > 0);
+          if (hasFadeOrShortMale && !hasLocsMale && !hasBraidsMale) return !!barberFreq && !!maleWashFreq && betweenOk;
+          if (hasLocsMale) return !!locRetwistFreq && !!maleScalpWashFreq && betweenOk;
+          if (hasBraidsMale) return !!maleStyleDuration && !!maleScalpWashFreq && betweenOk;
+          return betweenOk;
+        }
         if (isWornOutOnly) return !!wornOutWashFreq && !!restyleFreq;
         const cycleOk = !!cycleLen && (cycleLen !== 'It varies' || (!!cycleLenMin && !!cycleLenMax));
         const washOk = !!washFreq && (washFreq !== 'It depends on the style' || !!washFreqPerCycle);

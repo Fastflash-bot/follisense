@@ -594,7 +594,7 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* ── Step 1: Hair type + chemical processing ── */}
+            {/* ── Step 1: Hair type ── */}
             {step === 1 && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">Let's get to know your hair</h2>
@@ -611,25 +611,28 @@ const Onboarding = () => {
                     </button>
                   ))}
                 </div>
+              </div>
+            )}
 
-                <SlideIn show={!!hairType}>
-                  <div className="mt-8">
-                    <p className="font-medium text-foreground mb-3">Has your hair been chemically processed?</p>
-                    <div className="space-y-2">
-                      {chemicalOptionsSimple.map(opt => (
-                        <button key={opt} onClick={() => {
-                          setChemicalProcessing(opt);
-                          if (opt === 'No, fully natural') { setChemicalMultiple([]); setLastChemicalTreatment(''); }
-                          if (opt !== 'Yes') setChemicalMultiple([]);
-                        }} className={`selection-card w-full text-left ${chemicalProcessing === opt ? 'selected' : ''}`}>
-                          <p className="font-medium text-foreground text-sm">{opt}</p>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </SlideIn>
+            {/* ── Step 2: Chemical processing ── */}
+            {step === 2 && (
+              <div>
+                <h2 className="text-lg font-medium text-foreground mb-1">A quick question about your hair history</h2>
+                <p className="text-xs text-muted-foreground mb-5">{sectionWhyText[2]}</p>
+                <p className="font-medium text-foreground mb-3">Is your hair chemically processed?</p>
+                <div className="space-y-2">
+                  {chemicalOptionsSimple.map(opt => (
+                    <button key={opt} onClick={() => {
+                      setChemicalProcessing(opt);
+                      if (opt === 'Never' || opt === 'Not sure') { setChemicalMultiple([]); setLastChemicalTreatment(''); }
+                      if (opt !== 'Yes, currently') setChemicalMultiple([]);
+                    }} className={`selection-card w-full text-left ${chemicalProcessing === opt ? 'selected' : ''}`}>
+                      <p className="font-medium text-foreground text-sm">{opt}</p>
+                    </button>
+                  ))}
+                </div>
 
-                <SlideIn show={chemicalProcessing === 'Yes'}>
+                <SlideIn show={chemicalProcessing === 'Yes, currently'}>
                   <div className="mt-4 p-3 rounded-xl bg-accent space-y-2">
                     <p className="text-sm font-medium text-foreground mb-2">What type of processing?</p>
                     <div className="flex flex-wrap gap-2">
@@ -640,7 +643,7 @@ const Onboarding = () => {
                   </div>
                 </SlideIn>
 
-                <SlideIn show={(chemicalProcessing === 'Yes' && chemicalMultiple.length > 0) || chemicalProcessing === 'Previously processed, currently growing out'}>
+                <SlideIn show={(chemicalProcessing === 'Yes, currently' && chemicalMultiple.length > 0) || chemicalProcessing === 'Previously but not now'}>
                   <div className="mt-4">
                     <p className="text-sm font-medium text-foreground mb-3">When was your last chemical treatment?</p>
                     <div className="flex flex-wrap gap-2">
@@ -650,8 +653,6 @@ const Onboarding = () => {
                     </div>
                   </div>
                 </SlideIn>
-
-                <p className="text-xs text-muted-foreground mt-4">Chemical processing can affect how your scalp responds to styling — this helps us personalise your experience.</p>
               </div>
             )}
 

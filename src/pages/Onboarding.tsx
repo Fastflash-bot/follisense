@@ -480,7 +480,7 @@ const Onboarding = () => {
         }
         if (isWornOutOnly) return !!wornOutWashFreq && !!restyleFreq;
         const cycleOk = !!cycleLen && (cycleLen !== 'It varies' || (!!cycleLenMin && !!cycleLenMax));
-        const washOk = !!washFreq && (washFreq !== 'It depends on the style' || !!washFreqPerCycle);
+        const washOk = !!washFreqBucket && !!washFreqDetail && (washFreqDetail !== 'It depends' || !!washFreqPerCycle);
         const betweenOk = betweenWashCare.length > 0 && (!betweenWashCare.includes('Other') || otherBetweenWash.trim().length > 0);
         return cycleOk && washOk && betweenOk;
       }

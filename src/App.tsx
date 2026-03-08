@@ -12,6 +12,7 @@ import MidCycleCheckIn from "./pages/MidCycleCheckIn";
 import WashDayAssessment from "./pages/WashDayAssessment";
 import RiskOutput from "./pages/RiskOutput";
 import ClinicianSummary from "./pages/ClinicianSummary";
+import HealthProfile from "./pages/HealthProfile";
 import HistoryPage from "./pages/HistoryPage";
 import LearnPage from "./pages/LearnPage";
 import ProfilePage from "./pages/ProfilePage";

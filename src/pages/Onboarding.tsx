@@ -961,8 +961,8 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Goals step: step 7 for men, step 8 for others */}
-            {((skipMenstrual && step === 7) || (!skipMenstrual && step === 8)) && (
+            {/* Goals step: step 8 for men, step 9 for others */}
+            {((skipMenstrual && step === 8) || (!skipMenstrual && step === 9)) && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-2">What matters most to you right now?</h2>
                 <p className="text-muted-foreground mb-6">Pick up to 3 — this helps us focus your experience</p>

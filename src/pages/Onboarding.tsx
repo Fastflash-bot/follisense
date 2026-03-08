@@ -690,8 +690,13 @@ const Onboarding = () => {
                 </p>
                 <div className="space-y-4">
                   {hairTypes.map(ht => {
-                    const showPhotos = ht.photoLabels !== null;
+                    const hasPhotos = ht.id !== 'unsure' && hairPhotos[ht.id];
                     const genderKey = isMale ? 'male' : isNeutral ? 'both' : 'female';
+                    const photos = hasPhotos
+                      ? genderKey === 'both'
+                        ? [...(hairPhotos[ht.id].female || []), ...(hairPhotos[ht.id].male || [])]
+                        : hairPhotos[ht.id][genderKey] || []
+                      : [];
                     return (
                       <button
                         key={ht.id}
@@ -707,38 +712,15 @@ const Onboarding = () => {
                             <p className="text-sm text-muted-foreground">{ht.desc}</p>
                           </div>
                         </div>
-                        {showPhotos && ht.photoLabels && (
-                          <div className={`grid gap-2 mt-3 ${genderKey === 'both' ? 'grid-cols-2' : 'grid-cols-2'}`}>
+                        {photos.length > 0 && (
+                          <div className="grid grid-cols-2 gap-2 mt-3">
                             {/* Illustration */}
                             <div className="rounded-lg bg-accent/50 border border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
                               <CurlIcon type={ht.id} />
                               <span className="text-[10px] text-muted-foreground mt-1.5 text-center">Pattern illustration</span>
                             </div>
-                            {/* Photo placeholders based on gender */}
-                            {genderKey === 'female' && (
-                              <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
-                                <Camera size={20} className="text-muted-foreground mb-1" />
-                                <span className="text-[10px] text-muted-foreground text-center leading-tight">{ht.photoLabels.female}</span>
-                              </div>
-                            )}
-                            {genderKey === 'male' && (
-                              <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
-                                <Camera size={20} className="text-muted-foreground mb-1" />
-                                <span className="text-[10px] text-muted-foreground text-center leading-tight">{ht.photoLabels.male}</span>
-                              </div>
-                            )}
-                            {genderKey === 'both' && (
-                              <div className="space-y-2">
-                                <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-2 flex flex-col items-center justify-center min-h-[36px]">
-                                  <Camera size={14} className="text-muted-foreground mb-0.5" />
-                                  <span className="text-[9px] text-muted-foreground text-center leading-tight">{ht.photoLabels.female}</span>
-                                </div>
-                                <div className="rounded-lg bg-accent/30 border-2 border-dashed border-border p-2 flex flex-col items-center justify-center min-h-[36px]">
-                                  <Camera size={14} className="text-muted-foreground mb-0.5" />
-                                  <span className="text-[9px] text-muted-foreground text-center leading-tight">{ht.photoLabels.male}</span>
-                                </div>
-                              </div>
-                            )}
+                            {/* Real reference photos */}
+                            <PhotoGallery photos={photos} />
                           </div>
                         )}
                       </button>

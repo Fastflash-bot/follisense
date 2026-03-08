@@ -1,11 +1,33 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Plus, Leaf } from 'lucide-react';
+import { Plus, Leaf, Flame, Star, Play, Trophy } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import { dummyLeaderboard } from '@/data/quizQuestions';
+import { useState, useEffect } from 'react';
+
+const loadQuizState = () => {
+  try {
+    const saved = localStorage.getItem('scalpsense-quiz');
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return { totalPoints: 0, currentStreak: 0, bestStreak: 0 };
+};
 
 const StylistHome = () => {
   const navigate = useNavigate();
   const { clientObservations } = useApp();
+  const [quiz, setQuiz] = useState(loadQuizState);
+
+  useEffect(() => {
+    const handler = () => setQuiz(loadQuizState());
+    window.addEventListener('focus', handler);
+    return () => window.removeEventListener('focus', handler);
+  }, []);
+
+  const userEntry = { rank: 5, name: 'You', points: quiz.totalPoints, bestStreak: quiz.bestStreak };
+  const leaderboard = [...dummyLeaderboard, userEntry].sort((a, b) => b.points - a.points).map((e, i) => ({ ...e, rank: i + 1 }));
+  const userRank = leaderboard.find(e => e.name === 'You')?.rank || 5;
+  const motivation = userRank <= 3 ? "You're one of the most scalp-savvy stylists on ScalpSense" : userRank <= 10 ? "You're building real clinical knowledge. Keep going." : "Every quiz makes you better at spotting problems early. Keep playing.";
 
   return (
     <div className="page-container pt-6">
@@ -22,15 +44,59 @@ const StylistHome = () => {
         {/* New observation button */}
         <button
           onClick={() => navigate('/stylist/observation')}
-          className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press flex items-center justify-center gap-2 mb-8"
+          className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold text-base btn-press flex items-center justify-center gap-2 mb-4"
         >
           <Plus size={20} strokeWidth={2} />
           New client observation
         </button>
 
+        {/* Quiz card */}
+        <div className="card-elevated p-5 mb-4">
+          <div className="flex items-start justify-between mb-2">
+            <div>
+              <h3 className="font-semibold text-foreground">Scalp Quiz</h3>
+              <p className="text-sm text-muted-foreground">Test your eye. Build your confidence.</p>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Play size={18} className="text-primary ml-0.5" />
+            </div>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+            <span className="flex items-center gap-1"><Flame size={13} className="text-primary" />Streak: {quiz.currentStreak}</span>
+            <span className="flex items-center gap-1"><Star size={13} className="text-primary" />Points: {quiz.totalPoints}</span>
+          </div>
+          <button onClick={() => navigate('/stylist/quiz')} className="w-full h-10 bg-primary text-primary-foreground rounded-lg font-semibold text-sm btn-press">
+            Play
+          </button>
+        </div>
+
+        {/* Leaderboard card */}
+        <div className="card-elevated p-5 mb-6">
+          <div className="flex items-center gap-2 mb-1">
+            <Trophy size={16} className="text-primary" />
+            <h3 className="font-semibold text-foreground">Leaderboard</h3>
+          </div>
+          <p className="text-xs text-muted-foreground mb-3">Top stylists in the ScalpSense community</p>
+          <div className="space-y-2 mb-3">
+            {leaderboard.slice(0, 5).map(entry => (
+              <div key={entry.name} className={`flex items-center justify-between py-2 px-3 rounded-lg text-sm ${entry.name === 'You' ? 'bg-primary/10 font-semibold' : ''}`}>
+                <div className="flex items-center gap-3">
+                  <span className="w-5 text-xs font-semibold text-muted-foreground">{entry.rank}</span>
+                  <span className="text-foreground">{entry.name}</span>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                  <span>{entry.points} pts</span>
+                  <span className="flex items-center gap-0.5"><Flame size={11} />{entry.bestStreak}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground text-center italic">{motivation}</p>
+        </div>
+
         {/* Recent observations */}
         <h3 className="font-semibold text-foreground mb-3">Recent observations</h3>
-        <div className="space-y-2">
+        <div className="space-y-2 mb-20">
           {clientObservations.map(obs => (
             <div key={obs.id} className="card-elevated p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">

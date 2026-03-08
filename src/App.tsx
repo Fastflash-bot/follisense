@@ -28,6 +28,7 @@ import FindSpecialist from "./pages/FindSpecialist";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import MyRoutine from "./pages/MyRoutine";
 import StylistLearnPage from "./pages/StylistLearnPage";
+import ScalpQuiz from "./pages/ScalpQuiz";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();

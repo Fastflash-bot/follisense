@@ -143,6 +143,7 @@ const ReferralGuide = () => (
 );
 
 const StylistLearnPage = () => {
+  const navigate = useNavigate();
   const [selectedConditionId, setSelectedConditionId] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState<'conditions' | 'refer'>('conditions');
 

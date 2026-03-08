@@ -193,6 +193,11 @@ const HomePage = () => {
   const toggleService = (s: string) => setServices(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
   const toggleQuickSymptom = (s: string) => setQuickSymptoms(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
 
+  const dismissCheckIn = () => {
+    setDismissedCheckInModal(true);
+    localStorage.setItem('follisense-checkin-dismissed', String(Date.now()));
+  };
+
   const handleSaveSalon = () => {
     addSalonVisit({ id: `sv-${Date.now()}`, date: format(visitDate, 'MMM d'), services, stylistName: stylistName || undefined, notes: visitNotes || undefined });
     setShowSalonForm(false);

@@ -193,7 +193,7 @@ const ProfilePage = () => {
         )}
 
         {/* Hair settings */}
-        {!stylistMode && (
+        {(
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-label">Hair & Style Settings</h3>

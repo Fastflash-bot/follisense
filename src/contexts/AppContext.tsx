@@ -12,6 +12,8 @@ export interface OnboardingData {
   chemicalProcessingMultiple: string[];
   protectiveStyles: string[];
   otherStyle: string;
+  protectiveStyleFrequency: string;
+  isWornOutOnly: boolean;
   cycleLength: string;
   cycleLengthMin: string;
   cycleLengthMax: string;
@@ -19,6 +21,8 @@ export interface OnboardingData {
   washFrequencyPerCycle: string;
   betweenWashCare: string[];
   otherBetweenWashCare: string;
+  wornOutWashFrequency: string;
+  restyleFrequency: string;
   baselineItch: string;
   baselineTenderness: string;
   baselineHairline: string;
@@ -154,6 +158,8 @@ const defaultOnboarding: OnboardingData = {
   chemicalProcessingMultiple: [],
   protectiveStyles: [],
   otherStyle: '',
+  protectiveStyleFrequency: '',
+  isWornOutOnly: false,
   cycleLength: '',
   cycleLengthMin: '',
   cycleLengthMax: '',
@@ -161,6 +167,8 @@ const defaultOnboarding: OnboardingData = {
   washFrequencyPerCycle: '',
   betweenWashCare: [],
   otherBetweenWashCare: '',
+  wornOutWashFrequency: '',
+  restyleFrequency: '',
   baselineItch: '',
   baselineTenderness: '',
   baselineHairline: '',

@@ -27,11 +27,40 @@ const chemicalOptions = [
 const chemicalMultipleOptions = ['Relaxed', 'Texturised', 'Colour treated', 'Bleached'];
 
 const styleOptions = [
-  'Box braids', 'Cornrows / flat twists', 'Knotless braids', 'Twists (two-strand)',
-  'Twist out / braid out', 'Locs / faux locs', 'Weave / sew-in', 'Wig (lace front)',
-  'Wig (other)', 'Crochet braids', 'Hair extensions (k-tips, micro links, etc.)',
-  'Wash and go', 'Bantu knots', 'Silk press / blowout', 'Other',
+  'Worn out / loose (natural)', 'Worn out / loose (relaxed or straightened)',
+  'Silk press / blowout', 'Twist out / braid out',
+  'Wash and go', 'Box braids',
+  'Knotless braids', 'Cornrows / flat twists',
+  'Twists (two-strand)', 'Crochet braids',
+  'Locs / faux locs', 'Weave / sew-in',
+  'Wig (lace front)', 'Wig (other)',
+  'Hair extensions (k-tips, micro links, etc.)', 'Bantu knots',
+  'Other',
 ];
+
+const nonProtectiveStyles = [
+  'Worn out / loose (natural)',
+  'Worn out / loose (relaxed or straightened)',
+  'Silk press / blowout',
+  'Twist out / braid out',
+  'Wash and go',
+];
+
+const protectiveFrequencyOptions = [
+  'Most of the time',
+  'About half the time',
+  'Occasionally',
+  'Rarely — I mostly wear my hair out',
+];
+
+const wornOutWashOptions = [
+  'More than once a week',
+  'About once a week',
+  'Every 2 weeks',
+  'Less than every 2 weeks',
+];
+
+const restyleOptions = ['Daily', 'Every few days', 'Weekly', 'Less often'];
 
 const cycleLengths = ['1–2 weeks', '2–4 weeks', '4–6 weeks', '6+ weeks', 'It varies'];
 const washFrequencyOptions = [
@@ -100,6 +129,9 @@ const Onboarding = () => {
   const [chemicalMultiple, setChemicalMultiple] = useState<string[]>([]);
   const [styles, setStyles] = useState<string[]>([]);
   const [otherStyle, setOtherStyle] = useState('');
+  const [protectiveFreq, setProtectiveFreq] = useState('');
+  const [wornOutWashFreq, setWornOutWashFreq] = useState('');
+  const [restyleFreq, setRestyleFreq] = useState('');
   const [cycleLen, setCycleLen] = useState('');
   const [cycleLenMin, setCycleLenMin] = useState('');
   const [cycleLenMax, setCycleLenMax] = useState('');
@@ -107,6 +139,10 @@ const Onboarding = () => {
   const [washFreqPerCycle, setWashFreqPerCycle] = useState('');
   const [betweenWashCare, setBetweenWashCare] = useState<string[]>([]);
   const [otherBetweenWash, setOtherBetweenWash] = useState('');
+
+  // Determine if user only selected non-protective styles
+  const hasProtectiveStyle = styles.some(s => !nonProtectiveStyles.includes(s) && s !== 'Other');
+  const isWornOutOnly = styles.length > 0 && !hasProtectiveStyle;
   const [itch, setItch] = useState('');
   const [tenderness, setTenderness] = useState('');
   const [hairline, setHairline] = useState('');
@@ -133,8 +169,15 @@ const Onboarding = () => {
   const canProceed = () => {
     switch (step) {
       case 1: return !!hairType && !!chemicalProcessing && (chemicalProcessing !== 'Multiple' || chemicalMultiple.length > 0);
-      case 2: return styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
+      case 2: {
+        const stylesOk = styles.length > 0 && (!styles.includes('Other') || otherStyle.trim().length > 0);
+        const freqOk = !hasProtectiveStyle || !!protectiveFreq;
+        return stylesOk && freqOk;
+      }
       case 3: {
+        if (isWornOutOnly) {
+          return !!wornOutWashFreq && !!restyleFreq;
+        }
         const cycleOk = !!cycleLen && (cycleLen !== 'It varies' || (!!cycleLenMin && !!cycleLenMax));
         const washOk = !!washFreq && (washFreq !== 'It depends on the style' || !!washFreqPerCycle);
         const betweenOk = betweenWashCare.length > 0 && (!betweenWashCare.includes('Other') || otherBetweenWash.trim().length > 0);
@@ -165,6 +208,8 @@ const Onboarding = () => {
         chemicalProcessingMultiple: chemicalMultiple,
         protectiveStyles: styles,
         otherStyle,
+        protectiveStyleFrequency: protectiveFreq,
+        isWornOutOnly,
         cycleLength: cycleLen,
         cycleLengthMin: cycleLenMin,
         cycleLengthMax: cycleLenMax,
@@ -172,6 +217,8 @@ const Onboarding = () => {
         washFrequencyPerCycle: washFreqPerCycle,
         betweenWashCare,
         otherBetweenWashCare: otherBetweenWash,
+        wornOutWashFrequency: wornOutWashFreq,
+        restyleFrequency: restyleFreq,
         baselineItch: itch,
         baselineTenderness: tenderness,
         baselineHairline: hairline,
@@ -271,8 +318,8 @@ const Onboarding = () => {
 
             {step === 2 && (
               <div>
-                <h2 className="text-2xl font-semibold mb-2">What protective style do you usually wear?</h2>
-                <p className="text-muted-foreground mb-6">Select all that apply</p>
+                <h2 className="text-2xl font-semibold mb-2">How do you usually wear your hair?</h2>
+                <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
                 <div className="grid grid-cols-2 gap-3">
                   {styleOptions.slice(0, 8).map(s => (
                     <button
@@ -314,10 +361,22 @@ const Onboarding = () => {
                     className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3"
                   />
                 )}
+
+                {/* Follow-up: protective style frequency */}
+                {hasProtectiveStyle && styles.length > 0 && (
+                  <div className="mt-8">
+                    <p className="font-medium text-foreground mb-3">How much of the time are you in a protective or installed style?</p>
+                    <div className="flex flex-wrap gap-2">
+                      {protectiveFrequencyOptions.map(o => (
+                        <button key={o} onClick={() => setProtectiveFreq(o)} className={`pill-option ${protectiveFreq === o ? 'selected' : ''}`}>{o}</button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
-            {step === 3 && (
+            {step === 3 && !isWornOutOnly && (
               <div>
                 <h2 className="text-2xl font-semibold mb-2">Your cycle</h2>
                 <p className="text-muted-foreground mb-6">How long do you typically keep a style in?</p>
@@ -384,6 +443,31 @@ const Onboarding = () => {
                       className="w-full h-12 px-4 rounded-xl border-2 border-border bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors mt-3"
                     />
                   )}
+                </div>
+              </div>
+            )}
+
+            {step === 3 && isWornOutOnly && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-2">Your hair routine</h2>
+                <p className="text-muted-foreground mb-6">Since you mostly wear your hair out, we'll base your check-ins on your wash routine</p>
+
+                <div className="mb-8">
+                  <p className="font-medium text-foreground mb-3">How often do you wash your hair?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {wornOutWashOptions.map(o => (
+                      <button key={o} onClick={() => setWornOutWashFreq(o)} className={`pill-option ${wornOutWashFreq === o ? 'selected' : ''}`}>{o}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="font-medium text-foreground mb-3">How often do you restyle or manipulate your hair?</p>
+                  <div className="flex flex-wrap gap-2">
+                    {restyleOptions.map(o => (
+                      <button key={o} onClick={() => setRestyleFreq(o)} className={`pill-option ${restyleFreq === o ? 'selected' : ''}`}>{o}</button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

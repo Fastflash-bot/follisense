@@ -47,6 +47,7 @@ const scalpSteps = [
   {
     key: 'hairline',
     q: 'How are your edges and temples looking?',
+    qRegular: 'Noticed any changes around your hairline, temples, or parting?',
     options: [
       { label: 'No change', desc: 'Edges look the same as usual' },
       { label: 'Looks a bit thinner', desc: 'Slight difference, not sure' },
@@ -57,6 +58,7 @@ const scalpSteps = [
   {
     key: 'shedding',
     q: 'How much hair came out at wash time?',
+    qRegular: 'How much shedding have you noticed recently — in the shower, on your pillow, or while styling?',
     options: [
       { label: 'Normal', desc: "About what I'd expect" },
       { label: 'More than usual', desc: 'A bit more than usual' },

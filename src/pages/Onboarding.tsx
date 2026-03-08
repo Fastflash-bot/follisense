@@ -120,17 +120,25 @@ const CurlIcon = ({ type }: { type: string }) => {
   return patterns[type] || null;
 };
 
-const computeBaselineRisk = (itch: string, tenderness: string, hairline: string): 'green' | 'amber' | 'red' => {
+const computeBaselineRisk = (itch: string, tenderness: string, hairline: string, hairHealth: string): 'green' | 'amber' | 'red' => {
   const mildest = ['None', 'No concerns'];
   const severe = ['Severe', 'Very concerned'];
   const moderate = ['Moderate', 'Noticeable change'];
+  const hairMildest = ['Healthy — no concerns'];
+  const hairModerate = ['Noticeably dry, brittle, or breaking more than usual', 'Concerned about my hair\'s condition'];
 
-  const values = [itch, tenderness, hairline];
-  if (values.every(v => mildest.includes(v))) return 'green';
-  if (values.some(v => severe.includes(v))) return 'red';
-  const moderateCount = values.filter(v => moderate.includes(v)).length;
+  const scalpValues = [itch, tenderness, hairline];
+  const allScalpMild = scalpValues.every(v => mildest.includes(v));
+  const allMild = allScalpMild && hairMildest.includes(hairHealth);
+  if (allMild) return 'green';
+  if (scalpValues.some(v => severe.includes(v))) return 'red';
+  const moderateCount = scalpValues.filter(v => moderate.includes(v)).length;
   if (moderateCount >= 2) return 'red';
-  return 'amber';
+  // Hair intensification: green scalp + moderate hair → amber
+  if (allScalpMild && hairModerate.includes(hairHealth)) return 'amber';
+  // Amber scalp + moderate hair → red
+  if (!allScalpMild && hairModerate.includes(hairHealth) && moderateCount >= 1) return 'red';
+  return allScalpMild ? 'green' : 'amber';
 };
 
 const getBaselineSevereFlaggedSymptoms = (itch: string, tenderness: string, hairline: string): string[] => {

@@ -780,14 +780,32 @@ const Onboarding = () => {
                 <p className="text-muted-foreground mb-6">Select everything you rotate between</p>
                 {(() => {
                   const defaultCount = isMale ? 6 : 8;
+                  const locsStyles = ['Locs / faux locs', 'Locs or faux locs'];
+                  const getLocsPhoto = () => isMale && locsPhotos.male ? locsPhotos.male : null;
+                  
+                  const renderStyleButton = (s: string) => {
+                    const isLocs = locsStyles.includes(s);
+                    const locsPhoto = isLocs ? getLocsPhoto() : null;
+                    return (
+                      <button 
+                        key={s} 
+                        onClick={() => toggleStyle(s)} 
+                        className={`selection-card text-center py-4 ${styles.includes(s) ? 'selected' : ''}`}
+                      >
+                        {locsPhoto && (
+                          <div className="w-full h-16 rounded-lg overflow-hidden mb-2">
+                            <img src={locsPhoto.src} alt={locsPhoto.label} className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                        <p className="font-medium text-foreground text-sm">{s}</p>
+                      </button>
+                    );
+                  };
+                  
                   return (
                     <>
                       <div className="grid grid-cols-2 gap-3">
-                        {styleOptions.slice(0, defaultCount).map(s => (
-                          <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
-                            <p className="font-medium text-foreground text-sm">{s}</p>
-                          </button>
-                        ))}
+                        {styleOptions.slice(0, defaultCount).map(s => renderStyleButton(s))}
                       </div>
                       {styleOptions.length > defaultCount && !showMoreStyles && (
                         <button onClick={() => setShowMoreStyles(true)} className="w-full flex items-center justify-center gap-1.5 text-sm font-medium text-primary mt-3 py-2">
@@ -796,11 +814,7 @@ const Onboarding = () => {
                       )}
                       {showMoreStyles && (
                         <div className="grid grid-cols-2 gap-3 mt-3">
-                          {styleOptions.slice(defaultCount).map(s => (
-                            <button key={s} onClick={() => toggleStyle(s)} className={`selection-card text-center py-5 ${styles.includes(s) ? 'selected' : ''}`}>
-                              <p className="font-medium text-foreground text-sm">{s}</p>
-                            </button>
-                          ))}
+                          {styleOptions.slice(defaultCount).map(s => renderStyleButton(s))}
                         </div>
                       )}
                     </>

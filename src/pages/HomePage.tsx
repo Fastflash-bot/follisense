@@ -177,12 +177,6 @@ const HomePage = () => {
                 <p className="text-label mb-1">Last wash</p>
                 <p className="font-semibold text-foreground">{new Date(Date.now() - 3 * 86400000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
                 <p className="text-sm text-muted-foreground mt-1">Next check-in: {new Date(Date.now() + 4 * 86400000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
-                {cycleInfo && (
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <span className="w-2 h-2 rounded-full bg-primary" />
-                    <span className="text-xs text-muted-foreground">Cycle day {cycleInfo.day}</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>

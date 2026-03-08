@@ -252,6 +252,28 @@ const getBaselineSevereFlaggedSymptoms = (itch: string, tenderness: string, hair
   return flagged;
 };
 
+const getBaselineModerateSymptoms = (itch: string, tenderness: string, hairline: string, hairHealth: string): string[] => {
+  const flagged: string[] = [];
+  if (itch === 'Mild') flagged.push('mild itching');
+  if (itch === 'Moderate') flagged.push('moderate itching');
+  if (tenderness === 'Mild') flagged.push('mild tenderness');
+  if (tenderness === 'Moderate') flagged.push('some tenderness');
+  if (hairline === 'Slight concern') flagged.push('slight hairline concern');
+  if (hairline === 'Noticeable change') flagged.push('noticeable hairline changes');
+  if (hairHealth === 'Some dryness or breakage but nothing unusual') flagged.push('some dryness');
+  if (hairHealth === 'Noticeably dry, brittle, or breaking more than usual') flagged.push('noticeable dryness and breakage');
+  if (hairHealth === "Concerned about my hair's condition") flagged.push('hair condition concerns');
+  return flagged;
+};
+
+const getBaselineTipForSymptoms = (itch: string, tenderness: string, hairline: string, hairHealth: string): string => {
+  if (itch === 'Moderate' || itch === 'Mild') return 'A lightweight, non-comedogenic scalp oil can help soothe irritation between washes.';
+  if (tenderness === 'Moderate' || tenderness === 'Mild') return 'If your current style feels tight, don\'t re-tighten loose areas — let them be.';
+  if (hairline === 'Noticeable change' || hairline === 'Slight concern') return 'Consider asking your stylist to keep installations looser around your hairline next time.';
+  if (hairHealth.includes('dry') || hairHealth.includes('brittle') || hairHealth.includes('breakage')) return 'A deep conditioning treatment can help restore moisture and reduce breakage over time.';
+  return 'Consistency is key — regular check-ins will help you spot patterns early.';
+};
+
 const genderOptions = [
   { id: 'woman', label: 'A woman' },
   { id: 'man', label: 'A man' },

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart, AlertTriangle, ArrowRight, Target, MessageCircle, Stethoscope, FlaskConical, ShieldCheck, Microscope, Sparkles } from 'lucide-react';
+import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart, AlertTriangle, ArrowRight, Target, MessageCircle, Stethoscope, FlaskConical, ShieldCheck, Microscope, Sparkles, Eye } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { didYouKnowFacts } from '@/data/didYouKnowFacts';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';

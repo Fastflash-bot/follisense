@@ -663,7 +663,7 @@ const HomePage = () => {
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4"><Leaf size={22} className="text-primary" strokeWidth={1.8} /></div>
                         <h4 className="font-semibold text-center mb-2">Thanks for sharing that</h4>
                         <p className="text-sm text-muted-foreground text-center mb-6">We'll keep an eye on this. In the meantime:</p>
-                        <div className="rounded-2xl bg-accent p-4 mb-6"><p className="text-sm text-foreground">{getQuickLogTip(quickSymptoms)}</p></div>
+                        <div className="rounded-2xl bg-accent p-4 mb-6"><p className="text-sm text-foreground">{getQuickLogTip(quickSymptoms, isMale)}</p></div>
                       </div>
                     )}
                     {quickSeverity === 'Moderate' && (

@@ -35,9 +35,8 @@ const styleOptions = [
   'Other',
 ];
 
-const nonProtectiveStyles = [
+const wornOutOnlyStyles = [
   'Worn out / loose (natural)', 'Worn out / loose (relaxed or straightened)',
-  'Silk press / blowout', 'Twist out / braid out', 'Wash and go',
 ];
 
 const protectiveFrequencyOptions = [

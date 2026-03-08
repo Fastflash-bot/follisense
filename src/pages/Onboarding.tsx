@@ -859,8 +859,8 @@ const Onboarding = () => {
               </div>
             )}
 
-            {/* Step 6: Products */}
-            {step === 6 && (
+            {/* Step 7: Products */}
+            {step === 7 && (
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-2">What do you put on your scalp?</h2>
                 <p className="text-sm text-muted-foreground mb-4">Start typing a product or brand name</p>

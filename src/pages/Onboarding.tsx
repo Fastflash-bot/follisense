@@ -227,6 +227,37 @@ const CurlIcon = ({ type }: { type: string }) => {
   return patterns[type] || null;
 };
 
+// ── Mini photo gallery for multiple reference photos ──────────────────────────
+const PhotoGallery = ({ photos }: { photos: { src: string; label: string }[] }) => {
+  const [idx, setIdx] = useState(0);
+  if (photos.length === 0) return null;
+  if (photos.length === 1) {
+    return (
+      <div className="rounded-lg overflow-hidden border border-border">
+        <img src={photos[0].src} alt={photos[0].label} className="w-full h-24 object-cover" />
+        <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[0].label}</p>
+      </div>
+    );
+  }
+  return (
+    <div className="relative rounded-lg overflow-hidden border border-border">
+      <img src={photos[idx].src} alt={photos[idx].label} className="w-full h-24 object-cover" />
+      <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[idx].label}</p>
+      <button onClick={(e) => { e.stopPropagation(); setIdx(i => (i - 1 + photos.length) % photos.length); }} className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center">
+        <ChevronLeft size={12} />
+      </button>
+      <button onClick={(e) => { e.stopPropagation(); setIdx(i => (i + 1) % photos.length); }} className="absolute right-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center">
+        <ChevronRight size={12} />
+      </button>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1">
+        {photos.map((_, i) => (
+          <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === idx ? 'bg-foreground' : 'bg-foreground/30'}`} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ── Slide-in wrapper ─────────────────────────────────────────────────────────
 
 const SlideIn = ({ show, children }: { show: boolean; children: React.ReactNode }) => (

@@ -337,6 +337,8 @@ const Onboarding = () => {
         baselineItch: baselineAnswers.itch || '', baselineTenderness: baselineAnswers.tenderness || '',
         baselineHairline: baselineAnswers.hairline || '', baselineHairHealth: baselineAnswers.hairHealth || '',
         scalpProducts: products, otherProduct, productFrequency: prodFreq,
+        hairProducts: hairProds, otherHairProduct: otherHairProd, hairProductFrequency: hairProdFreq,
+        scalpProductFrequency: prodFreq,
         menstrualTracking,
         lastPeriodDate: lastPeriodDate ? format(lastPeriodDate, 'yyyy-MM-dd') : '',
         menstrualCycleLength,

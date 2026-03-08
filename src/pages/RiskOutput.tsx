@@ -149,7 +149,7 @@ const RiskOutput = () => {
               )}
               <div className="rounded-2xl bg-sage-light p-5 mb-8">
                 <p className="text-sm text-foreground">
-                  <strong>Tip:</strong> A lightweight scalp oil between wash days can help maintain moisture balance and reduce itching.
+                  <strong>Tip:</strong> A gentle scalp massage with your fingertips can help with circulation. You don't need to add product for this to work.
                 </p>
               </div>
               <button onClick={() => navigate('/home')} className="w-full h-14 bg-primary text-primary-foreground rounded-xl font-semibold btn-press">

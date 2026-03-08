@@ -83,7 +83,12 @@ const Onboarding = () => {
   const [styles, setStyles] = useState<string[]>([]);
   const [otherStyle, setOtherStyle] = useState('');
   const [cycleLen, setCycleLen] = useState('');
+  const [cycleLenMin, setCycleLenMin] = useState('');
+  const [cycleLenMax, setCycleLenMax] = useState('');
   const [washFreq, setWashFreq] = useState('');
+  const [washFreqPerCycle, setWashFreqPerCycle] = useState('');
+  const [betweenWashCare, setBetweenWashCare] = useState<string[]>([]);
+  const [otherBetweenWash, setOtherBetweenWash] = useState('');
   const [itch, setItch] = useState('');
   const [tenderness, setTenderness] = useState('');
   const [hairline, setHairline] = useState('');

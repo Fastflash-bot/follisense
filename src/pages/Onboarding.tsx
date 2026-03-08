@@ -412,7 +412,7 @@ const Onboarding = () => {
 
   const allBaselineAnswered = baselineQuestions.every(q => baselineAnswers[q.key]);
 
-  const showChemicalFollowUp = chemicalProcessing.startsWith('Yes') || chemicalProcessing === 'Previously processed, currently growing out' || chemicalProcessing === 'Multiple';
+  const showChemicalFollowUp = chemicalProcessing === 'Yes' || chemicalProcessing === 'Previously processed, growing out';
 
   // Map actual step to logical step (accounting for menstrual skip)
   const getLogicalStep = (s: number) => {

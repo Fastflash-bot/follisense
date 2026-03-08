@@ -192,6 +192,10 @@ const WashDayAssessment = () => {
       type: 'wash-day',
       date: new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric' }),
     });
+    if (photoSaved && includeInResearch && research.consented) {
+      incrementResearchPhotos();
+    }
+    setCheckInCount(checkInCount + 1);
     navigate('/results');
   };
 

@@ -301,6 +301,23 @@ const HomePage = () => {
           </button>
         )}
 
+        {/* Research contribution card - only after 2+ check-ins, not yet dismissed/consented */}
+        {checkInCount >= 2 && !research.consented && !research.dismissed && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="card-elevated p-5 mb-4 border-l-4 border-l-primary">
+            <div className="flex items-start gap-3 mb-3">
+              <Microscope size={20} className="text-primary flex-shrink-0 mt-0.5" strokeWidth={1.8} />
+              <div>
+                <h3 className="font-semibold text-foreground text-sm">Help build better AI for textured hair</h3>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Most scalp health AI doesn't work well on darker skin because the training data doesn't include us. Your check-in photos could help change that.</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => navigate('/research')} className="flex-1 h-10 bg-primary text-primary-foreground rounded-xl font-medium text-sm btn-press">Tell me more</button>
+              <button onClick={() => setResearch({ ...research, dismissed: true })} className="flex-1 h-10 rounded-xl border border-border font-medium text-sm btn-press text-muted-foreground">Not right now</button>
+            </div>
+          </motion.div>
+        )}
+
         {/* Salon visit card */}
         <button onClick={() => setShowSalonForm(true)} className="card-elevated p-4 mb-4 w-full flex items-center gap-3 text-left">
           <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">

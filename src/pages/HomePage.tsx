@@ -394,7 +394,7 @@ const HomePage = () => {
             <Lightbulb size={20} className="text-primary mt-0.5 flex-shrink-0" strokeWidth={1.8} />
             <div>
               <p className="text-sm text-foreground">
-                <strong>Did you know?</strong> Traction alopecia affects up to 1 in 3 women who regularly wear tight hairstyles.
+                <strong>Did you know?</strong> Traction alopecia affects up to 1 in 3 people who regularly wear tight hairstyles.
               </p>
               <button onClick={() => navigate('/learn')} className="text-sm text-primary font-medium mt-2">Learn more</button>
             </div>

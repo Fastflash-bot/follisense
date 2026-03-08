@@ -68,6 +68,7 @@ interface AppContextType {
   setStylistMode: (v: boolean) => void;
   clientObservations: ClientObservation[];
   addClientObservation: (o: ClientObservation) => void;
+  stylistObservations: StylistObservationEntry[];
   resetAll: () => void;
 }
 

@@ -1001,7 +1001,7 @@ const Onboarding = () => {
         <div className="pb-8">
           {step === 4 && baselineResultScreen ? (
             <button onClick={handleNext} className="w-full h-14 rounded-xl font-semibold text-base btn-press transition-colors bg-primary text-primary-foreground">
-              Continue setup
+              {baselineResultScreen === 'red' ? 'Continue setup' : 'Continue'}
             </button>
           ) : step === 4 && !baselineResultScreen && !baselineAck ? (
             allBaselineAnswered && baselineStep === baselineQuestions.length - 1 ? (

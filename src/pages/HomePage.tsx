@@ -21,13 +21,14 @@ const protectiveStyleTips = [
 ];
 
 const maleTips = [
-  "Wearing your durag tonight? Make sure your hairline isn't under too much tension from the tie",
-  "If your barber is lining you up every week, give your edges a break now and then",
+  "If your barber is lining you up every week, give your hairline a break now and then — constant clipping causes irritation",
+  "Razor bumps at the nape? Keep the area clean and try a bump-reducing aftershave balm",
   "Cornrows feeling tight? Don't tough it out. Loosen the front ones to protect your hairline",
-  "Sweat buildup under a wave cap can irritate your scalp. A quick rinse or scalp wipe helps",
+  "Sweat buildup under a wave cap or durag can irritate your scalp. A quick rinse or scalp wipe helps",
   "If your locs are pulling at the root, that's traction. Talk to your loctician about lighter retwists",
   "Staying hydrated helps your scalp too — aim for 2 litres today",
-  "Try pressing gently with a fingertip instead of scratching — it relieves itch without damaging the scalp",
+  "Ingrown hairs after a fade? Exfoliate gently between cuts and avoid shaving against the grain",
+  "If you're noticing thinning at the crown or temples, it's worth tracking — early action makes a difference",
 ];
 
 const wornOutTips = [

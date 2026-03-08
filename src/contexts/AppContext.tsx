@@ -149,6 +149,10 @@ interface AppContextType {
   setHealthProfile: (d: HealthProfileData) => void;
   baselinePhotos: BaselinePhoto[];
   setBaselinePhotos: (photos: BaselinePhoto[]) => void;
+  baselineRisk: 'green' | 'amber' | 'red' | null;
+  setBaselineRisk: (r: 'green' | 'amber' | 'red' | null) => void;
+  baselineDate: string | null;
+  setBaselineDate: (d: string | null) => void;
   resetAll: () => void;
 }
 

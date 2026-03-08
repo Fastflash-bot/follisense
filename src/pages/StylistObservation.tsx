@@ -198,8 +198,8 @@ const StylistObservation = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-[430px] mx-auto px-6">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="max-w-[430px] mx-auto px-6 flex-1 flex flex-col">
         {/* Top bar */}
         <div className="flex items-center justify-between py-4">
           <button onClick={() => step > 1 ? setStep(step - 1) : setShowConfirm(true)} className="p-2 -ml-2">

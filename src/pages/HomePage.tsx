@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Heart, AlertTriangle, Target, Stethoscope } from 'lucide-react';
+import { User, ChevronRight, Leaf, Lightbulb, Scissors, X, Calendar, Target, Stethoscope } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
 import { didYouKnowFacts } from '@/data/didYouKnowFacts';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -20,7 +20,6 @@ const HomePage = () => {
   const [services, setServices] = useState<string[]>([]);
   const [stylistName, setStylistName] = useState('');
   const [visitNotes, setVisitNotes] = useState('');
-  const [showScalpCheckInPicker, setShowScalpCheckInPicker] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('follisense-last-home-visit', String(Date.now()));
@@ -57,16 +56,6 @@ const HomePage = () => {
     setVisitDate(new Date());
   };
 
-  // Check-in context text
-  const getCheckInLabel = () => {
-    if (isMale) {
-      if (onboardingData.barberFrequency) return 'Scalp check-in';
-      if (onboardingData.locRetwistFrequency) return 'Scalp check-in';
-      return 'Scalp check-in';
-    }
-    return onboardingData.isWornOutOnly ? 'Scalp check-in' : 'Scalp check-in';
-  };
-
   const getCheckInDesc = () => {
     if (isMale) {
       if (onboardingData.barberFrequency) return "It's been a couple of weeks since your last barber visit. Quick scalp check?";
@@ -98,11 +87,10 @@ const HomePage = () => {
 
         {/* ══════ Primary Action: Scalp Check-in ══════ */}
         <button
-          onClick={() => setShowScalpCheckInPicker(true)}
+          onClick={() => navigate('/scalp-check')}
           className="card-elevated p-5 mb-4 w-full text-left border-l-4 border-l-primary"
         >
           <div className="flex items-center gap-4">
-            {/* Cycle ring for protective style users */}
             {!isMale && !onboardingData.isWornOutOnly ? (
               <div className="relative flex-shrink-0">
                 <svg width={size} height={size} className="-rotate-90">
@@ -120,7 +108,7 @@ const HomePage = () => {
               </div>
             )}
             <div className="flex-1">
-              <p className="font-semibold text-foreground mb-1">{getCheckInLabel()}</p>
+              <p className="font-semibold text-foreground mb-1">Scalp check-in</p>
               <p className="text-sm text-muted-foreground leading-relaxed">{getCheckInDesc()}</p>
               <p className="text-xs text-primary font-medium mt-1.5">{checkInCount} check-ins completed</p>
             </div>
@@ -170,57 +158,6 @@ const HomePage = () => {
         {/* Spacer for bottom nav */}
         <div className="h-20" />
       </motion.div>
-
-      {/* ══════ Scalp Check-in Picker Modal ══════ */}
-      <AnimatePresence>
-        {showScalpCheckInPicker && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-foreground/30 z-[55] flex items-center justify-center px-6">
-            <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-card rounded-3xl p-6 max-w-sm w-full shadow-card">
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-semibold text-foreground">Scalp Check-in</h3>
-                <button onClick={() => setShowScalpCheckInPicker(false)} className="p-1"><X size={22} className="text-muted-foreground" strokeWidth={1.8} /></button>
-              </div>
-              <p className="text-sm text-muted-foreground mb-5">What would you like to do?</p>
-
-              {/* Scheduled check-in */}
-              <button
-                onClick={() => {
-                  setShowScalpCheckInPicker(false);
-                  navigate(isMale || onboardingData.isWornOutOnly ? '/wash-day?mode=regular' : '/mid-cycle');
-                }}
-                className="w-full card-elevated p-4 mb-3 flex items-center gap-3 text-left"
-              >
-                <div className="w-10 h-10 rounded-xl bg-sage-light flex items-center justify-center flex-shrink-0">
-                  <Leaf size={20} className="text-primary" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-foreground text-sm">Scheduled check-in</p>
-                  <p className="text-xs text-muted-foreground">Your regular scalp check — takes about a minute</p>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground" />
-              </button>
-
-              {/* Something feels off */}
-              <button
-                onClick={() => {
-                  setShowScalpCheckInPicker(false);
-                  navigate('/scalp-check');
-                }}
-                className="w-full card-elevated p-4 flex items-center gap-3 text-left"
-              >
-                <div className="w-10 h-10 rounded-xl bg-warning/15 flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle size={20} className="text-warning" strokeWidth={1.5} />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-foreground text-sm">Something feels off</p>
-                  <p className="text-xs text-muted-foreground">Log a symptom or check what you're seeing</p>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground" />
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ══════ Salon Visit Picker Modal ══════ */}
       <AnimatePresence>

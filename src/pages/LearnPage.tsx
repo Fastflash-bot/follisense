@@ -7,7 +7,7 @@ import { useApp } from '@/contexts/AppContext';
 import ArticleView from '@/components/ArticleView';
 import ConditionGuidePage from '@/pages/ConditionGuidePage';
 
-const allCategories = [...categories, 'Know the signs', 'Spot It'];
+const allCategories = [...categories, 'Know the signs'];
 
 const LearnPage = () => {
   const { onboardingData } = useApp();
@@ -80,32 +80,6 @@ const LearnPage = () => {
     return (
       <div className="page-container pt-6">
         <ConditionGuidePage onBack={() => { setShowConditionGuide(false); setActiveCategory('All'); setSearchParams({}); }} />
-      </div>
-    );
-  }
-
-  if (activeCategory === 'Spot It') {
-    // Navigate to Spot It page
-    return (
-      <div className="page-container pt-6">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-          <button onClick={() => setActiveCategory('All')} className="flex items-center gap-1 text-sm text-primary font-medium mb-4">
-            ← Back to Learn
-          </button>
-          <div className="text-center py-12">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Eye size={28} className="text-primary" strokeWidth={1.5} />
-            </div>
-            <h2 className="text-xl font-semibold text-foreground mb-2">Spot It — Scalp Check Guide</h2>
-            <p className="text-sm text-muted-foreground mb-6 max-w-[300px] mx-auto">See something on your scalp? Use reference images to identify what it could be.</p>
-            <button
-              onClick={() => { window.location.href = '/spot-it'; }}
-              className="h-14 px-8 bg-primary text-primary-foreground rounded-xl font-semibold text-base"
-            >
-              Start guided check
-            </button>
-          </div>
-        </motion.div>
       </div>
     );
   }

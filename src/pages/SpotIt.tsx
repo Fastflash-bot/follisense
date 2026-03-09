@@ -350,6 +350,8 @@ const SpotIt = () => {
                       { label: 'Hairline thinning', desc: 'Thinning at the temples and edges from tight styles' },
                       { label: 'Hairline recession (FFA)', desc: 'Even, gradual recession of the frontal hairline with smooth skin' },
                       { label: 'Crown thinning', desc: 'Sparse hair at the vertex on textured hair' },
+                      { label: 'Widening part line', desc: 'Part line becoming visibly wider over time on textured hair' },
+                      { label: 'Redness / irritation', desc: 'Pinkish or irritated patches on darker scalp skin' },
                       { label: 'Redness / irritation', desc: 'Pinkish or irritated patches on darker scalp skin' },
                     ].map((photo, i) => (
                       <div key={i} className="flex-shrink-0 w-[160px]">

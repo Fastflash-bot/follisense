@@ -456,7 +456,7 @@ const Onboarding = () => {
       case 1: return !!hairType;
       case 2: {
         if (!chemicalProcessing) return false;
-        if (chemicalProcessing === 'Never' || chemicalProcessing === 'Not sure') return true;
+        if (chemicalProcessing === 'No, fully natural' || chemicalProcessing === 'Not sure') return true;
         if (chemicalProcessing === 'Yes, currently') return chemicalMultiple.length > 0 && !!lastChemicalTreatment;
         if (chemicalProcessing === 'Previously but not now') return !!lastChemicalTreatment;
         return false;

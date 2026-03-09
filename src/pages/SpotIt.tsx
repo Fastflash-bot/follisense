@@ -98,6 +98,21 @@ const getMatches = (selected: string[]): ConditionMatch[] => {
     });
   }
 
+  if (selected.includes('hairline-recession')) {
+    matches.push({
+      conditionId: 'frontal-fibrosing-alopecia',
+      name: 'Frontal fibrosing alopecia (FFA)',
+      likelihood: 'possible',
+      message: 'Gradual, even recession of the frontal hairline could be consistent with frontal fibrosing alopecia — a scarring condition that\'s different from traction alopecia.',
+      selfCareTips: [
+        'See a dermatologist as soon as possible — early treatment can slow progression',
+        'Document your hairline with photos to track changes',
+        'Mention any eyebrow thinning as well — it helps with diagnosis',
+      ],
+      severity: 'moderate',
+    });
+  }
+
   if (selected.includes('flaking')) {
     matches.push({
       conditionId: 'seborrheic-dermatitis',

@@ -54,21 +54,21 @@ const locsPhotos: Record<string, { src: string; label: string }> = {
 
 const hairTypes = [
   {
-    id: 'type3',
-    label: 'Type 3 — Curly',
-    desc: 'Visible curl pattern, S-shaped curls, looser texture',
-    photoLabels: {
-      female: '3 female: S-shaped curls, bouncy, visible curl pattern',
-      male: '3 male: defined curls, medium density',
-    },
-  },
-  {
     id: 'type4',
     label: 'Type 4 — Coily',
     desc: 'Tight coils or zig-zag pattern, dense texture, significant shrinkage',
     photoLabels: {
       female: '4 female: tight coils, z-pattern, dense',
       male: '4 male: tight coils, dense, significant shrinkage',
+    },
+  },
+  {
+    id: 'type3',
+    label: 'Type 3 — Curly',
+    desc: 'Visible curl pattern, S-shaped curls, looser texture',
+    photoLabels: {
+      female: '3 female: S-shaped curls, bouncy, visible curl pattern',
+      male: '3 male: defined curls, medium density',
     },
   },
   {
@@ -237,14 +237,14 @@ const PhotoGallery = ({ photos }: { photos: { src: string; label: string }[] }) 
   if (photos.length === 1) {
     return (
       <div className="rounded-lg overflow-hidden border border-border">
-        <img src={photos[0].src} alt={photos[0].label} className="w-full h-24 object-cover" />
+        <img src={photos[0].src} alt={photos[0].label} className="w-full h-24 object-cover object-top" />
         <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[0].label}</p>
       </div>
     );
   }
   return (
     <div className="relative rounded-lg overflow-hidden border border-border">
-      <img src={photos[idx].src} alt={photos[idx].label} className="w-full h-24 object-cover" />
+      <img src={photos[idx].src} alt={photos[idx].label} className="w-full h-24 object-cover object-top" />
       <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[idx].label}</p>
       <button onClick={(e) => { e.stopPropagation(); setIdx(i => (i - 1 + photos.length) % photos.length); }} className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center">
         <ChevronLeft size={12} />
@@ -722,12 +722,10 @@ const Onboarding = () => {
                         </div>
                         {photos.length > 0 && (
                           <div className="grid grid-cols-2 gap-2 mt-3">
-                            {/* Illustration */}
                             <div className="rounded-lg bg-accent/50 border border-border p-3 flex flex-col items-center justify-center min-h-[80px]">
                               <CurlIcon type={ht.id} />
                               <span className="text-[10px] text-muted-foreground mt-1.5 text-center">Pattern illustration</span>
                             </div>
-                            {/* Real reference photos */}
                             <PhotoGallery photos={photos} />
                           </div>
                         )}

@@ -93,6 +93,36 @@ const getMatches = (selected: string[], gender?: string): ConditionMatch[] => {
   }
 
   if (selected.includes('crown-thinning')) {
+    // FPHL match for female / neutral users
+    if (isFemale || isNeutral) {
+      matches.push({
+        conditionId: 'fphl',
+        name: 'Female pattern hair loss (FPHL)',
+        likelihood: selected.includes('widening-part') ? 'likely' : 'possible',
+        message: 'Thinning at the crown could be consistent with female pattern hair loss — the most common cause of hair loss in women. Unlike traction alopecia, it\'s hormonal.',
+        selfCareTips: [
+          'See a dermatologist or trichologist for proper diagnosis',
+          'Track changes with photos — especially your part line and crown',
+          'Ask about minoxidil — it\'s the most evidence-based treatment for FPHL',
+        ],
+        severity: 'moderate',
+      });
+    }
+    // MPHL match for male / neutral users
+    if (isMale || isNeutral) {
+      matches.push({
+        conditionId: 'mphl',
+        name: 'Male pattern hair loss (MPHL)',
+        likelihood: selected.includes('hairline-recession') ? 'likely' : 'possible',
+        message: 'Thinning at the crown could be consistent with male pattern hair loss. Tracking changes early helps.',
+        selfCareTips: [
+          'See a dermatologist or trichologist for proper diagnosis',
+          'Track changes with photos to monitor progression',
+          'Ask about evidence-based treatments like minoxidil or finasteride',
+        ],
+        severity: 'moderate',
+      });
+    }
     matches.push({
       conditionId: 'ccca',
       name: 'CCCA (Central Centrifugal Cicatricial Alopecia)',
@@ -105,6 +135,24 @@ const getMatches = (selected: string[], gender?: string): ConditionMatch[] => {
       ],
       severity: 'moderate',
     });
+  }
+
+  // Widening part line — FPHL match
+  if (selected.includes('widening-part') && !selected.includes('crown-thinning')) {
+    if (isFemale || isNeutral) {
+      matches.push({
+        conditionId: 'fphl',
+        name: 'Female pattern hair loss (FPHL)',
+        likelihood: 'possible',
+        message: 'A widening part line is one of the earliest signs of female pattern hair loss. Your frontal hairline is usually preserved while the crown thins.',
+        selfCareTips: [
+          'See a dermatologist or trichologist for proper diagnosis',
+          'Track changes with photos — especially your part line',
+          'Ask about minoxidil — it\'s the most evidence-based treatment for FPHL',
+        ],
+        severity: 'mild',
+      });
+    }
   }
 
   if (selected.includes('hairline-recession')) {

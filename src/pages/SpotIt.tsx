@@ -102,6 +102,21 @@ const getMatches = (selected: string[], gender?: string): ConditionMatch[] => {
   }
 
   if (selected.includes('hairline-recession')) {
+    // MPHL match for male / neutral users
+    if (isMale || isNeutral) {
+      matches.push({
+        conditionId: 'mphl',
+        name: 'Male pattern hair loss (MPHL)',
+        likelihood: selected.includes('crown-thinning') ? 'likely' : 'possible',
+        message: 'Gradual recession of your hairline could be consistent with male pattern hair loss — the most common cause of hair loss in men. Early treatment can slow or stop progression.',
+        selfCareTips: [
+          'See a dermatologist or trichologist for proper diagnosis',
+          'Track changes with photos to monitor progression',
+          'Ask about evidence-based treatments like minoxidil or finasteride',
+        ],
+        severity: 'moderate',
+      });
+    }
     matches.push({
       conditionId: 'frontal-fibrosing-alopecia',
       name: 'Frontal fibrosing alopecia (FFA)',

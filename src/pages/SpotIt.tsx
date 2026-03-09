@@ -265,7 +265,7 @@ const SpotIt = () => {
     }
   };
 
-  const matches = getMatches(selected);
+  const matches = getMatches(selected, onboardingData?.gender);
   const nothingSelected = selected.includes('nothing');
 
   const handleSaveAndFinish = () => {

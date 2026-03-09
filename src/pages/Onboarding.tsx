@@ -746,7 +746,7 @@ const Onboarding = () => {
                   {chemicalOptionsSimple.map(opt => (
                     <button key={opt} onClick={() => {
                       setChemicalProcessing(opt);
-                      if (opt === 'Never' || opt === 'Not sure') { setChemicalMultiple([]); setLastChemicalTreatment(''); }
+                      if (opt === 'No, fully natural' || opt === 'Not sure') { setChemicalMultiple([]); setLastChemicalTreatment(''); }
                       if (opt !== 'Yes, currently') setChemicalMultiple([]);
                     }} className={`selection-card w-full text-left ${chemicalProcessing === opt ? 'selected' : ''}`}>
                       <p className="font-medium text-foreground text-sm">{opt}</p>

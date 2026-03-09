@@ -244,7 +244,7 @@ const PhotoGallery = ({ photos }: { photos: { src: string; label: string }[] }) 
   }
   return (
     <div className="relative rounded-lg overflow-hidden border border-border">
-      <img src={photos[idx].src} alt={photos[idx].label} className="w-full h-24 object-cover" />
+      <img src={photos[idx].src} alt={photos[idx].label} className="w-full h-24 object-cover object-top" />
       <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[idx].label}</p>
       <button onClick={(e) => { e.stopPropagation(); setIdx(i => (i - 1 + photos.length) % photos.length); }} className="absolute left-1 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center">
         <ChevronLeft size={12} />

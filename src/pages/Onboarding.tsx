@@ -237,7 +237,7 @@ const PhotoGallery = ({ photos }: { photos: { src: string; label: string }[] }) 
   if (photos.length === 1) {
     return (
       <div className="rounded-lg overflow-hidden border border-border">
-        <img src={photos[0].src} alt={photos[0].label} className="w-full h-24 object-cover" />
+        <img src={photos[0].src} alt={photos[0].label} className="w-full h-24 object-cover object-top" />
         <p className="text-[10px] text-muted-foreground text-center py-1 bg-accent/30">{photos[0].label}</p>
       </div>
     );

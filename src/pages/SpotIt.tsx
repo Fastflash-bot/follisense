@@ -65,7 +65,10 @@ interface ConditionMatch {
   severity: 'mild' | 'moderate' | 'severe';
 }
 
-const getMatches = (selected: string[]): ConditionMatch[] => {
+const getMatches = (selected: string[], gender?: string): ConditionMatch[] => {
+  const isMale = gender === 'man';
+  const isFemale = gender === 'woman';
+  const isNeutral = !isMale && !isFemale;
   const matches: ConditionMatch[] = [];
 
   if (selected.includes('hairline-thinning')) {

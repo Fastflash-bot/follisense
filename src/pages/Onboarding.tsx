@@ -474,7 +474,7 @@ const Onboarding = () => {
           if (hasBraidsMale) return !!maleStyleDuration && !!maleScalpWashFreq && betweenOk;
           return betweenOk;
         }
-        if (isWornOutOnly) return !!wornOutWashFreq && !!restyleFreq;
+        if (isWornOutOnly) return !!wornOutWashFreq && (wornOutWashFreq !== 'Less often' || !!lessOftenDetail) && !!restyleFreq;
         const cycleOk = !!cycleLen && (cycleLen !== 'It varies' || (!!cycleLenMin && !!cycleLenMax));
         const washOk = !!washFreqBucket && !!washFreqDetail && (washFreqDetail !== 'It depends' || !!washFreqPerCycle);
         const betweenOk = betweenWashCare.length > 0 && (!betweenWashCare.includes('Other') || otherBetweenWash.trim().length > 0);

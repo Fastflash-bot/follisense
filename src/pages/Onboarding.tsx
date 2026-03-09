@@ -54,21 +54,21 @@ const locsPhotos: Record<string, { src: string; label: string }> = {
 
 const hairTypes = [
   {
-    id: 'type3',
-    label: 'Type 3 — Curly',
-    desc: 'Visible curl pattern, S-shaped curls, looser texture',
-    photoLabels: {
-      female: '3 female: S-shaped curls, bouncy, visible curl pattern',
-      male: '3 male: defined curls, medium density',
-    },
-  },
-  {
     id: 'type4',
     label: 'Type 4 — Coily',
     desc: 'Tight coils or zig-zag pattern, dense texture, significant shrinkage',
     photoLabels: {
       female: '4 female: tight coils, z-pattern, dense',
       male: '4 male: tight coils, dense, significant shrinkage',
+    },
+  },
+  {
+    id: 'type3',
+    label: 'Type 3 — Curly',
+    desc: 'Visible curl pattern, S-shaped curls, looser texture',
+    photoLabels: {
+      female: '3 female: S-shaped curls, bouncy, visible curl pattern',
+      male: '3 male: defined curls, medium density',
     },
   },
   {

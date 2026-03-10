@@ -154,20 +154,22 @@ const HealthProfile = () => {
                     onToggle={v => toggleMulti('medicalConditions', v)}
                   />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground mb-2">Are you currently pregnant, postpartum, or breastfeeding?</p>
-                  <RadioGroup value={hp.pregnancyStatus} options={['No', 'Pregnant', 'Postpartum (within 12 months)', 'Breastfeeding', 'Prefer not to say']} onChange={v => update('pregnancyStatus', v)} />
-                </div>
+                {!isMale && (
+                  <div>
+                    <p className="text-sm font-medium text-foreground mb-2">Are you currently pregnant, postpartum, or breastfeeding?</p>
+                    <RadioGroup value={hp.pregnancyStatus} options={['No', 'Pregnant', 'Postpartum (within 12 months)', 'Breastfeeding', 'Prefer not to say']} onChange={v => update('pregnancyStatus', v)} />
+                  </div>
+                )}
                 <div>
                   <p className="text-sm font-medium text-foreground mb-2">Have you experienced any major changes or stressors in the last 6 months?</p>
                   <MultiSelect
                     selected={hp.recentStressors}
                     options={[
-                      'Pregnancy or childbirth',
+                      ...(isMale ? [] : ['Pregnancy or childbirth']),
                       'Significant emotional stress (bereavement, relationship breakdown, job loss)',
                       'Major illness, surgery, or hospitalisation',
                       'Significant weight loss or dietary change',
-                      'Started or stopped hormonal contraception',
+                      ...(isMale ? [] : ['Started or stopped hormonal contraception']),
                       'Started or stopped HRT',
                       'None of these',
                       'Prefer not to say',

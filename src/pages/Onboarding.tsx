@@ -1197,6 +1197,30 @@ const Onboarding = () => {
                         {contraceptionOptions.map(o => (<button key={o} onClick={() => setHormonalContraception(o)} className={`pill-option ${hormonalContraception === o ? 'selected' : ''}`}>{o}</button>))}
                       </div>
                     </div>
+
+                    {/* Pregnancy prompt — fires when cycle appears overdue and no contraception */}
+                    {(() => {
+                      if (!lastPeriodDate || !menstrualCycleLength || hormonalContraception !== 'No') return null;
+                      const cycleLengthDays: Record<string, number> = { '21–25 days': 25, '26–30 days': 30, '31–35 days': 35 };
+                      const maxDays = cycleLengthDays[menstrualCycleLength];
+                      if (!maxDays) return null;
+                      const daysSince = Math.floor((Date.now() - lastPeriodDate.getTime()) / 86400000);
+                      if (daysSince <= maxDays) return null;
+                      return (
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 p-4">
+                          <p className="text-sm font-medium text-foreground mb-2">Could you be pregnant?</p>
+                          <p className="text-xs text-muted-foreground mb-3">
+                            Based on your last period ({format(lastPeriodDate, 'PPP')}) and your typical cycle length ({menstrualCycleLength}), your period may be overdue. If there's a chance you could be pregnant, you can note it in your Health Profile.
+                          </p>
+                          <button
+                            onClick={() => navigate('/health-profile')}
+                            className="text-sm font-medium text-primary"
+                          >
+                            Go to Health Profile →
+                          </button>
+                        </motion.div>
+                      );
+                    })()}
                   </motion.div>
                 )}
               </div>

@@ -360,6 +360,7 @@ const Onboarding = () => {
   const [showMoreStyles, setShowMoreStyles] = useState(false);
   const [showMicroEducation, setShowMicroEducation] = useState<{ title: string; message: string } | null>(null);
   const [skippedSections, setSkippedSections] = useState<number[]>([]);
+  const [notSureFollowUp, setNotSureFollowUp] = useState<string[]>([]);
 
   // Male-specific
   const [barberFreq, setBarberFreq] = useState('');

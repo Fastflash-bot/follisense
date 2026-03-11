@@ -498,9 +498,14 @@ const Onboarding = () => {
       case 1: return !!hairType;
       case 2: {
         if (!chemicalProcessing) return false;
-        if (chemicalProcessing === 'No, fully natural' || chemicalProcessing === 'Not sure') return true;
-        if (chemicalProcessing === 'Yes, currently') return chemicalMultiple.length > 0 && !!lastChemicalTreatment;
-        if (chemicalProcessing === 'Previously but not now') return !!lastChemicalTreatment;
+        if (chemicalProcessing === 'No, fully natural') return true;
+        if (chemicalProcessing === 'Yes') return chemicalMultiple.length > 0 && !!lastChemicalTreatment;
+        if (chemicalProcessing === 'Previously, but not currently') return !!lastChemicalTreatment;
+        if (chemicalProcessing === 'Not sure') {
+          if (notSureFollowUp.length === 0) return false;
+          if (notSureFollowUp.includes('None of these') || notSureFollowUp.includes("I really don't know")) return true;
+          return !!lastChemicalTreatment;
+        }
         return false;
       }
       case 3: {

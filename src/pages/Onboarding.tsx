@@ -375,6 +375,7 @@ const Onboarding = () => {
   const [baselineStep, setBaselineStep] = useState(0);
   const [baselineAnswers, setBaselineAnswers] = useState<Record<string, string>>({});
   const [baselineAck, setBaselineAck] = useState<string | null>(null);
+  const usedAcks = useRef<Set<string>>(new Set());
 
   // ── Derived ──
   const isMale = gender === 'man';

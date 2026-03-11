@@ -809,20 +809,23 @@ const Onboarding = () => {
               <div>
                 <h2 className="text-lg font-medium text-foreground mb-1">A quick question about your hair history</h2>
                 <p className="text-xs text-muted-foreground mb-5">{sectionWhyText[2]}</p>
-                <p className="font-medium text-foreground mb-3">Is your hair chemically processed?</p>
+                <p className="font-medium text-foreground mb-3">Has your hair been chemically processed?</p>
                 <div className="space-y-2">
                   {chemicalOptionsSimple.map(opt => (
                     <button key={opt} onClick={() => {
                       setChemicalProcessing(opt);
-                      if (opt === 'No, fully natural' || opt === 'Not sure') { setChemicalMultiple([]); setLastChemicalTreatment(''); }
-                      if (opt !== 'Yes, currently') setChemicalMultiple([]);
+                      if (opt === 'No, fully natural') { setChemicalMultiple([]); setLastChemicalTreatment(''); setNotSureFollowUp([]); }
+                      if (opt === 'Yes') { setNotSureFollowUp([]); }
+                      if (opt === 'Previously, but not currently') { setChemicalMultiple([]); setNotSureFollowUp([]); }
+                      if (opt === 'Not sure') { setChemicalMultiple([]); setLastChemicalTreatment(''); setNotSureFollowUp([]); }
+                      if (opt !== 'Yes') setChemicalMultiple([]);
                     }} className={`selection-card w-full text-left ${chemicalProcessing === opt ? 'selected' : ''}`}>
                       <p className="font-medium text-foreground text-sm">{opt}</p>
                     </button>
                   ))}
                 </div>
 
-                <SlideIn show={chemicalProcessing === 'Yes, currently'}>
+                <SlideIn show={chemicalProcessing === 'Yes'}>
                   <div className="mt-4 p-3 rounded-xl bg-accent space-y-2">
                     <p className="text-sm font-medium text-foreground mb-2">What type of processing?</p>
                     <div className="flex flex-wrap gap-2">
@@ -833,7 +836,27 @@ const Onboarding = () => {
                   </div>
                 </SlideIn>
 
-                <SlideIn show={(chemicalProcessing === 'Yes, currently' && chemicalMultiple.length > 0) || chemicalProcessing === 'Previously but not now'}>
+                <SlideIn show={chemicalProcessing === 'Not sure'}>
+                  <div className="mt-4 p-3 rounded-xl bg-accent space-y-3">
+                    <p className="text-sm font-medium text-foreground">No worries. Have you ever had any of these done to your hair?</p>
+                    <div className="space-y-2">
+                      {notSureChemicalFollowUp.map(opt => (
+                        <button key={opt.label} onClick={() => toggleNotSureFollowUp(opt.label)} className={`selection-card w-full text-left ${notSureFollowUp.includes(opt.label) ? 'selected' : ''}`}>
+                          <p className="font-medium text-foreground text-sm">{opt.label}</p>
+                          {opt.desc && <p className="text-xs text-muted-foreground">{opt.desc}</p>}
+                        </button>
+                      ))}
+                      <button onClick={() => toggleNotSureFollowUp('None of these')} className={`selection-card w-full text-left ${notSureFollowUp.includes('None of these') ? 'selected' : ''}`}>
+                        <p className="font-medium text-foreground text-sm">None of these</p>
+                      </button>
+                      <button onClick={() => toggleNotSureFollowUp("I really don't know")} className={`selection-card w-full text-left ${notSureFollowUp.includes("I really don't know") ? 'selected' : ''}`}>
+                        <p className="font-medium text-foreground text-sm">I really don't know</p>
+                      </button>
+                    </div>
+                  </div>
+                </SlideIn>
+
+                <SlideIn show={(chemicalProcessing === 'Yes' && chemicalMultiple.length > 0) || chemicalProcessing === 'Previously, but not currently' || (chemicalProcessing === 'Not sure' && notSureFollowUp.length > 0 && !notSureFollowUp.includes('None of these') && !notSureFollowUp.includes("I really don't know"))}>
                   <div className="mt-4">
                     <p className="text-sm font-medium text-foreground mb-3">When was your last chemical treatment?</p>
                     <div className="flex flex-wrap gap-2">

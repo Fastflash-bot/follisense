@@ -485,7 +485,9 @@ const Onboarding = () => {
 
   const selectBaselineAnswer = (key: string, val: string, optIndex: number) => {
     setBaselineAnswers(prev => ({ ...prev, [key]: val }));
-    setBaselineAck(getBaselineAcknowledgment(optIndex));
+    const ack = pickAck(optIndex, usedAcks.current);
+    usedAcks.current.add(ack);
+    setBaselineAck(ack);
   };
 
   // ── canProceed ──

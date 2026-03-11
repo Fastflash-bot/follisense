@@ -189,6 +189,32 @@ const HomePage = () => {
           </div>
         </div>
 
+        {/* ══════ Salon Booking (approaching end of cycle) ══════ */}
+        {!isMale && !onboardingData.isWornOutOnly && currentDay >= totalDays - 4 && (
+          <button onClick={() => navigate('/salon-booking')} className="card-elevated p-4 mb-4 w-full flex items-center gap-3 text-left">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Calendar size={20} className="text-primary" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1">
+              <p className="font-medium text-foreground text-sm">Time to book your next appointment?</p>
+              <p className="text-xs text-muted-foreground">Your {currentStyle.toLowerCase()} has been in for {currentDay} days</p>
+            </div>
+            <ChevronRight size={18} className="text-muted-foreground" />
+          </button>
+        )}
+
+        {/* ══════ Your Routine ══════ */}
+        <button onClick={() => navigate('/routine-tracker')} className="card-elevated p-4 mb-4 w-full flex items-center gap-3 text-left">
+          <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center flex-shrink-0">
+            <Droplets size={20} className="text-primary" strokeWidth={1.5} />
+          </div>
+          <div className="flex-1">
+            <p className="font-medium text-foreground text-sm">Your Routine</p>
+            <p className="text-xs text-muted-foreground">View your wash cycle timeline and products</p>
+          </div>
+          <ChevronRight size={18} className="text-muted-foreground" />
+        </button>
+
         {/* ══════ Complete your profile (only if sections skipped) ══════ */}
         {hasIncompleteProfile && (
           <button onClick={() => navigate(hasSkippedProducts ? '/onboarding?step=7' : '/health-profile')} className="card-elevated p-4 mb-4 w-full flex items-center gap-3 text-left border-l-4 border-l-warning">

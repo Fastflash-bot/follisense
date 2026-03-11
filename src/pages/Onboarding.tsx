@@ -74,9 +74,15 @@ const hairTypes = [
   },
 ];
 
-const chemicalOptionsSimple = ['Yes, currently', 'Previously but not now', 'No, fully natural', 'Not sure'];
+const chemicalOptionsSimple = ['No, fully natural', 'Yes', 'Previously, but not currently', 'Not sure'];
 const chemicalTypeOptions = ['Relaxed or permed', 'Texturised', 'Colour treated', 'Bleached'];
 const lastChemicalTreatmentOptions = ['Within the last month', '1 to 3 months ago', '3 to 6 months ago', '6 to 12 months ago', 'Over a year ago', 'Not sure'];
+const notSureChemicalFollowUp = [
+  { label: 'Relaxer or perm', desc: 'Makes curly hair straight', mapsTo: 'Relaxed or permed' },
+  { label: 'Texturiser', desc: 'Loosens curl pattern without fully straightening', mapsTo: 'Texturised' },
+  { label: 'Hair colour or dye', desc: '', mapsTo: 'Colour treated' },
+  { label: 'Bleach or lightening', desc: '', mapsTo: 'Bleached' },
+];
 
 const femaleStyleOptions = [
   'Worn out / loose (natural)', 'Worn out / loose (relaxed or straightened)',

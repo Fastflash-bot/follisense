@@ -90,25 +90,30 @@ const SignUpPage = () => {
 
           {/* Gender selection */}
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">How do you identify?</label>
-            <p className="text-xs text-muted-foreground mb-2">This helps us personalise your experience</p>
-            <div className="flex gap-2">
-              {genderOptions.map(opt => (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setGender(opt.id)}
-                  className={`flex-1 h-11 rounded-xl border-2 text-sm font-medium transition-colors ${
-                    gender === opt.id
-                      ? 'border-primary bg-primary/5 text-foreground'
-                      : 'border-border bg-card text-muted-foreground'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
+           <label className="text-sm font-medium text-foreground mb-1.5 block">
+            How do you identify?
+           </label>
+           <p className="text-xs text-muted-foreground mb-2">
+            This helps us personalise your experience
+           </p>
+           <div className="flex gap-2">
+             {genderOptions.map(opt => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setGender(opt.id)}
+                className={`flex-1 h-11 rounded-full border-2 text-sm font-medium transition-all duration-200
+                 ${
+                   gender === opt.id
+                   ? 'border-primary bg-primary/20 text-foreground shadow-inner'
+                   : 'border-border bg-card text-foreground hover:border-primary hover:bg-primary/10 hover:shadow-lg hover:scale-102'
+                 }`}
+               >
+                {opt.label}
+               </button>
+             ))}
           </div>
+</div>
 
           <button
             type="submit"

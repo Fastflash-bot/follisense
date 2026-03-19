@@ -36,14 +36,14 @@ const Welcome = () => {
           <div className="flex gap-3">
             <button
               onClick={() => navigate('/signup')}
-              className="flex-1 h-12 bg-primary text-primary-foreground rounded-xl font-semibold text-sm btn-press"
+              className="flex-1 h-12 bg-slate-800 text-white rounded-xl font-semibold text-sm btn-press hover:opacity-60 transition-opacity duration-200"
             >
               Sign up
             </button>
             <button
               onClick={() => navigate('/login')}
-              className="flex-1 h-12 rounded-xl border-2 border-border bg-card text-foreground font-semibold text-sm btn-press"
-            >
+              className="flex-1 h-12 rounded-lg bg-white text-gray-800 font-semibold text-sm border-2 border-gray-300 shadow-sm:shadow-md hover:scale-105 transition-transform duration-200"
+            > 
               Log in
             </button>
           </div>
@@ -63,14 +63,14 @@ const Welcome = () => {
           <div className="flex gap-3">
             <button
               onClick={() => navigate('/stylist/signup')}
-              className="flex-1 h-12 bg-foreground text-background rounded-xl font-semibold text-sm btn-press"
+              className="flex-1 h-12 bg-teal-700  text-white rounded-xl font-semibold text-sm btn-press shadow-md hover:opacity-70 hover:opacity-80 transition-opacity duration-200"
             >
               Sign up
             </button>
             <button
               onClick={() => navigate('/stylist/login')}
-              className="flex-1 h-12 rounded-xl border-2 border-border bg-card text-foreground font-semibold text-sm btn-press"
-            >
+              className="flex-1 h-12 rounded-lg bg-white text-gray-800 font-semibold text-sm  border-2 border-gray-300 shadow-sm:shadow-md hover:scale-105 transition-transform duration-200"
+            >   
               Log in
             </button>
           </div>

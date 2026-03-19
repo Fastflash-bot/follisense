@@ -1,3 +1,5 @@
+import { supabase } from "./lib/supabaseClient";
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -43,8 +45,23 @@ import ScalpCheckIn from "./pages/ScalpCheckIn";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+console.log("SUPABASE URL:", import.meta.env.VITE_SUPABASE_URL);
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    const test = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*");
+
+      console.log("DATA:", data);
+      console.log("ERROR:", error);
+    };
+
+    test();
+  }, []);
+
+  return(
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AppProvider>
@@ -95,6 +112,7 @@ const App = () => (
       </AppProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+ );
+};
 
 export default App;
